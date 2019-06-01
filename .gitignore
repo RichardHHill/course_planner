@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 *.Rproj
+/data/provided
+/shiny-app/data
