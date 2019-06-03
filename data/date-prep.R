@@ -28,7 +28,7 @@ saveRDS(math_table, "shiny-app/data/math.RDS")
 math_ab <- read.xlsx(
   file_path,
   sheet = 2,
-  rows = 3:22,
+  rows = 3:21,
   cols = 1:4,
   colNames = FALSE
 )
