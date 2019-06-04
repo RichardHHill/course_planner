@@ -4,26 +4,6 @@ major_convertor <- reactive({
   majors_list[[majors_table$major[[index]]]]
 })
 
-#to know what courses to display as needed
-courses_for_major_1 <- eventReactive(input$get_requirements, {
-  major = major_convertor()
-  req_count = 0
-  count = 1
-  reqs = sum(as.numeric(major[1,]))
-  tags_to_remove = c()
-  for (i in seq_along(major)) {
-    name = major[[length(major) - i + 1]][[1]]
-    number = as.numeric(major[[length(major) - i + 1]][[2]])  #had to do gymnastics because the ui was appearing
-    courses = major[[length(major) - i + 1]][-c(1,2)]  #in the reverse order
-    tag = paste0("req_", count)
-    tags_to_remove = c(tags_to_remove, tag)
-    req_count = req_count + number
-    count = count + 1
-  }
-  tags_to_remove
-})
-
-
 observeEvent(input$get_requirements, {
   major = major_convertor()
   req_count = 0
@@ -91,9 +71,22 @@ observeEvent(input$get_requirements, {
   #removeUI(selector = "#get_requirements")
   observeEvent(input$remove, {
     removeUI(selector = "#req_0")
+
     for (i in seq_along(tags_to_remove)) {
       removeUI(selector = paste0("#", tags_to_remove[[i]]))
     }
-    
+    removeUI(selector = "#get_requirements")
+    insertUI(
+      selector = "pick_major",
+      where = "afterEnd",
+      tags$div(
+        id = "get_requirements",
+        actionButton(
+          "get_requirements",
+          "Get Requirements"
+        )
+      )
+    )
   })
 })
+
