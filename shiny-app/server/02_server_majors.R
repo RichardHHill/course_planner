@@ -4,6 +4,8 @@ major_convertor <- reactive({
   majors_list[[majors_table$major[[index]]]]
 })
 
+courses_for_major_1 <- reactiveValues()
+
 observeEvent(input$get_requirements, {
   disable(id = "pick_major")
   disable(id = "get_requirements")
@@ -32,6 +34,7 @@ observeEvent(input$get_requirements, {
     courses = major[[length(major) - i + 1]][-c(1,2)]  #in the reverse order
     tag = paste0("req_", length(major) - count + 1)
     tags_to_remove = c(tags_to_remove, tag)
+    courses_for_major_1[[letters[[i]]]] <- tag
     
     if (number == 1) {
       insertUI(
