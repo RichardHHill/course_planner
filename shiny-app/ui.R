@@ -3,6 +3,7 @@ head <- dashboardHeader(
 )
 
 sidebar <- dashboardSidebar(
+  useShinyjs(),
   sidebarMenu(
     id = "sidebar",
     menuItem(

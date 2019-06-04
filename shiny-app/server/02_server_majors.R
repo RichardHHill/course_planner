@@ -5,6 +5,9 @@ major_convertor <- reactive({
 })
 
 observeEvent(input$get_requirements, {
+  disable(id = "pick_major")
+  disable(id = "get_requirements")
+  
   major = major_convertor()
   req_count = 0
   count = 1
@@ -75,18 +78,9 @@ observeEvent(input$get_requirements, {
     for (i in seq_along(tags_to_remove)) {
       removeUI(selector = paste0("#", tags_to_remove[[i]]))
     }
-    removeUI(selector = "#get_requirements")
-    insertUI(
-      selector = "pick_major",
-      where = "afterEnd",
-      tags$div(
-        id = "get_requirements",
-        actionButton(
-          "get_requirements",
-          "Get Requirements"
-        )
-      )
-    )
+    
+    enable(id = "pick_major")
+    enable(id = "get_requirements")
   })
 })
 
