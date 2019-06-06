@@ -3,7 +3,8 @@ tabItem(
   fluidRow(
     box(
       width = 9,
-      textOutput("courses_table")
+      textOutput("major_name"),
+      DTOutput("courses_table")
     )
   )
 )
