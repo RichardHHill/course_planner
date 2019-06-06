@@ -4,8 +4,10 @@ major_convertor <- reactive({
   majors_list[[majors_table$major[[index]]]]
 })
 
+#stores tags of generated ui
 courses_for_major_1 <- reactiveValues()
 
+#adds ui for each requirement of the major
 observeEvent(input$get_requirements, {
   disable(id = "pick_major")
   disable(id = "get_requirements")
@@ -13,7 +15,6 @@ observeEvent(input$get_requirements, {
   major = major_convertor()
   req_count = 0
   count = 1
-  reqs = sum(as.numeric(major[1,]))
   tags_to_remove = c()
   
   insertUI(
@@ -22,9 +23,17 @@ observeEvent(input$get_requirements, {
     tags$div(
       id = "req_0",
       actionButton(
-        "remove",
-        "Remove"
-      )
+        "select_different_major",
+        "Select Different Major",
+        style="color: #fff; background-color: #aa3636; border-color: #aa3636"
+      ),
+      actionButton(
+        "majors_to_courses",
+        "Go to Courses",
+        style="color: #fff; background-color: #07b710; border-color: #07b710"
+      ),
+      br(),
+      textOutput("major_is_complete")
     )
   )
   
@@ -75,7 +84,7 @@ observeEvent(input$get_requirements, {
   }
   
   #removeUI(selector = "#get_requirements")
-  observeEvent(input$remove, {
+  observeEvent(input$select_different_major, {
     removeUI(selector = "#req_0")
 
     for (i in seq_along(tags_to_remove)) {
@@ -87,3 +96,20 @@ observeEvent(input$get_requirements, {
   })
 })
 
+
+output$major_is_complete <- renderText({
+  if (length(course_vector()) == sum(as.numeric(major_convertor()[2,]))) {
+    enable(id = "majors_to_courses")
+    text <- ""
+  } else {
+    disable(id = "majors_to_courses")
+    text <- "Input more courses"
+  }
+  text
+})
+
+
+#go to courses after picking major
+observeEvent(input$majors_to_courses, {
+  updateTabsetPanel(session, "sidebar", selected = "select_courses")
+})
