@@ -1,5 +1,5 @@
 output$major_name <- renderText({
-  "HI"
+  input$pick_major
 })
 
 
@@ -44,6 +44,10 @@ output$courses_table <- renderDT({
   table <- courses_table_prep()
   datatable(
     table,
-    rownames = FALSE
+    rownames = FALSE,
+    options = list(
+      searching = FALSE,
+      lengthChange = FALSE
+    )
   )
 })

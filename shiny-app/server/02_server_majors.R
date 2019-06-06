@@ -69,6 +69,7 @@ observeEvent(input$get_requirements, {
             tag,
             name,
             choices = courses[!is.na(courses)],
+            selected = courses[1:number],
             multiple = TRUE,
             options = pickerOptions(
               maxOptions = number
