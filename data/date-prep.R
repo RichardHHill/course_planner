@@ -16,6 +16,7 @@ majors_table <- tibble(
 
 saveRDS(majors_table, "shiny-app/data/majors.RDS")
 
+#math department courses
 math_table <- read.xlsx(
   file_path,
   sheet = 1,
@@ -24,6 +25,15 @@ math_table <- read.xlsx(
 )
 
 saveRDS(math_table, "shiny-app/data/math.RDS")
+
+econ_table <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:41,
+  cols = 4:5
+)
+
+saveRDS(econ_table, "shiny-app/data/econ.RDS")
 
 math_ab <- read.xlsx(
   file_path,
