@@ -20,7 +20,7 @@ saveRDS(majors_table, "shiny-app/data/majors.RDS")
 math_table <- read.xlsx(
   file_path,
   sheet = 1,
-  rows = 2:33,
+  rows = 2:34,
   cols = 1:2
 )
 
