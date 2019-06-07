@@ -4,12 +4,73 @@ tabItem(
     id = "major_output",
     fluidRow(
       box(
-        width = 9,
-        h2(textOutput("major_name")),
-        br(),
-        br(),
+        width = 6,
+        title = textOutput("major_name"),
         DTOutput("courses_table")
       )
     )
-  ) %>% hidden()
+  ) %>% hidden(),
+  box(
+    width = 12,
+    fluidRow(
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 1"
+        )
+      ),
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 3"
+        )
+      ),
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 5"
+        )
+      ),
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 7"
+        )
+      )
+    ),
+    fluidRow(
+      column(
+        width = 3,
+        box(
+          width = 10,
+          title = "Semester 2"
+        )
+      ),
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 4"
+        )
+      ),
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 6"
+        )
+      ),
+      column(
+        width = 3,
+        box(
+          width = 12,
+          title = "Semester 8"
+        )
+      )
+    )
+  )
 )
