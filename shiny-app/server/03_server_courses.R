@@ -2,7 +2,6 @@ output$major_name <- renderText({
   input$pick_major
 })
 
-
 course_vector <- reactive({
   courses = c()
   for (i in seq_along(major_convertor())) {
@@ -25,9 +24,9 @@ courses_table_prep <- reactive({
     course <- selected_courses[[i]]
     department <- substr(course, 1, 4)
     if (department == "MATH"){ #really weird issue
-      department_table <- department_list$MATH
+      department_table <- department_list$"MATH"
     } else {
-      department_table <- department_list$ECON
+      department_table <- department_list$"ECON"
     }
     
     index <- match(course, department_table$course_code)

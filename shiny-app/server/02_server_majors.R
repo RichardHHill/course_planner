@@ -23,8 +23,8 @@ observeEvent(input$get_requirements, {
     tags$div(
       id = "req_0",
       actionButton(
-        "select_different_major",
-        "Select Different Major",
+        "deselect_major",
+        "Deselect Major",
         style="color: #fff; background-color: #aa3636; border-color: #aa3636"
       ),
       actionButton(
@@ -85,7 +85,7 @@ observeEvent(input$get_requirements, {
   }
   
   #removeUI(selector = "#get_requirements")
-  observeEvent(input$select_different_major, {
+  observeEvent(input$deselect_major, {
     removeUI(selector = "#req_0")
 
     for (i in seq_along(tags_to_remove)) {
@@ -94,6 +94,7 @@ observeEvent(input$get_requirements, {
     
     enable(id = "pick_major")
     enable(id = "get_requirements")
+    hide("major_output")
   })
 })
 
@@ -112,5 +113,6 @@ output$major_is_complete <- renderText({
 
 #go to courses after picking major
 observeEvent(input$majors_to_courses, {
+  show("major_output")
   updateTabsetPanel(session, "sidebar", selected = "select_courses")
 })
