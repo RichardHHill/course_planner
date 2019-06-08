@@ -25,3 +25,14 @@ department_list <- list(
   "MATH" = math_courses,
   "ECON" = econ_courses
 )
+
+course_code_to_name <- function(course_code) {
+ department <- substr(course_code, 1, 4)
+  if (department == "MATH"){ #really weird issue
+    department_table <- department_list$"MATH"
+  } else {
+    department_table <- department_list$"ECON"
+  }
+  index <- match(course_code, department_table$course_code)
+  course_name <- department_table$course_name[[index]]
+}

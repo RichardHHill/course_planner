@@ -22,15 +22,7 @@ courses_table_prep <- reactive({
   
   for (i in seq_along(selected_courses)) {
     course <- selected_courses[[i]]
-    department <- substr(course, 1, 4)
-    if (department == "MATH"){ #really weird issue
-      department_table <- department_list$"MATH"
-    } else {
-      department_table <- department_list$"ECON"
-    }
-    
-    index <- match(course, department_table$course_code)
-    course_names <- c(course_names, department_table$course_name[[index]])
+    course_names <- c(course_names, course_code_to_name(course))
   }
   table <- tibble(
     "Course Code" = selected_courses,

@@ -46,7 +46,7 @@ tabItem(
       column(
         width = 3,
         box(
-          width = 10,
+          width = 12,
           title = "Semester 2"
         )
       ),
