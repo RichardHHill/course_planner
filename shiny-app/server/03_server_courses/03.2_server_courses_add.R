@@ -32,13 +32,19 @@ observeEvent(input$add_course_by_department, {
   )
   
   observeEvent(input$department_to_add, {
+    removeUI(selector = "#course_to_add")
+    
+    department <- input$department_to_add
     insertUI(
       selector = "#column_for_course_picker",
       where = "afterEnd",
-      pickerInput(
-        "course_to_add",
-        "Course",
-        choices = "Math 0050"
+      div(
+        id = "course_to_add",
+        pickerInput(
+          "course_to_add",
+          "Course",
+          choices = paste(department_list[[department]][[1]], department_list[[department]][[2]])
+        )
       )
     )
   })
