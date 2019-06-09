@@ -22,7 +22,8 @@ tabItem(
           width = 3,
           box(
             width = 12,
-            title = "Semester 1"
+            title = "Semester 1",
+            textOutput("semester1_text")
           )
         ),
         column(

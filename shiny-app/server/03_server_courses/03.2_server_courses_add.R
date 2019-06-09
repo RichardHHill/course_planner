@@ -34,6 +34,7 @@ observeEvent(input$add_course_by_department, {
       title = "Add Course",
       size = "m",
       footer = list(
+        actionButton("submit_course_department", "Add Course"),
         modalButton("Cancel")
       )
     )
@@ -56,6 +57,15 @@ observeEvent(input$add_course_by_department, {
       )
     )
   })
+  
+  
+})
+
+observeEvent(input$submit_course_department, {
+  removeModal()
+  if (length(input$course_to_add) != 0) {
+    semester1(input$course_to_add)
+  }
 })
 
 observeEvent(input$add_course_custom, {
@@ -82,9 +92,17 @@ observeEvent(input$add_course_custom, {
       title = "Add Course",
       size = "m",
       footer = list(
+        actionButton("submit_course_custom", "Add Course"),
         modalButton("Cancel")
       )
     )
   )
-}, ignoreInit = TRUE)
+})
+
+
+semester1 <- reactiveVal()
+
+output$semester1_text <- renderText({
+  semester1()
+})
 
