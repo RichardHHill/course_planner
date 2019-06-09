@@ -5,6 +5,14 @@ observeEvent(input$add_course_by_department, {
         column(
           width = 6,
           pickerInput(
+            "pick_semester",
+            "Pick Semester",
+            choices = c(
+              "Semester 1", "Semester 2", "Semester 3", "Semester 4",
+              "Semester 5", "Semester 6", "Semester 7", "Semester 8"
+            )
+          ),
+          pickerInput(
             "department_to_add",
             "Department",
             choices = c(
@@ -54,6 +62,17 @@ observeEvent(input$add_course_custom, {
   showModal(
     modalDialog(
       fluidRow(
+        column(
+          width = 6,
+          pickerInput(
+            "pick_semester",
+            "Pick Semester",
+            choices = c(
+              "Semester 1", "Semester 2", "Semester 3", "Semester 4",
+              "Semester 5", "Semester 6", "Semester 7", "Semester 8"
+            )
+          )
+        ),
         column(
           width = 6,
           textInput("custom_course_to_add_code", "Course Code", placeholder = "ECON 0110"),
