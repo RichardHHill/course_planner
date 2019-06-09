@@ -13,7 +13,8 @@ tabItem(
   fluidRow(
     box(
       width = 12,
-      actionButton("add_course", "Add Course"),
+      actionButton("add_course_by_department", "Add Course by Department"),
+      actionButton("add_course_custom", "Add Custom Course"),
       br(),
       br(),
       fluidRow(
