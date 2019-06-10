@@ -63,9 +63,12 @@ observeEvent(input$add_course_by_department, {
 
 observeEvent(input$submit_course_department, {
   removeModal()
-  if (length(input$course_to_add) != 0) {
-    semester1(input$course_to_add)
-  }
+  req(input$course_to_add)
+  course = input$course_to_add
+
+  string = substr(course, 1, 4)
+  semesters$semester1 <- c(semesters$semester1, course)
+
 })
 
 observeEvent(input$add_course_custom, {
@@ -100,9 +103,9 @@ observeEvent(input$add_course_custom, {
 })
 
 
-semester1 <- reactiveVal()
+semesters <- reactiveValues()
 
 output$semester1_text <- renderText({
-  semester1()
+  semesters$semester1
 })
 
