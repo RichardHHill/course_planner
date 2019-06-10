@@ -8,8 +8,10 @@ observeEvent(input$add_course_by_department, {
             "pick_semester",
             "Pick Semester",
             choices = c(
-              "Semester 1", "Semester 2", "Semester 3", "Semester 4",
-              "Semester 5", "Semester 6", "Semester 7", "Semester 8"
+              "Semester 1" = "semester1", "Semester 2" = "semester2",
+              "Semester 3" = "semester3", "Semester 4" = "semester4",
+              "Semester 5" = "semester5", "Semester 6" = "semester6",
+              "Semester 7" = "semester7", "Semester 8" = "semester8"
             )
           ),
           pickerInput(
@@ -65,9 +67,8 @@ observeEvent(input$submit_course_department, {
   removeModal()
   req(input$course_to_add)
   course = input$course_to_add
-
-  string = substr(course, 1, 4)
-  semesters$semester1 <- c(semesters$semester1, course)
+  string = input$pick_semester
+  semesters[[string]] <- c(semesters[[string]], course)
 
 })
 
@@ -107,5 +108,33 @@ semesters <- reactiveValues()
 
 output$semester1_text <- renderText({
   semesters$semester1
+})
+
+output$semester2_text <- renderText({
+  semesters$semester2
+})
+
+output$semester3_text <- renderText({
+  semesters$semester3
+})
+
+output$semester4_text <- renderText({
+  semesters$semester4
+})
+
+output$semester5_text <- renderText({
+  semesters$semester5
+})
+
+output$semester6_text <- renderText({
+  semesters$semester6
+})
+
+output$semester7_text <- renderText({
+  semesters$semester7
+})
+
+output$semester8_text <- renderText({
+  semesters$semester8
 })
 

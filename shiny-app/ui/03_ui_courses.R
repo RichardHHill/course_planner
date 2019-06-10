@@ -30,21 +30,24 @@ tabItem(
           width = 3,
           box(
             width = 12,
-            title = "Semester 3"
+            title = "Semester 3",
+            textOutput("semester3_text")
           )
         ),
         column(
           width = 3,
           box(
             width = 12,
-            title = "Semester 5"
+            title = "Semester 5",
+            textOutput("semester5_text")
           )
         ),
         column(
           width = 3,
           box(
             width = 12,
-            title = "Semester 7"
+            title = "Semester 7",
+            textOutput("semester7_text")
           )
         )
       ),
@@ -53,28 +56,32 @@ tabItem(
           width = 3,
           box(
             width = 12,
-            title = "Semester 2"
+            title = "Semester 2",
+            textOutput("semester2_text")
           )
         ),
         column(
           width = 3,
           box(
             width = 12,
-            title = "Semester 4"
+            title = "Semester 4",
+            textOutput("semester4_text")
           )
         ),
         column(
           width = 3,
           box(
             width = 12,
-            title = "Semester 6"
+            title = "Semester 6",
+            textOutput("semester6_text")
           )
         ),
         column(
           width = 3,
           box(
             width = 12,
-            title = "Semester 8"
+            title = "Semester 8",
+            textOutput("semester8_text")
           )
         )
       )
