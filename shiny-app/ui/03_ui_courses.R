@@ -1,15 +1,5 @@
 tabItem(
   tabName = "select_courses",
-  div(
-    id = "major_output",
-    fluidRow(
-      box(
-        width = 6,
-        title = textOutput("major_name"),
-        DTOutput("courses_table")
-      )
-    )
-  ) %>% hidden(),
   fluidRow(
     box(
       width = 12,
@@ -23,7 +13,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 1",
-            textOutput("semester1_text")
+            DTOutput("semester1_text")
           )
         ),
         column(
@@ -31,7 +21,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 3",
-            textOutput("semester3_text")
+            DTOutput("semester3_text")
           )
         ),
         column(
@@ -39,7 +29,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 5",
-            textOutput("semester5_text")
+            DTOutput("semester5_text")
           )
         ),
         column(
@@ -47,7 +37,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 7",
-            textOutput("semester7_text")
+            DTOutput("semester7_text")
           )
         )
       ),
@@ -57,7 +47,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 2",
-            textOutput("semester2_text")
+            DTOutput("semester2_text")
           )
         ),
         column(
@@ -65,7 +55,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 4",
-            textOutput("semester4_text")
+            DTOutput("semester4_text")
           )
         ),
         column(
@@ -73,7 +63,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 6",
-            textOutput("semester6_text")
+            DTOutput("semester6_text")
           )
         ),
         column(
@@ -81,10 +71,20 @@ tabItem(
           box(
             width = 12,
             title = "Semester 8",
-            textOutput("semester8_text")
+            DTOutput("semester8_text")
           )
         )
       )
     )
-  )
+  ),
+  div(
+    id = "major_output",
+    fluidRow(
+      box(
+        width = 6,
+        title = textOutput("major_name"),
+        DTOutput("courses_table")
+      )
+    )
+  ) %>% hidden()
 )

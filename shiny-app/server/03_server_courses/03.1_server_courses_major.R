@@ -37,8 +37,7 @@ output$courses_table <- renderDT({
     table,
     rownames = FALSE,
     options = list(
-      searching = FALSE,
-      lengthChange = FALSE
+      dom = "t"
     )
   )
 })
