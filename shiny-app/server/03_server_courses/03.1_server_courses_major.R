@@ -19,14 +19,16 @@ selected_courses <- eventReactive(input$majors_to_courses, {
 courses_table_prep <- reactive({
   selected_courses <- selected_courses()
   course_names <- c()
+  in_schedule <- selected_courses() %in% semester1_out()$Code
   
   for (i in seq_along(selected_courses)) {
     course <- selected_courses[[i]]
     course_names <- c(course_names, course_code_to_name(course))
-  }
+  } 
   table <- tibble(
     "Course Code" = selected_courses,
-    "Course Name" = course_names
+    "Course Name" = course_names,
+    "Satisfied" = in_schedule
   )
 })
 

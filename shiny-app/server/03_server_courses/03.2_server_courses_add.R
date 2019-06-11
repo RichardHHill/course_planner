@@ -106,15 +106,19 @@ observeEvent(input$add_course_custom, {
 
 semesters <- reactiveValues()
 
-
-output$semester1_text <- renderDT({
+semester1_out <- reactive({
   req(semesters$semester1)
   out <- semesters$semester1
-  datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
-    ),
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
+    )
+})
+
+output$semester1_text <- renderDT({
+  out <- semester1_out()
+  datatable(
+    out,
     rownames = FALSE,
     options = list(
       dom = "t"
@@ -127,8 +131,8 @@ output$semester2_text <- renderDT({
   out <- semesters$semester2
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
@@ -142,8 +146,8 @@ output$semester3_text <- renderDT({
   out <- semesters$semester3
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
@@ -157,8 +161,8 @@ output$semester4_text <- renderDT({
   out <- semesters$semester4
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
@@ -172,8 +176,8 @@ output$semester5_text <- renderDT({
   out <- semesters$semester5
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
@@ -187,8 +191,8 @@ output$semester6_text <- renderDT({
   out <- semesters$semester6
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
@@ -202,8 +206,8 @@ output$semester7_text <- renderDT({
   out <- semesters$semester7
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
@@ -217,8 +221,8 @@ output$semester8_text <- renderDT({
   out <- semesters$semester8
   datatable(
     tibble(
-      "Code" = substr(out, 1, 4),
-      "Course" = substr(out, 5, nchar(out))
+      "Code" = substr(out, 1, 9),
+      "Course" = substr(out, 10, nchar(out))
     ),
     rownames = FALSE,
     options = list(
