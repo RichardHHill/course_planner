@@ -19,17 +19,18 @@ observeEvent(input$add_course_by_department, {
             "Department",
             choices = c(
               "MATH", "ECON"
-            ),
-            multiple = TRUE,
-            options = pickerOptions(
-              maxOptions = 1
             )
           )
         ),
         column(
           width = 6,
-          div(
-            id = "column_for_course_picker"
+          pickerInput(
+            "course_to_add",
+            "Course",
+            choices = paste(
+              department_list[["MATH"]][[1]],
+              department_list[["MATH"]][[2]]
+            )
           )
         )
       ),
@@ -43,33 +44,28 @@ observeEvent(input$add_course_by_department, {
   )
   
   observeEvent(input$department_to_add, {
-    removeUI(selector = "#course_to_add")
-    
     department <- input$department_to_add
-    insertUI(
-      selector = "#column_for_course_picker",
-      where = "afterEnd",
-      div(
-        id = "course_to_add",
-        pickerInput(
-          "course_to_add",
-          "Course",
-          choices = paste(department_list[[department]][[1]], department_list[[department]][[2]])
-        )
+    updatePickerInput(
+      session,
+      "course_to_add", 
+      "Course",
+      choices = paste(
+        department_list[[department]][[1]],
+        department_list[[department]][[2]]
       )
     )
   })
   
-  
 })
 
 observeEvent(input$submit_course_department, {
+  removeUI(selector = "#course_to_add")
   removeModal()
+  removeUI(selector = "#course_to_add")
   req(input$course_to_add)
   course = input$course_to_add
   string = input$pick_semester
   semesters[[string]] <- c(semesters[[string]], course)
-
 })
 
 observeEvent(input$add_course_custom, {
