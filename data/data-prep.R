@@ -35,6 +35,24 @@ econ_table <- read.xlsx(
 
 saveRDS(econ_table, "shiny-app/data/econ.RDS")
 
+apma_table <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:23,
+  cols = 7:8
+)
+
+saveRDS(apma_table, "shiny-app/data/apma.RDS")
+
+phys_table <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:28,
+  cols = 10:11
+)
+
+saveRDS(phys_table, "shiny-app/data/phys.RDS")
+
 math_ab <- read.xlsx(
   file_path,
   sheet = 2,

@@ -18,7 +18,7 @@ observeEvent(input$add_course_by_department, {
             "department_to_add",
             "Department",
             choices = c(
-              "MATH", "ECON"
+              "MATH", "ECON", "APMA", "PHYS"
             )
           )
         ),

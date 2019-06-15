@@ -11,6 +11,8 @@ majors_table <- readRDS("data/majors.RDS")
 
 math_courses <- readRDS("data/math.RDS")
 econ_courses <- readRDS("data/econ.RDS")
+apma_courses <- readRDS("data/apma.RDS")
+phys_courses <- readRDS("data/phys.RDS")
 
 math_ab <- readRDS("data/math_ab.RDS")
 econ_ab <- readRDS("data/econ_ab.RDS")
@@ -23,7 +25,9 @@ majors_list <- list(
 
 department_list <- list(
   "MATH" = math_courses,
-  "ECON" = econ_courses
+  "ECON" = econ_courses,
+  "APMA" = apma_courses,
+  "PHYS" = phys_courses
 )
 
 course_code_to_name <- function(course_code) {
