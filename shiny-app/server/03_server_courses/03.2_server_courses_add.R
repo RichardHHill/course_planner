@@ -59,9 +59,7 @@ observeEvent(input$add_course_by_department, {
 })
 
 observeEvent(input$submit_course_department, {
-  removeUI(selector = "#course_to_add")
   removeModal()
-  removeUI(selector = "#course_to_add")
   req(input$course_to_add)
   course = input$course_to_add
   string = input$pick_semester
@@ -75,11 +73,13 @@ observeEvent(input$add_course_custom, {
         column(
           width = 6,
           pickerInput(
-            "pick_semester",
+            "pick_semester_custom",
             "Pick Semester",
             choices = c(
-              "Semester 1", "Semester 2", "Semester 3", "Semester 4",
-              "Semester 5", "Semester 6", "Semester 7", "Semester 8"
+              "Semester 1" = "semester1", "Semester 2" = "semester2",
+              "Semester 3" = "semester3", "Semester 4" = "semester4",
+              "Semester 5" = "semester5", "Semester 6" = "semester6",
+              "Semester 7" = "semester7", "Semester 8" = "semester8"
             )
           )
         ),
@@ -97,6 +97,17 @@ observeEvent(input$add_course_custom, {
       )
     )
   )
+})
+
+shinyjs::runjs("$('#custom_course_to_add_code').attr('maxlength', 9)")
+
+observeEvent(input$submit_course_custom, {
+  code <- input$custom_course_to_add_code
+  removeModal()
+  course = paste(code, input$custom_course_to_add_name)
+  string = input$pick_semester_custom
+  print(list(semester = string, course = course))
+  semesters[[string]] <- c(semesters[[string]], course)
 })
 
 
