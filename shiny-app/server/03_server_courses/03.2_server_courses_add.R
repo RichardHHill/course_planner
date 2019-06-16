@@ -99,14 +99,20 @@ observeEvent(input$add_course_custom, {
   )
 })
 
-shinyjs::runjs("$('#custom_course_to_add_code').attr('maxlength', 9)")
+
 
 observeEvent(input$submit_course_custom, {
   code <- input$custom_course_to_add_code
+
+  if (nchar(code) > 9) {
+    code <- substr(code,1,9)
+  } else if (nchar(code) < 9) {
+    code <- paste0(code, strrep(" ", 9 - nchar(code)))
+  }
+  
   removeModal()
   course = paste(code, input$custom_course_to_add_name)
   string = input$pick_semester_custom
-  print(list(semester = string, course = course))
   semesters[[string]] <- c(semesters[[string]], course)
 })
 
