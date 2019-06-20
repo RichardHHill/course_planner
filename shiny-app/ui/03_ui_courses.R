@@ -78,10 +78,10 @@ tabItem(
     )
   ),
   div(
-    id = "major_output",
+    id = "major_1_output",
     fluidRow(
       box(
-        width = 6,
+        width = 4,
         title = textOutput("major_name"),
         DTOutput("courses_table")
       )
