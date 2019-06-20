@@ -12,10 +12,10 @@ observeEvent(input$get_requirements_1, {
   disable(id = "pick_major_1")
   disable(id = "get_requirements_1")
 
-  major = major_convertor_1()
-  req_count = 0
-  count = 1
-  tags_to_remove = vector(mode = "character", length = length(major))
+  major <- major_convertor_1()
+  req_count <- 0
+  count <- 1
+  tags_to_remove <- vector(mode = "character", length = length(major))
 
   insertUI(
     selector = "#get_requirements_1",
@@ -38,10 +38,10 @@ observeEvent(input$get_requirements_1, {
   )
     
   for (i in seq_along(major)) {
-    name = major[[length(major) - i + 1]][[1]]
-    number = as.numeric(major[[length(major) - i + 1]][[2]])  #had to do gymnastics because the ui
-    courses = major[[length(major) - i + 1]][-c(1,2)]  #was appearing in the reverse order
-    tag = paste0("req_1_", length(major) - count + 1)
+    name <- major[[length(major) - i + 1]][[1]]
+    number <- as.numeric(major[[length(major) - i + 1]][[2]])  #had to do gymnastics because the ui
+    courses <- major[[length(major) - i + 1]][-c(1,2)]  #was appearing in the reverse order
+    tag <- paste0("req_1_", length(major) - count + 1)
     tags_to_remove[[i]] <- tag
     courses_for_major_1(c(courses_for_major_1(), tag))
     
@@ -80,8 +80,8 @@ observeEvent(input$get_requirements_1, {
       )
     }
 
-    req_count = req_count + number
-    count = count + 1
+    req_count <- req_count + number
+    count <- count + 1
   }
 
   observeEvent(input$deselect_major_1, {
