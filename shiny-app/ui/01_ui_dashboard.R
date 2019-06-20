@@ -3,15 +3,13 @@ tabItem(
   fluidRow(
     box(
       width = 8,
-      column(
-        width = 12,
-        align = "center",
-        h1("Welcome to Course Planner")
-      )
-    ),
-    br(),
-    box(
-      width = 8,
+      fluidRow(
+        column(
+          width = 12,
+          align = "center",
+          h1("Welcome to Course Planner")
+        )
+      ),
       fluidRow(
         column(
           width = 6,
@@ -37,8 +35,19 @@ tabItem(
         )
       ),
       br(),
-      br(),
-      br(),
+      br()
+    )
+  ),
+  fluidRow(
+    box(
+      width = 8,
+      fluidRow(
+        column(
+          12,
+          align = "center",
+          h2("Course Information")
+        )
+      ),
       fluidRow(
         column(
           width = 6,
