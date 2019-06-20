@@ -2,31 +2,32 @@ tabItem(
   tabName = "dashboard",
   fluidRow(
     box(
-      width = 10,
+      width = 8,
       column(
         width = 12,
+        align = "center",
         h1("Welcome to Course Planner")
       )
     ),
     br(),
     box(
-      width = 10,
+      width = 8,
       fluidRow(
         column(
-          width = 12,
-          h2("Start picking majors or just go ahead and input courses"),
-          br()
-        )
-      ),
-      fluidRow(
-        column(
-          width = 12,
+          width = 6,
+          align = "center",
+          h3("Choose Majors"),
           actionButton(
             "go_to_majors",
             "Majors", 
             width = "200px", 
             style="color: #fff; background-color: #07b710; border-color: #07b710"
-          ),
+          )
+        ),
+        column(
+          width = 6,
+          align = "center",
+          h3("or Pick Courses"),
           actionButton(
             "go_to_courses", 
             "Courses", 
@@ -36,24 +37,39 @@ tabItem(
         )
       ),
       br(),
+      br(),
+      br(),
       fluidRow(
         column(
-          width = 4,
+          width = 6,
+          align = "center",
           h3("Courses @ Brown"),
           br(),
-          img(
-            src = "images/brown_logo.png"
+          a(
+            href = "https://cab.brown.edu",
+            img(
+              src = "images/brown_logo.png"
+            ),
+            target = "_blank"
           )
         ),
         column(
-          width = 4,
+          width = 6,
+          align = "center",
           h3("The Critical Review"),
           br(),
-          img(
-            src = "images/critical_review.jpg"
+          a(
+            href="https://thecriticalreview.org",
+            img(
+              src = "images/critical_review.jpg",
+              style = "height: 220px; width: 220px"
+            ),
+            target = "_blank"
           )
         )
-      )
+      ),
+      br(),
+      br()
     )
   )
 )
