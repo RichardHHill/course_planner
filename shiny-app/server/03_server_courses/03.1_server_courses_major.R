@@ -47,10 +47,7 @@ output$courses_table <- renderDT({
     rownames = FALSE,
     options = list(
       dom = "t",
-      pageLength = 25,
-      columnDefs = list(
-        className = "dt-center", targets = 2:3
-      )
+      pageLength = 25
     )
   )
 })
