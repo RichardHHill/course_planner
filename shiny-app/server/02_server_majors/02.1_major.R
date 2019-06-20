@@ -1,23 +1,29 @@
+#turn the display name to the referenced data frame
+major_convertor_1 <- reactive({
+  index <- match(input$pick_major_1, majors_table$display)
+  majors_list[[majors_table$major[[index]]]]
+})
+
 #stores tags of generated ui
-courses_for_major_1 <- reactiveValues()
+courses_for_major_1 <- reactiveVal()
 
 #adds ui for each requirement of the major
 observeEvent(input$get_requirements_1, {
-  disable(id = "pick_major")
+  disable(id = "pick_major_1")
   disable(id = "get_requirements_1")
 
-  major = major_convertor()
+  major = major_convertor_1()
   req_count = 0
   count = 1
-  tags_to_remove = c()
+  tags_to_remove = vector(mode = "character", length = length(major))
 
   insertUI(
     selector = "#get_requirements_1",
     where = "afterEnd",
     tags$div(
-      id = "req_0",
+      id = "req_1_0",
       actionButton(
-        "deselect_major",
+        "deselect_major_1",
         "Deselect Major",
         style="color: #fff; background-color: #aa3636; border-color: #aa3636"
       ),
@@ -30,15 +36,15 @@ observeEvent(input$get_requirements_1, {
       textOutput("major_1_is_complete")
     )
   )
-
+    
   for (i in seq_along(major)) {
     name = major[[length(major) - i + 1]][[1]]
-    number = as.numeric(major[[length(major) - i + 1]][[2]])  #had to do gymnastics because the ui was appearing
-    courses = major[[length(major) - i + 1]][-c(1,2)]  #in the reverse order
-    tag = paste0("req_", length(major) - count + 1)
-    tags_to_remove = c(tags_to_remove, tag)
-    courses_for_major_1[[letters[[i]]]] <- tag
-
+    number = as.numeric(major[[length(major) - i + 1]][[2]])  #had to do gymnastics because the ui
+    courses = major[[length(major) - i + 1]][-c(1,2)]  #was appearing in the reverse order
+    tag = paste0("req_1_", length(major) - count + 1)
+    tags_to_remove[[i]] <- tag
+    courses_for_major_1(c(courses_for_major_1(), tag))
+    
     if (number == 1) {
       insertUI(
         selector = "#get_requirements_1",
@@ -78,14 +84,14 @@ observeEvent(input$get_requirements_1, {
     count = count + 1
   }
 
-  observeEvent(input$deselect_major, {
-    removeUI(selector = "#req_0")
+  observeEvent(input$deselect_major_1, {
+    removeUI(selector = "#req_1_0")
 
     for (i in seq_along(tags_to_remove)) {
       removeUI(selector = paste0("#", tags_to_remove[[i]]))
     }
 
-    enable(id = "pick_major")
+    enable(id = "pick_major_1")
     enable(id = "get_requirements_1")
     hide("major_1_output")
   })
@@ -93,7 +99,7 @@ observeEvent(input$get_requirements_1, {
 
 
 output$major_1_is_complete <- renderText({
-  if (length(course_vector()) == sum(as.numeric(major_convertor()[2,]))) {
+  if (length(course_vector()) == sum(as.numeric(major_convertor_1()[2,]))) {
     enable(id = "major_1_to_courses")
     text <- ""
   } else {

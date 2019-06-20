@@ -1,12 +1,12 @@
 output$major_name <- renderText({
-  input$pick_major
+  input$pick_major_1
 })
 
 course_vector <- reactive({
-  courses = c()
-  for (i in seq_along(major_convertor())) {
-    letter <- letters[[i]]
-    courses = c(input[[courses_for_major_1[[letter]]]], courses)
+  courses <- c()
+  courses_1 <- courses_for_major_1()
+  for (i in seq_along(major_convertor_1())) {
+    courses <- c(input[[courses_1[[i]]]], courses)
   }
   courses
 })

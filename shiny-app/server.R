@@ -1,7 +1,6 @@
 server <- function(input, output, session) {
   source("server/01_server_dashboard.R", local = TRUE)$value
   
-  source("server/02_server_majors/02.0_server.R", local = TRUE)$value
   source("server/02_server_majors/02.1_major.R", local = TRUE)$value
   source("server/02_server_majors/02.2_major.R", local = TRUE)$value
   
