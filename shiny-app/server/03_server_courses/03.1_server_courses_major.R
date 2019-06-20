@@ -21,6 +21,13 @@ courses_table_prep <- reactive({
   selected_courses <- course_vector()
   course_names <- vector(mode = "character", length = length(selected_courses))
   in_schedule <- selected_courses %in% schedule_list()
+  in_schedule <- lapply(in_schedule, function(x) {
+    if (isTRUE(x)) {
+      as.character(icon("check-circle"))
+    } else {
+      as.character(icon("circle"))
+    }
+  })
   
   for (i in seq_along(selected_courses)) {
     course_names[[i]] <- selected_courses[[i]]
@@ -40,7 +47,10 @@ output$courses_table <- renderDT({
     rownames = FALSE,
     options = list(
       dom = "t",
-      pageLength = 25
+      pageLength = 25,
+      columnDefs = list(
+        className = "dt-center", targets = 2:3
+      )
     )
   )
 })
