@@ -6,10 +6,7 @@ tabItem(
       pickerInput(
         "pick_major_1",
         "Choose a Major",
-        choices = c(
-          "Math AB",
-          "Econ AB"
-        )
+        choices = display_majors
       ),
       br(),
       actionButton(
@@ -22,10 +19,7 @@ tabItem(
       pickerInput(
         "pick_major_2",
         "Choose a Second Major",
-        choices = c(
-          "Math AB",
-          "Econ AB"
-        )
+        choices = display_majors
       ),
       br(),
       actionButton(
