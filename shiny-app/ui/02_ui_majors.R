@@ -6,7 +6,7 @@ tabItem(
       pickerInput(
         "pick_major_1",
         "Choose a Major",
-        choices = display_majors
+        choices = majors_table$display
       ),
       br(),
       actionButton(
@@ -19,7 +19,7 @@ tabItem(
       pickerInput(
         "pick_major_2",
         "Choose a Second Major",
-        choices = display_majors
+        choices = majors_table$display
       ),
       br(),
       actionButton(
