@@ -26,12 +26,6 @@ majors_list <- list(
   "apma_ab" = apma_ab
 )
 
-display_majors <- c(
-  "Math AB",
-  "Econ AB",
-  "Apma AB"
-)
-
 department_list <- list(
   "MATH" = math_courses,
   "ECON" = econ_courses,
