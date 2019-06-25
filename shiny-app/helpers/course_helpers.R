@@ -8,7 +8,7 @@
   #' 
   #' @examples
   #' 
-  code_to_name <- function(code) {
+  course_code_to_name <- function(code) {
     department <- substr(code, 1, 4)
     
     department_table <- department_list[[department]]
