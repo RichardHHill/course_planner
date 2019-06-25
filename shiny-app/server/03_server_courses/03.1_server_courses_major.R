@@ -42,9 +42,9 @@ major_1_courses_table_prep <- reactive({
     }
   })
   
-  for (i in seq_along(selected_courses)) {
-    course_names[[i]] <- selected_courses[[i]]
-  } 
+
+  course_names <- lapply(selected_courses, helpers$course_code_to_name)
+  
   table <- tibble(
     "Course Code" = selected_courses,
     "Course Name" = course_names,

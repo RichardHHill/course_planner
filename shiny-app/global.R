@@ -36,9 +36,4 @@ department_list <- list(
   "CSCI" = csci_courses
 )
 
-course_code_to_name <- function(course_code) {
- department <- substr(course_code, 1, 4)
- department_table <- department_list[[department]]
- index <- match(course_code, department_table$course_code)
- course_name <- department_table$course_name[[index]]
-}
+helpers <- source("helpers/course_helpers.R", local = TRUE)$value
