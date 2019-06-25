@@ -101,9 +101,11 @@ observeEvent(input$get_requirements_1, {
 output$major_1_is_complete <- renderText({
   if (length(major_1_course_vector()) == sum(as.numeric(major_convertor_1()[2,]))) {
     enable(id = "major_1_to_courses")
+    show("major_1_output")
     text <- ""
   } else {
     disable(id = "major_1_to_courses")
+    hide("major_1_output")
     text <- "Input more courses"
   }
   text
@@ -112,6 +114,5 @@ output$major_1_is_complete <- renderText({
 
 #go to courses after picking major
 observeEvent(input$major_1_to_courses, {
-  show("major_1_output")
   updateTabsetPanel(session, "sidebar", selected = "select_courses")
 })
