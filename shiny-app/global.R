@@ -18,12 +18,14 @@ csci_courses <- readRDS("data/csci.RDS")
 math_ab <- readRDS("data/math_ab.RDS")
 econ_ab <- readRDS("data/econ_ab.RDS")
 apma_ab <- readRDS("data/apma_ab.RDS")
+mathcs_scb <- readRDS("data/mathcs_scb.RDS")
 
 #convert string to data frame
 majors_list <- list(
   "math_ab" = math_ab,
   "econ_ab" = econ_ab,
-  "apma_ab" = apma_ab
+  "apma_ab" = apma_ab,
+  "mathcs_scb" = mathcs_scb
 )
 
 department_list <- list(

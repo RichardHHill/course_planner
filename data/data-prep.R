@@ -7,12 +7,14 @@ majors_table <- tibble(
   "major" = c(
     "math_ab",
     "econ_ab",
-    "apma_ab"
+    "apma_ab",
+    "mathcs_scb"
   ),
   "display" = c(
     "Math AB",
     "Econ AB",
-    "Apma AB"
+    "Apma AB",
+    "Math-CS ScB"
   )
 )
 
@@ -93,3 +95,13 @@ apma_ab <- read.xlsx(
 )
 
 saveRDS(apma_ab, "shiny-app/data/apma_ab.RDS")
+
+mathcs_scb <- read.xlsx(
+  file_path,
+  sheet = 2,
+  rows = 3:35,
+  cols = 22:29,
+  colNames = FALSE
+)
+
+saveRDS(mathcs_scb, "shiny-app/data/mathcs_scb.RDS")
