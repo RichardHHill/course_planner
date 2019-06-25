@@ -82,9 +82,19 @@ tabItem(
     fluidRow(
       box(
         width = 4,
-        title = textOutput("major_name"),
-        DTOutput("courses_table")
+        title = textOutput("major_1_name"),
+        DTOutput("major_1_courses_table")
       )
     )
-  ) %>% hidden()
+  ) %>% hidden(),
+  div(
+    id = "major_2_output",
+    fluidRow(
+      box(
+        width = 4,
+        title = textOutput("major_2_name"),
+        DTOutput("major_2_courses_table")
+      )
+    )
+  )
 )

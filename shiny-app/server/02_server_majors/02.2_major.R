@@ -99,7 +99,7 @@ observeEvent(input$get_requirements_2, {
 
 
 output$major_2_is_complete <- renderText({
-  if (length(course_vector()) == sum(as.numeric(major_convertor_2()[2,]))) {
+  if (length(major_2_course_vector()) == sum(as.numeric(major_convertor_2()[2,]))) {
     enable(id = "major_2_to_courses")
     text <- ""
   } else {
