@@ -119,14 +119,22 @@ observeEvent(input$submit_course_custom, {
 
 semesters <- reactiveValues()
 
-semester1_out <- reactive({
+semester1_out <- reactiveVal(NULL)
+
+observe({
   req(semesters$semester1)
   out <- semesters$semester1
-  
-  tibble(
+  id <- seq_along(length(out))
+  buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', seq_along(out), ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
+
+  table <- tibble(
+    "ID" = id,
+    "Remove" = buttons,
     "Code" = substr(out, 1, 9),
     "Course" = substr(out, 10, nchar(out))
   )
+  
+  semester1_out(table)
 })
 
 #to get major table to render without courses in every semester
@@ -134,13 +142,16 @@ semester1_to_list <- reactiveVal(NULL)
 observe(semester1_to_list(semester1_out()$Code))
 
 output$semester1_text <- renderDT({
-  out <- semester1_out()
+  out <- semester1_out()[, 2:4]
   datatable(
     out,
     rownames = FALSE,
     options = list(
       dom = "t"
-    )
+    ),
+    escape = -1,
+    selection = "none",
+    extensions = c("Buttons")
   )
 })
 
