@@ -103,6 +103,19 @@ tabItem(
           )
         )
       ) %>% hidden()
+    ),
+    column(
+      4,
+      div(
+        id = "major_3_output",
+        fluidRow(
+          box(
+            width = 12,
+            title = textOutput("major_3_name"),
+            DTOutput("major_3_courses_table")
+          )
+        )
+      ) %>% hidden()
     )
   )
 )

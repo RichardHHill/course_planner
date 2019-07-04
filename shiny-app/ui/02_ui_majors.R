@@ -37,6 +37,20 @@ tabItem(
         "get_requirements_2",
         "Get Requirements"
       )
+    ),
+    box(
+      width = 4,
+      pickerInput(
+        "pick_major_3",
+        "Choose a Second Major",
+        choices = majors_table$display,
+        selected = majors_table$display[[3]]
+      ),
+      br(),
+      actionButton(
+        "get_requirements_3",
+        "Get Requirements"
+      )
     )
   )
 )

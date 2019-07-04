@@ -150,8 +150,7 @@ output$semester1_text <- renderDT({
       dom = "t"
     ),
     escape = -1,
-    selection = "none",
-    extensions = c("Buttons")
+    selection = "none"
   )
 })
 
