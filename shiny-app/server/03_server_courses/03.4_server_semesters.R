@@ -4,11 +4,12 @@ semesters <- reactiveValues()
 
 semester1_out <- reactiveVal(NULL)
 
-observe({
+semester1_out <- reactive({
   req(semesters$semester1)
   out <- semesters$semester1
-  id <- seq_along(length(out))
-  buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', seq_along(out), ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
+  id <- seq_along(out)
+  
+  buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', id, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
   
   table <- tibble(
     "ID" = id,
@@ -17,7 +18,7 @@ observe({
     "Course" = substr(out, 10, nchar(out))
   )
   
-  semester1_out(table)
+  #semester1_out(table)
 })
 
 #to get major table to render without courses in every semester
@@ -58,7 +59,9 @@ output$semester2_text <- renderDT({
     rownames = FALSE,
     options = list(
       dom = "t"
-    )
+    ),
+    escape = -1,
+    selection = "none"
   )
 })
 

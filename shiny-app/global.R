@@ -5,6 +5,14 @@ library(shinyjs)
 library(dplyr)
 library(DT)
 
+# get bootstrap dependency
+bsDep <- shiny::bootstrapLib()
+bsDep$name <- "bootstrap2"
+
+# get pickerInput dependency
+pkDep <- htmltools::findDependencies(shinyWidgets:::attachShinyWidgetsDep(tags$div(), widget = "picker"))
+pkDep[[2]]$name <- "picker2"
+
 options(scipen = 999)
 
 majors_table <- readRDS("data/majors.RDS")

@@ -25,6 +25,13 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+  # Suppress dependencies
+  htmltools::suppressDependencies("selectPicker"),
+  htmltools::suppressDependencies("bootstrap"),
+  
+  # reinject them
+  bsDep, pkDep, 
+  
   tabItems(
     source("ui/01_ui_dashboard.R", local = TRUE)$value,
     source("ui/02_ui_majors.R", local = TRUE)$value,
