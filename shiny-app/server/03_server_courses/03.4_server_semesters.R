@@ -4,7 +4,7 @@ semesters <- reactiveValues()
 
 semester1_out <- reactiveVal(NULL)
 
-semester1_out <- reactive({
+observe({
   req(semesters$semester1)
   out <- semesters$semester1
   id <- seq_along(out)
@@ -18,7 +18,7 @@ semester1_out <- reactive({
     "Course" = substr(out, 10, nchar(out))
   )
   
-  #semester1_out(table)
+  semester1_out(table)
 })
 
 #to get major table to render without courses in every semester

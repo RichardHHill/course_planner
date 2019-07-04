@@ -25,6 +25,11 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+  shiny::tags$head(
+    #tags$link(rel = "shortcut icon", href = "logo.png"),
+    tags$script(src = "custom.js")
+    #tags$link(rel = "stylesheet", href = "styles.css")
+  ),
   # Suppress dependencies
   htmltools::suppressDependencies("selectPicker"),
   htmltools::suppressDependencies("bootstrap"),
