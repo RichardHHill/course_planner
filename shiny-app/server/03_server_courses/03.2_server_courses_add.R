@@ -17,9 +17,7 @@ observeEvent(input$add_course_by_department, {
           pickerInput(
             "department_to_add",
             "Department",
-            choices = c(
-              "MATH", "ECON", "APMA", "PHYS", "CSCI"
-            )
+            choices = names(department_list)
           )
         ),
         column(

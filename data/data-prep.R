@@ -66,6 +66,15 @@ csci_table <- read.xlsx(
 
 saveRDS(csci_table, "shiny-app/data/csci.RDS")
 
+fren_table <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:28,
+  cols = 16:17
+)
+
+saveRDS(fren_table, "shiny-app/data/fren.RDS")
+
 math_ab <- read.xlsx(
   file_path,
   sheet = 2,
