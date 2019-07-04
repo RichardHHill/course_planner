@@ -50,7 +50,7 @@ tabItem(
       ),
       fluidRow(
         column(
-          width = 6,
+          width = 4,
           align = "center",
           h3("Courses @ Brown"),
           br(),
@@ -63,7 +63,7 @@ tabItem(
           )
         ),
         column(
-          width = 6,
+          width = 4,
           align = "center",
           h3("The Critical Review"),
           br(),
@@ -71,6 +71,20 @@ tabItem(
             href="https://thecriticalreview.org",
             img(
               src = "images/critical_review.jpg",
+              style = "height: 220px; width: 220px"
+            ),
+            target = "_blank"
+          )
+        ),
+        column(
+          width = 4,
+          align = "center",
+          h3("Concentrations"),
+          br(),
+          a(
+            href="https://bulletin.brown.edu/the-college/concentrations/",
+            img(
+              src = "images/brown_logo.png",
               style = "height: 220px; width: 220px"
             ),
             target = "_blank"

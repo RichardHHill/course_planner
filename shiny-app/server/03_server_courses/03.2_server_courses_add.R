@@ -26,8 +26,8 @@ observeEvent(input$add_course_by_department, {
             "course_to_add",
             "Course",
             choices = paste(
-              department_list[["MATH"]][[1]],
-              department_list[["MATH"]][[2]]
+              department_list[[1]][[1]],
+              department_list[[1]][[2]]
             )
           )
         )
