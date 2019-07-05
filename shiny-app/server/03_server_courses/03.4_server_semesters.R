@@ -5,7 +5,6 @@ semesters <- reactiveValues()
 semester1_out <- reactiveVal(NULL)
 
 observe({
-  req(semesters$semester1)
   out <- semesters$semester1
   id <- seq_along(out)
   
@@ -26,12 +25,17 @@ semester1_to_list <- reactiveVal(NULL)
 observe(semester1_to_list(semester1_out()$Code))
 
 output$semester1_text <- renderDT({
+  #Require the list; requiring the table doesn't work
+  req(semesters$semester1)
+  
   out <- semester1_out()[, 2:4]
   datatable(
     out,
     rownames = FALSE,
+    colnames = rep("", length(out)),
     options = list(
-      dom = "t"
+      dom = "t",
+      ordering = FALSE
     ),
     escape = -1,
     selection = "none"
