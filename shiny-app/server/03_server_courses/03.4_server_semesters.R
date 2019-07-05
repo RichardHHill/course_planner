@@ -11,7 +11,6 @@ observe({
   buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', id, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
   
   table <- tibble(
-    "ID" = id,
     "Remove" = buttons,
     "Code" = substr(out, 1, 9),
     "Course" = substr(out, 10, nchar(out))
@@ -28,7 +27,7 @@ output$semester1_table <- renderDT({
   #Require the list; requiring the table doesn't work
   req(semesters$semester1)
   
-  out <- semester1_out()[, 2:4]
+  out <- semester1_out()
   datatable(
     out,
     rownames = FALSE,
