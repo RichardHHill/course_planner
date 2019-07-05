@@ -3,8 +3,22 @@ tabItem(
   fluidRow(
     box(
       width = 12,
-      actionButton("add_course_by_department", "Add Course by Department"),
-      actionButton("add_course_custom", "Add Custom Course"),
+      fluidRow(
+        column(
+          6,
+          actionButton("add_course_by_department", "Add Course by Department"),
+          actionButton("add_course_custom", "Add Custom Course")
+        ),
+        column(
+          6,
+          align = "right",
+          actionButton(
+            "delete_courses",
+            "Delete Courses",
+            style = "background-color: #dd4b39; border-color: #d73925; color: #fff"
+          )
+        )
+      ),
       br(),
       br(),
       fluidRow(
