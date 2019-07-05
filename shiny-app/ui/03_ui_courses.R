@@ -13,7 +13,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 1",
-            DTOutput("semester1_text")
+            DTOutput("semester1_table")
           )
         ),
         column(
@@ -21,7 +21,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 3",
-            DTOutput("semester3_text")
+            DTOutput("semester3_table")
           )
         ),
         column(
@@ -29,7 +29,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 5",
-            DTOutput("semester5_text")
+            DTOutput("semester5_table")
           )
         ),
         column(
@@ -37,7 +37,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 7",
-            DTOutput("semester7_text")
+            DTOutput("semester7_table")
           )
         )
       ),
@@ -47,7 +47,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 2",
-            DTOutput("semester2_text")
+            DTOutput("semester2_table")
           )
         ),
         column(
@@ -55,7 +55,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 4",
-            DTOutput("semester4_text")
+            DTOutput("semester4_table")
           )
         ),
         column(
@@ -63,7 +63,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 6",
-            DTOutput("semester6_text")
+            DTOutput("semester6_table")
           )
         ),
         column(
@@ -71,7 +71,7 @@ tabItem(
           box(
             width = 12,
             title = "Semester 8",
-            DTOutput("semester8_text")
+            DTOutput("semester8_table")
           )
         )
       )

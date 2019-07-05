@@ -24,7 +24,7 @@ observe({
 semester1_to_list <- reactiveVal(NULL)
 observe(semester1_to_list(semester1_out()$Code))
 
-output$semester1_text <- renderDT({
+output$semester1_table <- renderDT({
   #Require the list; requiring the table doesn't work
   req(semesters$semester1)
   
@@ -56,7 +56,7 @@ semester2_out <- reactive({
 semester2_to_list <- reactiveVal(NULL)
 observe(semester2_to_list(semester2_out()$Code))
 
-output$semester2_text <- renderDT({
+output$semester2_table <- renderDT({
   out <- semester2_out()
   datatable(
     out,
@@ -83,7 +83,7 @@ semester3_out <- reactive({
 semester3_to_list <- reactiveVal(NULL)
 observe(semester3_to_list(semester3_out()$Code))
 
-output$semester3_text <- renderDT({
+output$semester3_table <- renderDT({
   out <- semester3_out()
   datatable(
     out,
@@ -108,7 +108,7 @@ semester4_out <- reactive({
 semester4_to_list <- reactiveVal(NULL)
 observe(semester4_to_list(semester4_out()$Code))
 
-output$semester4_text <- renderDT({
+output$semester4_table <- renderDT({
   out <- semester4_out()
   datatable(
     out,
@@ -133,7 +133,7 @@ semester5_out <- reactive({
 semester5_to_list <- reactiveVal(NULL)
 observe(semester5_to_list(semester5_out()$Code))
 
-output$semester5_text <- renderDT({
+output$semester5_table <- renderDT({
   out <- semester5_out()
   datatable(
     out,
@@ -158,7 +158,7 @@ semester6_out <- reactive({
 semester6_to_list <- reactiveVal(NULL)
 observe(semester6_to_list(semester6_out()$Code))
 
-output$semester6_text <- renderDT({
+output$semester6_table <- renderDT({
   out <- semester6_out()
   datatable(
     out,
@@ -183,7 +183,7 @@ semester7_out <- reactive({
 semester7_to_list <- reactiveVal(NULL)
 observe(semester7_to_list(semester7_out()$Code))
 
-output$semester7_text <- renderDT({
+output$semester7_table <- renderDT({
   out <- semester7_out()
   datatable(
     out,
@@ -208,7 +208,7 @@ semester8_out <- reactive({
 semester8_to_list <- reactiveVal(NULL)
 observe(semester8_to_list(semester8_out()$Code))
 
-output$semester8_text <- renderDT({
+output$semester8_table <- renderDT({
   out <- semester8_out()
   datatable(
     out,
