@@ -13,10 +13,11 @@ tabItem(
           6,
           align = "right",
           actionButton(
-            "delete_courses",
+            "enable_delete_mode",
             "Delete Courses",
             style = "background-color: #dd4b39; border-color: #d73925; color: #fff"
-          )
+          ),
+          actionButton("disable_delete_mode", "Stop Deleting") %>% hidden
         )
       ),
       br(),

@@ -5,8 +5,16 @@ semesters <- reactiveValues()
 semester1_out <- reactiveVal()
 delete_mode <- reactiveVal(FALSE)
 
-observeEvent(input$delete_courses, {
+observeEvent(input$enable_delete_mode, {
   delete_mode(TRUE)
+  hide("enable_delete_mode")
+  show("disable_delete_mode")
+})
+
+observeEvent(input$disable_delete_mode, {
+  delete_mode(FALSE)
+  hide("disable_delete_mode")
+  show("enable_delete_mode")
 })
 
 observe({
@@ -33,7 +41,6 @@ observe({
   semester1_out(table)
 })
 
-observe(print(semester1_out()))
 
 #to get major table to render without courses in every semester
 semester1_to_list <- reactiveVal(NULL)
