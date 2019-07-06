@@ -20,20 +20,9 @@ observeEvent(input$get_requirements_2, {
   insertUI(
     selector = "#get_requirements_2",
     where = "afterEnd",
-    tags$div(
-      id = "req_2_0",
-      actionButton(
-        "deselect_major_2",
-        "Deselect Major",
-        style="color: #fff; background-color: #aa3636; border-color: #aa3636"
-      ),
-      actionButton(
-        "major_2_to_courses",
-        "Go to Courses",
-        style="color: #fff; background-color: #07b710; border-color: #07b710"
-      ),
-      br(),
-      textOutput("major_2_is_complete")
+    div(
+      id = "req_2_00",
+      textOutput("major_2_note")
     )
   )
   
@@ -84,8 +73,31 @@ observeEvent(input$get_requirements_2, {
     count <- count + 1
   }
   
+  insertUI(
+    selector = "#get_requirements_2",
+    where = "afterEnd",
+    tags$div(
+      id = "req_2_0",
+      br(),
+      actionButton(
+        "deselect_major_2",
+        "Deselect Major",
+        style="color: #fff; background-color: #aa3636; border-color: #aa3636"
+      ),
+      actionButton(
+        "major_2_to_courses",
+        "Go to Courses",
+        style="color: #fff; background-color: #07b710; border-color: #07b710"
+      ),
+      br(),
+      textOutput("major_2_is_complete"),
+      br()
+    )
+  )
+  
   observeEvent(input$deselect_major_2, {
     removeUI(selector = "#req_2_0")
+    removeUI(selector = "#req_2_00")
     
     for (i in seq_along(tags_to_remove)) {
       removeUI(selector = paste0("#", tags_to_remove[[i]]))
@@ -97,6 +109,10 @@ observeEvent(input$get_requirements_2, {
   })
 })
 
+
+output$major_2_note <- renderText({
+  as.character(major_convertor_2()[1,1])
+})
 
 output$major_2_is_complete <- renderText({
   if (length(major_2_course_vector()) == sum(as.numeric(major_convertor_2()[3,]))) {
