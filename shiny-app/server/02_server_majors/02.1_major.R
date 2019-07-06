@@ -16,24 +16,13 @@ observeEvent(input$get_requirements_1, {
   req_count <- 0
   count <- 1
   tags_to_remove <- vector(mode = "character", length = length(major))
-
+  
   insertUI(
     selector = "#get_requirements_1",
     where = "afterEnd",
-    tags$div(
-      id = "req_1_0",
-      actionButton(
-        "deselect_major_1",
-        "Deselect Major",
-        style="color: #fff; background-color: #aa3636; border-color: #aa3636"
-      ),
-      actionButton(
-        "major_1_to_courses",
-        "Go to Courses",
-        style="color: #fff; background-color: #07b710; border-color: #07b710"
-      ),
-      br(),
-      textOutput("major_1_is_complete")
+    div(
+      id = "req_1_00",
+      textOutput("major_1_note")
     )
   )
     
@@ -83,9 +72,32 @@ observeEvent(input$get_requirements_1, {
     req_count <- req_count + number
     count <- count + 1
   }
+  
+  insertUI(
+    selector = "#get_requirements_1",
+    where = "afterEnd",
+    tags$div(
+      id = "req_1_0",
+      br(),
+      actionButton(
+        "deselect_major_1",
+        "Deselect Major",
+        style="color: #fff; background-color: #aa3636; border-color: #aa3636"
+      ),
+      actionButton(
+        "major_1_to_courses",
+        "Go to Courses",
+        style="color: #fff; background-color: #07b710; border-color: #07b710"
+      ),
+      br(),
+      textOutput("major_1_is_complete"),
+      br()
+    )
+  )
 
   observeEvent(input$deselect_major_1, {
     removeUI(selector = "#req_1_0")
+    removeUI(selector = "#req_1_00")
 
     for (i in seq_along(tags_to_remove)) {
       removeUI(selector = paste0("#", tags_to_remove[[i]]))
@@ -95,6 +107,10 @@ observeEvent(input$get_requirements_1, {
     enable(id = "get_requirements_1")
     hide("major_1_output")
   })
+})
+
+output$major_1_note <- renderText({
+  as.character(major_convertor_1()[1,1])
 })
 
 
