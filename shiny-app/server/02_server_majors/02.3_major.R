@@ -31,7 +31,6 @@ observeEvent(input$get_requirements_3, {
     number <- as.numeric(major[[length(major) - i + 1]][[3]])  #had to do gymnastics because the ui
     courses <- major[[length(major) - i + 1]][-c(1,2,3)]  #was appearing in the reverse order
     tag <- paste0("req_3_", length(major) - count + 1)
-    tags_to_remove[[i]] <- tag
     courses_for_major_3(c(courses_for_major_3(), tag))
     
     if (number == 1) {

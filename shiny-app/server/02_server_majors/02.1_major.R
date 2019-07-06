@@ -31,7 +31,6 @@ observeEvent(input$get_requirements_1, {
     number <- as.numeric(major[[length(major) - i + 1]][[3]])  #had to do gymnastics because the ui
     courses <- major[[length(major) - i + 1]][-c(1,2,3)]  #was appearing in the reverse order
     tag <- paste0("req_1_", length(major) - count + 1)
-    tags_to_remove[[i]] <- tag
     courses_for_major_1(c(courses_for_major_1(), tag))
     
     if (number == 1) {
@@ -94,20 +93,23 @@ observeEvent(input$get_requirements_1, {
       br()
     )
   )
-
-  observeEvent(input$deselect_major_1, {
-    removeUI(selector = "#req_1_0")
-    removeUI(selector = "#req_1_00")
-
-    for (i in seq_along(tags_to_remove)) {
-      removeUI(selector = paste0("#", tags_to_remove[[i]]))
-    }
-
-    enable(id = "pick_major_1")
-    enable(id = "get_requirements_1")
-    hide("major_1_output")
-  })
 })
+
+
+observeEvent(input$deselect_major_1, {
+  removeUI(selector = "#req_1_0")
+  removeUI(selector = "#req_1_00")
+  tags_to_remove <- courses_for_major_1()
+  
+  for (i in seq_along(tags_to_remove)) {
+    removeUI(selector = paste0("#", tags_to_remove[[i]]))
+  }
+  
+  enable(id = "pick_major_1")
+  enable(id = "get_requirements_1")
+  hide("major_1_output")
+})
+
 
 output$major_1_note <- renderText({
   as.character(major_convertor_1()[1,1])
