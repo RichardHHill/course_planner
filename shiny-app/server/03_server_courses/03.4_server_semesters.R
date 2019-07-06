@@ -1,8 +1,6 @@
 #creates 8 semester tables
 
 semesters <- reactiveValues()
-
-semester1_out <- reactiveVal()
 delete_mode <- reactiveVal(FALSE)
 
 observeEvent(input$enable_delete_mode, {
@@ -16,6 +14,12 @@ observeEvent(input$disable_delete_mode, {
   hide("disable_delete_mode")
   show("enable_delete_mode")
 })
+
+###
+# Semester 1
+###
+
+semester1_out <- reactiveVal()
 
 observe({
   out <- semesters$semester1
@@ -64,27 +68,53 @@ output$semester1_table <- renderDT({
   )
 })
 
+###
+# Semester 2
+###
 
-semester2_out <- reactive({
-  req(semesters$semester2)
+semester2_out <- reactiveVal()
+
+observe({
   out <- semesters$semester2
+  id <- seq_along(out)
   
-  tibble(
+  table <- tibble(
     "Code" = substr(out, 1, 9),
     "Course" = substr(out, 10, nchar(out))
   )
+  
+  if (delete_mode() & length(out) > 0) {
+    buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', id, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
+    
+    buttons <- tibble(
+      "Remove" = buttons
+    )
+    table <- bind_cols(
+      buttons,
+      table
+    )
+  }
+  
+  semester2_out(table)
 })
 
+
+#to get major table to render without courses in every semester
 semester2_to_list <- reactiveVal(NULL)
 observe(semester2_to_list(semester2_out()$Code))
 
 output$semester2_table <- renderDT({
+  #Require the list of courses 
+  req(semesters$semester2, nrow(semester2_out()))
+  
   out <- semester2_out()
   datatable(
     out,
     rownames = FALSE,
+    colnames = rep("", length(out)),
     options = list(
-      dom = "t"
+      dom = "t",
+      ordering = FALSE
     ),
     escape = -1,
     selection = "none"
