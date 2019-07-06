@@ -26,8 +26,8 @@ observe({
   id <- seq_along(out)
   
   table <- tibble(
-    "Code" = substr(out, 1, 9),
-    "Course" = substr(out, 10, nchar(out))
+    "Code" = substr(out, 1, 10),
+    "Course" = substr(out, 11, nchar(out))
   )
   
   if (delete_mode() & length(out) > 0) {
@@ -79,8 +79,8 @@ observe({
   id <- seq_along(out)
   
   table <- tibble(
-    "Code" = substr(out, 1, 9),
-    "Course" = substr(out, 10, nchar(out))
+    "Code" = substr(out, 1, 10),
+    "Course" = substr(out, 11, nchar(out))
   )
   
   if (delete_mode() & length(out) > 0) {
@@ -127,8 +127,8 @@ semester3_out <- reactive({
   out <- semesters$semester3
   
   tibble(
-    "Code" = substr(out, 1, 9),
-    "Course" = substr(out, 10, nchar(out))
+    "Code" = substr(out, 1, 10),
+    "Course" = substr(out, 11, nchar(out))
   )
 })
 

@@ -102,10 +102,10 @@ observeEvent(input$add_course_custom, {
 observeEvent(input$submit_course_custom, {
   code <- input$custom_course_to_add_code
 
-  if (nchar(code) > 9) {
-    code <- substr(code,1,9)
-  } else if (nchar(code) < 9) {
-    code <- paste0(code, strrep(" ", 9 - nchar(code)))
+  if (nchar(code) > 10) {
+    code <- substr(code,1,10)
+  } else if (nchar(code) < 10) {
+    code <- paste0(code, strrep(" ", 10 - nchar(code)))
   }
   
   removeModal()
