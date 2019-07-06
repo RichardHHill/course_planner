@@ -108,6 +108,7 @@ observeEvent(input$deselect_major_2, {
   enable(id = "pick_major_2")
   enable(id = "get_requirements_2")
   hide("major_2_output")
+  courses_for_major_2(NULL)
 })
 
 
@@ -115,7 +116,11 @@ output$major_2_note <- renderText({
   as.character(major_convertor_2()[1,1])
 })
 
-output$major_2_is_complete <- renderText({
+
+major_2_complete_prep <- reactiveVal()
+
+observe({
+  req(major_2_course_vector(), major_convertor_2())
   if (length(major_2_course_vector()) == sum(as.numeric(major_convertor_2()[3,]))) {
     enable(id = "major_2_to_courses")
     show("major_2_output")
@@ -125,8 +130,15 @@ output$major_2_is_complete <- renderText({
     hide("major_2_output")
     text <- "Input more courses"
   }
-  text
+  
+  major_2_complete_prep(text)
 })
+
+
+output$major_2_is_complete <- renderText({
+  major_2_complete_prep()
+})
+
 
 
 #go to courses after picking major

@@ -11,6 +11,8 @@ output$major_3_name <- renderText({
 })
 
 major_1_course_vector <- reactive({
+  req(courses_for_major_1())
+  
   courses <- c()
   courses_1 <- courses_for_major_1()
   for (i in seq_along(major_convertor_1())) {
@@ -20,6 +22,8 @@ major_1_course_vector <- reactive({
 })
 
 major_2_course_vector <- reactive({
+  req(courses_for_major_2())
+  
   courses <- c()
   courses_2 <- courses_for_major_2()
   for (i in seq_along(major_convertor_2())) {
@@ -29,6 +33,8 @@ major_2_course_vector <- reactive({
 })
 
 major_3_course_vector <- reactive({
+  req(courses_for_major_3())
+  
   courses <- c()
   courses_3 <- courses_for_major_3()
   for (i in seq_along(major_convertor_3())) {
