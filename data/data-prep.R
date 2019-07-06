@@ -78,7 +78,7 @@ saveRDS(fren_table, "shiny-app/data/fren.RDS")
 math_ab <- read.xlsx(
   file_path,
   sheet = 2,
-  rows = 3:21,
+  rows = 2:21,
   cols = 1:4,
   colNames = FALSE
 )
@@ -88,7 +88,7 @@ saveRDS(math_ab, "shiny-app/data/math_ab.RDS")
 econ_ab <- read.xlsx(
   file_path,
   sheet = 2,
-  rows = 27:56,
+  rows = 26:56,
   cols = 1:7,
   colNames = FALSE
 )
@@ -98,7 +98,7 @@ saveRDS(econ_ab, "shiny-app/data/econ_ab.RDS")
 apma_ab <- read.xlsx(
   file_path,
   sheet = 2,
-  rows = 3:19,
+  rows = 2:19,
   cols = 10:16,
   colNames = FALSE
 )
@@ -108,7 +108,7 @@ saveRDS(apma_ab, "shiny-app/data/apma_ab.RDS")
 mathcs_scb <- read.xlsx(
   file_path,
   sheet = 2,
-  rows = 3:35,
+  rows = 2:35,
   cols = 22:29,
   colNames = FALSE
 )
