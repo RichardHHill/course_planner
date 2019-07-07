@@ -109,7 +109,7 @@ mathcs_scb <- read.xlsx(
   file_path,
   sheet = 2,
   rows = 2:35,
-  cols = 22:29,
+  cols = 22:30,
   colNames = FALSE
 )
 
