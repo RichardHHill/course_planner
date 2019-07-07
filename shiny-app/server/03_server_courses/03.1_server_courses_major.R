@@ -53,9 +53,15 @@ major_1_courses_table_prep <- reactive({
   selected_courses <- major_1_course_vector()
   course_names <- unlist(lapply(selected_courses, helpers$course_code_to_name))
   
-  course_names[selected_courses == "Flex Course"] <- '<input type="text" value="" size="30" placeholder = "Principles of Economics"/>'
-  selected_courses[selected_courses == "Flex Course"] <- '<input type="text" value="" size="10" placeholder = "ECON 0110"/>'
-  
+  for (i in seq_along(selected_courses)) {
+    if (selected_courses[[i]] == "Flex Course") {
+      course_names[[i]] <- paste0('<input type="text" value="" size="30" placeholder = "Principles of Economics" id =', i, '/>')
+      selected_courses[[i]] <- paste0('<input type="text" value="" size="10" placeholder = "ECON 0110" id =', i, '/>')
+    }
+  }
+  #course_names[selected_courses == "Flex Course"] <- paste0('<input type="text" value="" size="30" placeholder = "Principles of Economics" id =', 1, '/>')
+  #selected_courses[selected_courses == "Flex Course"] <- '<input type="text" value="" size="10" placeholder = "ECON 0110"/>'
+  course_names[[15]] <- ""
   in_schedule <- selected_courses %in% schedule_list()
   in_schedule <- lapply(in_schedule, function(x) {
     if (isTRUE(x)) {
@@ -64,7 +70,7 @@ major_1_courses_table_prep <- reactive({
       as.character(icon("circle"))
     }
   })
-  
+  print(course_names)
   table <- tibble(
     "Course Code" = selected_courses,
     "Course Name" = course_names,

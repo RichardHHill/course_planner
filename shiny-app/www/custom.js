@@ -9,9 +9,6 @@ $(document).on("click", "#semester2_table .deselect_btn", function() {
 });
 
 
-
 $(document).on("click", "#set_inputs_1", function() {
-  console.log("Hi");
-  console.log($('#major_1_courses_table > div > table').DataTable().column().data());
-  //.cell(12,1).nodes().to$().find('input').val());
+  console.log($('#major_1_courses_table > div > table').DataTable().cell(12,1).nodes().to$().find('input').val());
 })
