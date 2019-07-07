@@ -51,7 +51,11 @@ schedule_list <- reactive({
 
 major_1_courses_table_prep <- reactive({
   selected_courses <- major_1_course_vector()
-  course_names <- vector(mode = "character", length = length(selected_courses))
+  course_names <- unlist(lapply(selected_courses, helpers$course_code_to_name))
+  
+  course_names[selected_courses == "Flex Course"] <- '<input type="text" value="" size="30" placeholder = "Principles of Economics"/>'
+  selected_courses[selected_courses == "Flex Course"] <- '<input type="text" value="" size="10" placeholder = "ECON 0110"/>'
+  
   in_schedule <- selected_courses %in% schedule_list()
   in_schedule <- lapply(in_schedule, function(x) {
     if (isTRUE(x)) {
@@ -60,9 +64,6 @@ major_1_courses_table_prep <- reactive({
       as.character(icon("circle"))
     }
   })
-  
-
-  course_names <- lapply(selected_courses, helpers$course_code_to_name)
   
   table <- tibble(
     "Course Code" = selected_courses,
@@ -118,6 +119,7 @@ output$major_1_courses_table <- renderDT({
   datatable(
     table,
     rownames = FALSE,
+    escape = FALSE,
     options = list(
       dom = "t",
       pageLength = 25
