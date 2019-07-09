@@ -19,7 +19,8 @@ observeEvent(input$disable_delete_mode, {
 # Semester 1
 ###
 
-callModule(semester_module, "1", delete_mode = delete_mode)
+semester1_courses <- reactiveVal()
+  callModule(semester_module, "1", delete_mode = delete_mode, courses = semester1_courses)
 
 ###
 # Semester 2

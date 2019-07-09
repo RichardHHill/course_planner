@@ -59,9 +59,10 @@ observeEvent(input$add_course_by_department, {
 observeEvent(input$submit_course_department, {
   removeModal()
   req(input$course_to_add)
-  course = input$course_to_add
-  string = input$pick_semester
-  semesters[[string]] <- c(semesters[[string]], course)
+  course <- input$course_to_add
+  semester <- input$pick_semester
+  
+  if (semester == "semester1") semester1_courses(c(semester1_courses(), course))
 })
 
 observeEvent(input$add_course_custom, {
@@ -109,8 +110,11 @@ observeEvent(input$submit_course_custom, {
   }
   
   removeModal()
-  course = paste(code, input$custom_course_to_add_name)
-  string = input$pick_semester_custom
-  semesters[[string]] <- c(semesters[[string]], course)
+  course <- paste(code, input$custom_course_to_add_name)
+  semester <- input$pick_semester_custom
+  
+  if (semester == "semester1") semester1_courses(c(semester1_courses(), course))
+  
+  
 })
 

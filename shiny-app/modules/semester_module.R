@@ -7,14 +7,14 @@ semester_module_ui <- function(id) {
     width = 3,
     box(
       width = 12,
-      title = "Semester",
+      title = paste0("Semester ", id),
       DTOutput(ns("semester_table"))
     )
   )
 }
 
-semester_module <- function(input, output, session, delete_mode) {
-  courses <- reactiveVal()
+semester_module <- function(input, output, session, delete_mode, courses) {
+  #courses <- reactiveVal()
   semester_out <- reactiveVal()
   
   observe({
@@ -48,7 +48,7 @@ semester_module <- function(input, output, session, delete_mode) {
   
   output$semester_table <- renderDT({
     #Require the list of courses 
-    req(courses, nrow(semester_out()))
+    req(courses(), nrow(semester_out()))
     
     out <- semester_out()
     datatable(
@@ -62,5 +62,7 @@ semester_module <- function(input, output, session, delete_mode) {
       escape = -1,
       selection = "none"
     )
+    
+    #return(courses)
   })
 }
