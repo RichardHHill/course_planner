@@ -24,64 +24,15 @@ tabItem(
       br(),
       fluidRow(
         semester_module_ui(id = "1"),
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 3",
-            DTOutput("semester3_table")
-          )
-        ),
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 5",
-            DTOutput("semester5_table")
-          )
-        ),
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 7",
-            DTOutput("semester7_table")
-          )
-        )
+        semester_module_ui(id = "3"),
+        semester_module_ui(id = "5"),
+        semester_module_ui(id = "7")
       ),
       fluidRow(
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 2",
-            DTOutput("semester2_table")
-          )
-        ),
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 4",
-            DTOutput("semester4_table")
-          )
-        ),
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 6",
-            DTOutput("semester6_table")
-          )
-        ),
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 8",
-            DTOutput("semester8_table")
-          )
-        )
+        semester_module_ui(id = "2"),
+        semester_module_ui(id = "4"),
+        semester_module_ui(id = "6"),
+        semester_module_ui(id = "8")
       )
     )
   ),
