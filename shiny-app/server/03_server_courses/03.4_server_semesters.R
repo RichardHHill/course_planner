@@ -19,54 +19,7 @@ observeEvent(input$disable_delete_mode, {
 # Semester 1
 ###
 
-semester1_out <- reactiveVal()
-
-observe({
-  out <- semesters$semester1
-  id <- seq_along(out)
-  
-  table <- tibble(
-    "Code" = substr(out, 1, 10),
-    "Course" = substr(out, 11, nchar(out))
-  )
-  
-  if (delete_mode() & length(out) > 0) {
-    buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', id, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
-    
-    buttons <- tibble(
-      "Remove" = buttons
-    )
-    table <- bind_cols(
-      buttons,
-      table
-    )
-  }
-  
-  semester1_out(table)
-})
-
-
-#to get major table to render without courses in every semester
-semester1_to_list <- reactiveVal(NULL)
-observe(semester1_to_list(semester1_out()$Code))
-
-output$semester1_table <- renderDT({
-  #Require the list of courses 
-  req(semesters$semester1, nrow(semester1_out()))
-
-  out <- semester1_out()
-  datatable(
-    out,
-    rownames = FALSE,
-    colnames = rep("", length(out)),
-    options = list(
-      dom = "t",
-      ordering = FALSE
-    ),
-    escape = -1,
-    selection = "none"
-  )
-})
+callModule(semester_module, "1", delete_mode = delete_mode)
 
 ###
 # Semester 2

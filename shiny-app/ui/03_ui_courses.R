@@ -23,14 +23,7 @@ tabItem(
       br(),
       br(),
       fluidRow(
-        column(
-          width = 3,
-          box(
-            width = 12,
-            title = "Semester 1",
-            DTOutput("semester1_table")
-          )
-        ),
+        semester_module_ui(id = "1"),
         column(
           width = 3,
           box(

@@ -47,3 +47,5 @@ department_list <- list(
 )
 
 helpers <- source("helpers/course_helpers.R", local = TRUE)$value
+
+source("modules/semester_module.R")

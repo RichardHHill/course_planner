@@ -61,7 +61,7 @@ major_1_courses_table_prep <- reactive({
   }
   #course_names[selected_courses == "Flex Course"] <- paste0('<input type="text" value="" size="30" placeholder = "Principles of Economics" id =', 1, '/>')
   #selected_courses[selected_courses == "Flex Course"] <- '<input type="text" value="" size="10" placeholder = "ECON 0110"/>'
-  course_names[[15]] <- ""
+  #course_names[[15]] <- ""
   in_schedule <- selected_courses %in% schedule_list()
   in_schedule <- lapply(in_schedule, function(x) {
     if (isTRUE(x)) {
