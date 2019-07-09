@@ -27,7 +27,8 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   shiny::tags$head(
     #tags$link(rel = "shortcut icon", href = "logo.png"),
-    tags$script(src = "custom.js")
+    tags$script(src = "custom.js"),
+    tags$script(src = "myModuleJS.js")
     #tags$link(rel = "stylesheet", href = "styles.css")
   ),
   # Suppress dependencies

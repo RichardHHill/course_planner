@@ -13,8 +13,10 @@ semester_module_ui <- function(id) {
   )
 }
 
-semester_module <- function(input, output, session, delete_mode, courses) {
-  #courses <- reactiveVal()
+semester_module <- function(input, output, session, delete_mode, courses, semester_remove) {
+  ns <- session$ns
+  runjs(paste0("myModuleJS('", ns(""), "');"))
+  
   semester_out <- reactiveVal()
   
   observe({
@@ -62,7 +64,12 @@ semester_module <- function(input, output, session, delete_mode, courses) {
       escape = -1,
       selection = "none"
     )
+  })
+  
+  observeEvent(semester_remove(), {
+    row <- as.numeric(semester_remove())
     
-    #return(courses)
+    courses(courses()[-row])
+    semester_out(semester_out()[-row,])
   })
 }
