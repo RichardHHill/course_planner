@@ -15,43 +15,22 @@ observeEvent(input$disable_delete_mode, {
   show("enable_delete_mode")
 })
 
-# semesters <- reactiveValues()
-# 
-# semester_courses <- lapply(1:8, function(x) {
-#   callModule(semester_module, as.character(x), delete_mode = delete_mode, courses = reactive(semesters[[paste0("semester", x)]]), semester_remove = reactive(input[[paste0(x, "-semester_remove")]]))
-# })
-# 
-# observe({
-#   for (i in 1:8) {
-#     semesters[[paste0("semester", i)]] <- semester_courses[[i]]()
-#   }
-#   print(semesters)
-# })
 
 semester1_courses <- reactiveVal()
-semester1_to_list <- callModule(semester_module, "1", delete_mode = delete_mode, courses = semester1_courses, semester_remove = reactive(input[["1-semester_remove"]]))
-#semester1_courses(sem_1_return$reactive_1())
-#observe(print(semester1_courses()))
-
-
 semester2_courses <- reactiveVal()
-semester2_to_list <- callModule(semester_module, "2", delete_mode = delete_mode, courses = semester2_courses, semester_remove = reactive(input[["2-semester_remove"]]))
-
 semester3_courses <- reactiveVal()
-semester3_to_list <- callModule(semester_module, "3", delete_mode = delete_mode, courses = semester3_courses, semester_remove = reactive(input[["3-semester_remove"]]))
-
 semester4_courses <- reactiveVal()
-semester4_to_list <- callModule(semester_module, "4", delete_mode = delete_mode, courses = semester4_courses, semester_remove = reactive(input[["4-semester_remove"]]))
-
 semester5_courses <- reactiveVal()
-semester5_to_list <- callModule(semester_module, "5", delete_mode = delete_mode, courses = semester5_courses, semester_remove = reactive(input[["5-semester_remove"]]))
-
 semester6_courses <- reactiveVal()
-semester6_to_list <- callModule(semester_module, "6", delete_mode = delete_mode, courses = semester6_courses, semester_remove = reactive(input[["6-semester_remove"]]))
-
 semester7_courses <- reactiveVal()
-semester7_to_list <- callModule(semester_module, "7", delete_mode = delete_mode, courses = semester7_courses, semester_remove = reactive(input[["7-semester_remove"]]))
-
 semester8_courses <- reactiveVal()
+
+semester1_to_list <- callModule(semester_module, "1", delete_mode = delete_mode, courses = semester1_courses, semester_remove = reactive(input[["1-semester_remove"]]))
+semester2_to_list <- callModule(semester_module, "2", delete_mode = delete_mode, courses = semester2_courses, semester_remove = reactive(input[["2-semester_remove"]]))
+semester3_to_list <- callModule(semester_module, "3", delete_mode = delete_mode, courses = semester3_courses, semester_remove = reactive(input[["3-semester_remove"]]))
+semester4_to_list <- callModule(semester_module, "4", delete_mode = delete_mode, courses = semester4_courses, semester_remove = reactive(input[["4-semester_remove"]]))
+semester5_to_list <- callModule(semester_module, "5", delete_mode = delete_mode, courses = semester5_courses, semester_remove = reactive(input[["5-semester_remove"]]))
+semester6_to_list <- callModule(semester_module, "6", delete_mode = delete_mode, courses = semester6_courses, semester_remove = reactive(input[["6-semester_remove"]]))
+semester7_to_list <- callModule(semester_module, "7", delete_mode = delete_mode, courses = semester7_courses, semester_remove = reactive(input[["7-semester_remove"]]))
 semester8_to_list <- callModule(semester_module, "8", delete_mode = delete_mode, courses = semester8_courses, semester_remove = reactive(input[["8-semester_remove"]]))
 
