@@ -62,6 +62,8 @@ observeEvent(input$submit_course_department, {
   course <- input$course_to_add
   semester <- input$pick_semester
   
+  #semesters[[semester]] <- c(semesters[[semester]], course)
+  
   if (semester == "semester1") semester1_courses(c(semester1_courses(), course))
   if (semester == "semester2") semester2_courses(c(semester2_courses(), course))
   if (semester == "semester3") semester3_courses(c(semester3_courses(), course))
@@ -120,6 +122,8 @@ observeEvent(input$submit_course_custom, {
   course <- paste(code, input$custom_course_to_add_name)
   semester <- input$pick_semester_custom
   
+  #semesters[[semester]] <- c(semesters[[semester]], course)
+  
   if (semester == "semester1") semester1_courses(c(semester1_courses(), course))
   if (semester == "semester2") semester2_courses(c(semester2_courses(), course))
   if (semester == "semester3") semester3_courses(c(semester3_courses(), course))
@@ -128,8 +132,5 @@ observeEvent(input$submit_course_custom, {
   if (semester == "semester6") semester6_courses(c(semester6_courses(), course))
   if (semester == "semester7") semester7_courses(c(semester7_courses(), course))
   if (semester == "semester8") semester8_courses(c(semester8_courses(), course))
-  
-  
-  
 })
 

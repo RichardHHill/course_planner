@@ -69,7 +69,14 @@ semester_module <- function(input, output, session, delete_mode, courses, semest
   observeEvent(semester_remove(), {
     row <- as.numeric(semester_remove())
     
+    #courses <- courses()[-row]
     courses(courses()[-row])
     semester_out(semester_out()[-row,])
   })
+  
+  return(semester_to_list)
+  #return(courses)
+  # return(list(
+  #   "reactive_1" = courses
+  # ))
 }

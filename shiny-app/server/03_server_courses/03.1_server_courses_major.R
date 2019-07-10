@@ -44,8 +44,10 @@ major_3_course_vector <- reactive({
 })
 
 schedule_list <- reactive({
-  c(semester1_to_list(), semester2_to_list(), semester3_to_list(), semester4_to_list(),
+  all <- c(semester1_to_list(), semester2_to_list(), semester3_to_list(), semester4_to_list(),
     semester5_to_list(), semester6_to_list(), semester7_to_list(), semester8_to_list())
+  
+  unlist(lapply(all, function (x) gsub("^\\s+|\\s+$", "", x)))
 })
 
 
@@ -70,7 +72,7 @@ major_1_courses_table_prep <- reactive({
       as.character(icon("circle"))
     }
   })
-  print(course_names)
+
   table <- tibble(
     "Course Code" = selected_courses,
     "Course Name" = course_names,
