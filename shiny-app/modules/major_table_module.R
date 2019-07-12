@@ -9,7 +9,7 @@ major_table_module_ui <- function(id) {
         box(
           width = 12,
           title = textOutput(ns("major_name")),
-          actionButton(ns("set_inputs"), "Set Inputs"),
+          #actionButton(ns("set_inputs"), "Set Inputs"),
           DTOutput(ns("major_courses_table"))
         )
       )
@@ -53,7 +53,7 @@ major_table_module <- function(input, output, server, major_course_vector, name,
         as.character(icon("circle"))
       }
     })
-    
+
     tibble(
       "Course Code" = selected_courses,
       "Course Name" = course_names,

@@ -38,31 +38,7 @@ tabItem(
   ),
   fluidRow(
     major_table_module_ui("1"),
-    column(
-      4,
-      div(
-        id = "major_2_output",
-        fluidRow(
-          box(
-            width = 12,
-            title = textOutput("major_2_name"),
-            DTOutput("major_2_courses_table")
-          )
-        )
-      ) %>% hidden()
-    ),
-    column(
-      4,
-      div(
-        id = "major_3_output",
-        fluidRow(
-          box(
-            width = 12,
-            title = textOutput("major_3_name"),
-            DTOutput("major_3_courses_table")
-          )
-        )
-      ) %>% hidden()
-    )
+    major_table_module_ui("2"),
+    major_table_module_ui("3")
   )
 )
