@@ -8,7 +8,8 @@ input_major_module_ui <- function(id) {
     pickerInput(
       ns("pick_major"),
       "Choose a Major",
-      choices = majors_table$display
+      choices = majors_table$display,
+      selected = majors_table$display[[as.numeric(id)]]
     ),
     br(),
     actionButton(
@@ -53,7 +54,6 @@ input_major_module <- function(input, output, session, parent_session, schedule_
       )
     )
     
-    #To do: preallocate vector
     for (i in seq_along(major)) {
       name <- major[[length(major) - i + 1]][[2]]
       number <- as.numeric(major[[length(major) - i + 1]][[3]])  #had to do gymnastics because the ui
