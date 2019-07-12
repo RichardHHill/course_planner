@@ -20,7 +20,6 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   semester_out <- reactiveVal()
   
   observe({
-    #out <- courses()
     out <- semesters[[paste0("semester", id)]]
     ids <- seq_along(out)
     
@@ -66,11 +65,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   observeEvent(semester_remove(), {
     row <- as.numeric(semester_remove())
     
-    #courses <- courses()[-row]
-    #courses(courses()[-row])
     semesters[[paste0("semester", id)]] <- semesters[[paste0("semester", id)]][-row]
     semester_out(semester_out()[-row,])
   })
-  
-  #return(semester_to_list)
 }
