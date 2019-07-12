@@ -56,8 +56,8 @@ input_major_module <- function(input, output, session, parent_session, schedule_
     
     for (i in seq_along(major)) {
       name <- major[[length(major) - i + 1]][[2]]
-      number <- as.numeric(major[[length(major) - i + 1]][[3]])  #had to do gymnastics because the ui
-      courses <- major[[length(major) - i + 1]][-c(1,2,3)]  #was appearing in the reverse order
+      number <- as.numeric(major[[length(major) - i + 1]][[3]])  
+      courses <- major[[length(major) - i + 1]][-c(1,2,3)] 
       tag <- paste0("req_", length(major) - count + 1)
       course_tags(c(course_tags(), tag))
       

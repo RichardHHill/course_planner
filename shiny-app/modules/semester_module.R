@@ -13,14 +13,15 @@ semester_module_ui <- function(id) {
   )
 }
 
-semester_module <- function(input, output, session, delete_mode, courses, semester_remove) {
+semester_module <- function(input, output, session, id, delete_mode, semesters, semester_remove) {
   ns <- session$ns
   runjs(paste0("myModuleJS('", ns(""), "');"))
   
   semester_out <- reactiveVal()
   
   observe({
-    out <- courses()
+    #out <- courses()
+    out <- semesters[[paste0("semester", id)]]
     ids <- seq_along(out)
     
     table <- tibble(
@@ -44,13 +45,9 @@ semester_module <- function(input, output, session, delete_mode, courses, semest
   })
   
   
-  #to get major table to render without courses in every semester
-  semester_to_list <- reactiveVal(NULL)
-  observe(semester_to_list(semester_out()$Code))
-  
   output$semester_table <- renderDT({
     #Require the list of courses 
-    req(courses(), nrow(semester_out()))
+    req(semesters[[paste0("semester", id)]], nrow(semester_out()))
     
     out <- semester_out()
     datatable(
@@ -70,9 +67,10 @@ semester_module <- function(input, output, session, delete_mode, courses, semest
     row <- as.numeric(semester_remove())
     
     #courses <- courses()[-row]
-    courses(courses()[-row])
+    #courses(courses()[-row])
+    semesters[[paste0("semester", id)]] <- semesters[[paste0("semester", id)]][-row]
     semester_out(semester_out()[-row,])
   })
   
-  return(semester_to_list)
+  #return(semester_to_list)
 }
