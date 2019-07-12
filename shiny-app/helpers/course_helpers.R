@@ -15,7 +15,13 @@
     
     index <- match(code, department_table$course_code)
     
-    department_table$course_name[[index]]
+    out <- department_table$course_name[[index]]
+
+    if (is.null(out)) {
+      out <- ""
+    }
+    
+    out
   }
   
   return(list(
