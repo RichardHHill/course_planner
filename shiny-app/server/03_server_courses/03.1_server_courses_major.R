@@ -1,6 +1,4 @@
-output$major_1_name <- renderText({
-  input$pick_major_1
-})
+
 
 output$major_2_name <- renderText({
   input$pick_major_2
@@ -10,16 +8,7 @@ output$major_3_name <- renderText({
   input$pick_major_3
 })
 
-major_1_course_vector <- reactive({
-  req(courses_for_major_1())
-  
-  courses <- c()
-  courses_1 <- courses_for_major_1()
-  for (i in seq_along(major_convertor_1())) {
-    courses <- c(input[[courses_1[[i]]]], courses)
-  }
-  courses
-})
+
 
 major_2_course_vector <- reactive({
   req(courses_for_major_2())
@@ -51,34 +40,7 @@ schedule_list <- reactive({
 })
 
 
-major_1_courses_table_prep <- reactive({
-  selected_courses <- major_1_course_vector()
-  course_names <- unlist(lapply(selected_courses, helpers$course_code_to_name))
-  
-  for (i in seq_along(selected_courses)) {
-    if (selected_courses[[i]] == "Flex Course") {
-      course_names[[i]] <- paste0('<input type="text" value="" size="30" id = "course_code_', i, '"/>')
-      selected_courses[[i]] <- paste0('<input type="text" value="" size="10" id = "course_name_', i, '"/>')
-    }
-  }
-  #course_names[selected_courses == "Flex Course"] <- paste0('<input type="text" value="" size="30" placeholder = "Principles of Economics" id =', 1, '/>')
-  #selected_courses[selected_courses == "Flex Course"] <- '<input type="text" value="" size="10" placeholder = "ECON 0110"/>'
-  #course_names[[15]] <- ""
-  in_schedule <- selected_courses %in% schedule_list()
-  in_schedule <- lapply(in_schedule, function(x) {
-    if (isTRUE(x)) {
-      as.character(icon("check-circle"))
-    } else {
-      as.character(icon("circle"))
-    }
-  })
 
-  table <- tibble(
-    "Course Code" = selected_courses,
-    "Course Name" = course_names,
-    "Satisfied" = in_schedule
-  )
-})
 
 major_2_courses_table_prep <- reactive({
   selected_courses <- major_2_course_vector()
@@ -122,18 +84,10 @@ major_3_courses_table_prep <- reactive({
   )
 })
 
-output$major_1_courses_table <- renderDT({
-  table <- major_1_courses_table_prep()
-  datatable(
-    table,
-    rownames = FALSE,
-    escape = FALSE,
-    options = list(
-      dom = "t",
-      pageLength = 25
-    )
-  )
-})
+major_1_return <- callModule(input_major_module, "1", parent_session = session)
+
+callModule(major_table_module, "1", major_course_vector = major_1_return$courses, name = major_1_return$name, shown = major_1_return$shown, schedule_list = schedule_list)
+
 
 output$major_2_courses_table <- renderDT({
   table <- major_2_courses_table_prep()

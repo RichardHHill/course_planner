@@ -37,20 +37,7 @@ tabItem(
     )
   ),
   fluidRow(
-    column(
-      4,
-      div(
-        id = "major_1_output",
-        fluidRow(
-          box(
-            width = 12,
-            title = textOutput("major_1_name"),
-            actionButton("set_inputs_1", "Set Inputs"),
-            DTOutput("major_1_courses_table")
-          )
-        )
-      ) %>% hidden()
-    ),
+    major_table_module_ui("1"),
     column(
       4,
       div(

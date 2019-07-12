@@ -11,19 +11,7 @@ tabItem(
     )
   ),
   fluidRow(
-    box(
-      width = 4,
-      pickerInput(
-        "pick_major_1",
-        "Choose a Major",
-        choices = majors_table$display
-      ),
-      br(),
-      actionButton(
-        "get_requirements_1",
-        "Get Requirements"
-      )
-    ),
+    input_major_module_ui(id = "1"),
     box(
       width = 4,
       pickerInput(
