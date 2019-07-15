@@ -31,12 +31,6 @@ body <- dashboardBody(
     tags$script(src = "myModuleJS.js")
     #tags$link(rel = "stylesheet", href = "styles.css")
   ),
-  # Suppress dependencies
-  htmltools::suppressDependencies("selectPicker"),
-  htmltools::suppressDependencies("bootstrap"),
-  
-  # reinject them
-  bsDep, pkDep, 
   
   tabItems(
     source("ui/01_ui_dashboard.R", local = TRUE)$value,
