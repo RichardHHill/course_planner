@@ -5,7 +5,15 @@ library(shinyjs)
 library(dplyr)
 library(DT)
 
+
+#Sys.setenv(R_CONFIG_ACTIVE = "default")
+#Sys.setenv(R_CONFIG_ACTIVE = "production")
+#app_config <- config::get()
+#conn <- tychobratools::db_connect(app_config)
+
+
 options(scipen = 999)
+
 
 majors_table <- readRDS("data/majors.RDS")
 
