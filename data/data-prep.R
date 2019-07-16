@@ -75,6 +75,15 @@ fren_table <- read.xlsx(
 
 saveRDS(fren_table, "shiny-app/data/fren.RDS")
 
+hisp_table <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:34,
+  cols = 19:20
+)
+
+saveRDS(hisp_table, "shiny-app/data/hisp.RDS")
+
 math_ab <- read.xlsx(
   file_path,
   sheet = 2,

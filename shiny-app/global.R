@@ -23,6 +23,7 @@ apma_courses <- readRDS("data/apma.RDS")
 phys_courses <- readRDS("data/phys.RDS")
 csci_courses <- readRDS("data/csci.RDS")
 fren_courses <- readRDS("data/fren.RDS")
+hisp_courses <- readRDS("data/hisp.RDS")
 
 math_ab <- readRDS("data/math_ab.RDS")
 econ_ab <- readRDS("data/econ_ab.RDS")
@@ -43,7 +44,8 @@ department_list <- list(
   "APMA" = apma_courses,
   "PHYS" = phys_courses,
   "CSCI" = csci_courses,
-  "FREN" = fren_courses
+  "FREN" = fren_courses,
+  "HISP" = hisp_courses
 )
 
 helpers <- source("helpers/course_helpers.R", local = TRUE)$value
