@@ -21,5 +21,17 @@ courses_df <- reactive({
   out
 })
 
-observe(print(courses_df()))
+
+major_inputs_saved <- reactive({
+  majors <- all_majors()
+  out <- list()
+  
+  for (i in seq_along(majors)) {
+    out[[paste0("major_", i)]] <- majors[[i]]
+  }
+  
+  out
+})
+
+observe(print(major_inputs_saved()))
 

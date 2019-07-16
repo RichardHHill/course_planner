@@ -19,21 +19,17 @@ input_major_module_ui <- function(id) {
   )
 }
 
-input_major_module <- function(input, output, session, parent_session, schedule_list
-                         #, majors_table, majors_list, schedule_list, helpers
-                         ) {
+input_major_module <- function(input, output, session, parent_session, schedule_list) {
   ns <- session$ns
   
   major_output_shown <- reactiveVal(FALSE) #to show and hide the ui table under semesters
+  course_tags <- reactiveVal() #stores tags of generated ui
   
   #turn the display name to the referenced data frame
   major_convertor <- reactive({
     index <- match(input$pick_major, majors_table$display)
     majors_list[[majors_table$major[[index]]]]
   })
-  
-  #stores tags of generated ui
-  course_tags <- reactiveVal()
   
   #adds ui for each requirement of the major
   observeEvent(input$get_requirements, {
@@ -189,12 +185,25 @@ input_major_module <- function(input, output, session, parent_session, schedule_
     input$pick_major
   })
   
+  major_data_to_save <- reactive({
+    out <- list(major = input$pick_major)
+    course_tags <- course_tags()
+    
+    for (i in seq_along(course_tags)) {
+      tag <- course_tags[[i]]
+      out[[tag]] <- input[[tag]]
+    }
+    
+    out
+  })
+  
   
   return(
     list(
       courses = major_course_vector,
       name = major_name,
-      shown = major_output_shown
+      shown = major_output_shown,
+      data = major_data_to_save
     )
   )
 }
