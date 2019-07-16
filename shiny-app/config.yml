@@ -1,20 +1,9 @@
 default:
-  app_name: "course-planner"
-  functions_url: "https://us-central1-polish-canopy.cloudfunctions.net/signInWithToken"
+  app_name: "course_planner"
   db:
-    dbname: "course-planner-dev"
+    dbname: "course_planner"
     host: "104.196.200.157"
     port: 5432
     user: "postgres"
     password: "attic_12_escape"
 
-production:
-  tychobra_origin: "https://canopy.tychobra.com"
-  functions_url: "https://us-central1-polish-canopy.cloudfunctions.net/signInWithToken"
-  app_name: "course-planner"
-  db:
-    dbname: "course-planner-prod"
-    host: "104.196.200.157"
-    port: 5432
-    user: "postgres"
-    password: "attic_12_escape"
