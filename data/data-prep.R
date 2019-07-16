@@ -4,13 +4,13 @@ library(dplyr)
 file_path <- "data/provided/Department Courses.xlsx"
 
 majors_table <- tibble(
-  "major" = c(
+  major = c(
     "math_ab",
     "econ_ab",
     "apma_ab",
     "mathcs_scb"
   ),
-  "display" = c(
+  display = c(
     "Math AB",
     "Econ AB",
     "Apma AB",
@@ -20,69 +20,74 @@ majors_table <- tibble(
 
 saveRDS(majors_table, "shiny-app/data/majors.RDS")
 
-#math department courses
-math_table <- read.xlsx(
+###
+# Departments
+###
+
+math_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:34,
   cols = 1:2
 )
 
-saveRDS(math_table, "shiny-app/data/math.RDS")
-
-econ_table <- read.xlsx(
+econ_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:41,
   cols = 4:5
 )
 
-saveRDS(econ_table, "shiny-app/data/econ.RDS")
-
-apma_table <- read.xlsx(
+apma_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:23,
   cols = 7:8
 )
 
-saveRDS(apma_table, "shiny-app/data/apma.RDS")
-
-phys_table <- read.xlsx(
+phys_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:28,
   cols = 10:11
 )
 
-saveRDS(phys_table, "shiny-app/data/phys.RDS")
-
-csci_table <- read.xlsx(
+csci_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:47,
   cols = 13:14
 )
 
-saveRDS(csci_table, "shiny-app/data/csci.RDS")
-
-fren_table <- read.xlsx(
+fren_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:28,
   cols = 16:17
 )
 
-saveRDS(fren_table, "shiny-app/data/fren.RDS")
-
-hisp_table <- read.xlsx(
+hisp_courses <- read.xlsx(
   file_path,
   sheet = 1,
   rows = 2:34,
   cols = 19:20
 )
 
-saveRDS(hisp_table, "shiny-app/data/hisp.RDS")
+department_list <- list(
+  "MATH" = math_courses,
+  "ECON" = econ_courses,
+  "APMA" = apma_courses,
+  "PHYS" = phys_courses,
+  "CSCI" = csci_courses,
+  "FREN" = fren_courses,
+  "HISP" = hisp_courses
+)
+
+saveRDS(department_list, "shiny-app/data/department_list.RDS")
+
+###
+# Majors
+###
 
 math_ab <- read.xlsx(
   file_path,
@@ -92,8 +97,6 @@ math_ab <- read.xlsx(
   colNames = FALSE
 )
 
-saveRDS(math_ab, "shiny-app/data/math_ab.RDS")
-
 econ_ab <- read.xlsx(
   file_path,
   sheet = 2,
@@ -101,8 +104,6 @@ econ_ab <- read.xlsx(
   cols = 1:7,
   colNames = FALSE
 )
-
-saveRDS(econ_ab, "shiny-app/data/econ_ab.RDS")
 
 apma_ab <- read.xlsx(
   file_path,
@@ -112,8 +113,6 @@ apma_ab <- read.xlsx(
   colNames = FALSE
 )
 
-saveRDS(apma_ab, "shiny-app/data/apma_ab.RDS")
-
 mathcs_scb <- read.xlsx(
   file_path,
   sheet = 2,
@@ -122,4 +121,11 @@ mathcs_scb <- read.xlsx(
   colNames = FALSE
 )
 
-saveRDS(mathcs_scb, "shiny-app/data/mathcs_scb.RDS")
+majors_list <- list(
+  "math_ab" = math_ab,
+  "econ_ab" = econ_ab,
+  "apma_ab" = apma_ab,
+  "mathcs_scb" = mathcs_scb
+)
+
+saveRDS(majors_list, "shiny-app/data/majors_list.RDS")
