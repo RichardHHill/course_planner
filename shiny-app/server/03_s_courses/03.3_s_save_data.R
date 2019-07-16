@@ -33,5 +33,3 @@ major_inputs_saved <- reactive({
   out
 })
 
-observe(print(major_inputs_saved()))
-
