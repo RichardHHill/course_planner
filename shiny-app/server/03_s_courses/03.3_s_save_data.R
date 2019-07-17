@@ -24,15 +24,42 @@ courses_df <- reactive({
 
 major_inputs_saved <- reactive({
   majors <- all_majors()
-  out <- list()
+  
+  out <- tibble(
+    major_number = character(0),
+    major_name = character(0),
+    tag = character(0),
+    course = character(0)
+  )
   
   for (i in seq_along(majors)) {
-    out[[paste0("major_", i)]] <- majors[[i]]
+    if (length(majors[[i]]) > 1) {
+      course_list <- majors[[i]]
+      courses <- list()
+      
+      for (j in seq_along(course_list)) {
+        tag <- names(course_list)[[j]]
+        tag_courses <- course_list[[j]]
+        names(tag_courses) <- rep(tag, length(tag_courses))
+        courses <- c(courses, tag_courses)
+      }
+      
+      out <- bind_rows(
+        out,
+        tibble(
+          major_number = paste0("major_", i),
+          major_name = majors[[i]]$major,
+          tag = names(courses),
+          course = unlist(courses)
+        )
+      )
+    }
   }
   
   out
 })
 
+observe(print(major_inputs_saved()))
 
 observeEvent(input$save_all_inputs, {
   showModal(
@@ -51,16 +78,14 @@ observeEvent(input$save_all_inputs, {
       fluidRow(
         column(
           12,
-          #align = "center",
           textInput("passkey", "Passkey")
         )
       ),
       fluidRow(
         column(
           12,
-          #align = "center",
           "This passkey will be used to track all of your saved tables. Make sure it's unique; anyone
-             who types it in will be able to see your info!"
+           who types it in will be able to see your info!"
         )
       )
     )
