@@ -47,6 +47,21 @@ observeEvent(input$save_all_inputs, {
           icon = icon("plus")
         ),
         modalButton("Cancel")
+      ),
+      fluidRow(
+        column(
+          12,
+          #align = "center",
+          textInput("passkey", "Passkey")
+        )
+      ),
+      fluidRow(
+        column(
+          12,
+          #align = "center",
+          "This passkey will be used to track all of your saved tables. Make sure it's unique; anyone
+             who types it in will be able to see your info!"
+        )
       )
     )
   )
