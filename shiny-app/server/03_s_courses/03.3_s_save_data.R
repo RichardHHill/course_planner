@@ -100,7 +100,7 @@ observeEvent(input$confirm_save_all, {
   
   tryCatch({
     DBI::dbWithTransaction(conn, {
-      tychobratools::add_row(conn, input_ids, key)
+      tychobratools::add_row(conn, "input_ids", key)
       
       get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
       
@@ -156,7 +156,6 @@ observeEvent(input$confirm_save_all, {
         message = NULL
       )
     )
-    progress$close()
     print(error)
   })
   
