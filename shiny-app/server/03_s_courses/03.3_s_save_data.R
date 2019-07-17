@@ -1,6 +1,6 @@
 
 
-courses_df <- reactive({
+semester_courses_df <- reactive({
   names <- names(reactiveValuesToList(semesters))
   
   out <- tibble(
@@ -22,7 +22,7 @@ courses_df <- reactive({
 })
 
 
-major_inputs_saved <- reactive({
+major_inputs_df <- reactive({
   majors <- all_majors()
   
   out <- tibble(
@@ -59,7 +59,6 @@ major_inputs_saved <- reactive({
   out
 })
 
-observe(print(major_inputs_saved()))
 
 observeEvent(input$save_all_inputs, {
   showModal(
@@ -95,16 +94,47 @@ observeEvent(input$save_all_inputs, {
 
 observeEvent(input$confirm_save_all, {
   removeModal()
-  courses_df <- courses_df()
-  major_inputs_saved <- major_inputs_saved()
-  dat <- courses_df
+  key <- list(passkey = input$passkey)
+  semester_courses <- semester_courses_df()
+  majors <- major_inputs_df()
   
-  progress <- Progress$new(session, min = 0, max = 8)
   tryCatch({
     DBI::dbWithTransaction(conn, {
-      progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
+      tychobratools::add_row(conn, input_ids, key)
+      
+      get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
+      
+      get_query <- DBI::sqlInterpolate(conn, get_query, .dots = key)
+      
+      input_set_id <- as.integer(DBI::dbGetQuery(
+        conn,
+        get_query
+      ))
       
       
+      semester_courses <- cbind(
+        tibble(id = rep(input_set_id, nrow(semester_courses))),
+        semester_courses
+      )
+      
+      DBI::dbWriteTable(
+        conn,
+        name = "semester_courses",
+        value = semester_courses,
+        append = TRUE
+      )
+      
+      majors <- cbind(
+        tibble(id = rep(input_set_id, nrow(majors))),
+        majors
+      )
+      
+      DBI::dbWriteTable(
+        conn,
+        name = "majors",
+        value = majors,
+        append = TRUE
+      )
     })
     
     session$sendCustomMessage(
@@ -116,9 +146,6 @@ observeEvent(input$confirm_save_all, {
       )
     )
     
-    loaded_input_set(hold_loaded_input_set)
-    
-    progress$close()
   }, error = function(error) {
     
     session$sendCustomMessage(
@@ -132,6 +159,8 @@ observeEvent(input$confirm_save_all, {
     progress$close()
     print(error)
   })
+  
+  
   
 })
 

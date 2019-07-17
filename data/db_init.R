@@ -7,6 +7,7 @@ conn <- tychobratools::db_connect(app_config$db)
 
 ids_table_query <- "CREATE TABLE input_ids (
   id                SERIAL PRIMARY KEY,
+  time_created      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   passkey           TEXT       
 );"
 
