@@ -13,7 +13,7 @@ major_table_module_ui <- function(id) {
           DTOutput(ns("major_courses_table"))
         )
       )
-    ) %>% hidden()
+    ) %>% shinyjs::hidden()
   )
 }
 
@@ -25,9 +25,9 @@ major_table_module <- function(input, output, server, major_course_vector, name,
   
   observeEvent(shown(), {
     if (isTRUE(shown())) {
-      show("major_output")
+      shinyjs::show("major_output")
     } else {
-      hide("major_output")
+      shinyjs::hide("major_output")
     }
   })
   
