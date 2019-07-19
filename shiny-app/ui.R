@@ -28,7 +28,9 @@ body <- dashboardBody(
   shiny::tags$head(
     #tags$link(rel = "shortcut icon", href = "logo.png"),
     tags$script(src = "custom.js"),
-    tags$script(src = "myModuleJS.js")
+    tags$script(src = "myModuleJS.js"),
+    tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"),
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
     #tags$link(rel = "stylesheet", href = "styles.css")
   ),
   
