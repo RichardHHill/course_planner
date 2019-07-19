@@ -99,8 +99,11 @@ observeEvent(input$confirm_save_all, {
   semester_courses <- semester_courses_df()
   majors <- major_inputs_df()
   
+  progress <- Progress$new(session, min = 0, max = 3)
   tryCatch({
     DBI::dbWithTransaction(conn, {
+      progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
+      
       tychobratools::add_row(conn, "input_ids", dat)
       
       get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
@@ -112,6 +115,7 @@ observeEvent(input$confirm_save_all, {
         get_query
       ))
       
+      progress$inc(amount = 1, message = "Saving Inputs", detail = "Semester Courses")
       
       semester_courses <- cbind(
         tibble(id = rep(input_set_id, nrow(semester_courses))),
@@ -124,6 +128,8 @@ observeEvent(input$confirm_save_all, {
         value = semester_courses,
         append = TRUE
       )
+      
+      progress$inc(amount = 1, message = "Saving Inputs", detail = "Majors")
       
       majors <- cbind(
         tibble(id = rep(input_set_id, nrow(majors))),
@@ -160,8 +166,7 @@ observeEvent(input$confirm_save_all, {
     print(error)
   })
   
-  
-  
+  progress$close()
 })
 
 
