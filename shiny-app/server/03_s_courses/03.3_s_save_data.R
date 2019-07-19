@@ -77,6 +77,7 @@ observeEvent(input$save_all_inputs, {
       fluidRow(
         column(
           12,
+          textInput("saved_name", "Name"),
           textInput("passkey", "Passkey")
         )
       ),
@@ -94,17 +95,17 @@ observeEvent(input$save_all_inputs, {
 
 observeEvent(input$confirm_save_all, {
   removeModal()
-  key <- list(passkey = input$passkey)
+  dat <- list(passkey = input$passkey, name = input$saved_name)
   semester_courses <- semester_courses_df()
   majors <- major_inputs_df()
   
   tryCatch({
     DBI::dbWithTransaction(conn, {
-      tychobratools::add_row(conn, "input_ids", key)
+      tychobratools::add_row(conn, "input_ids", dat)
       
       get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
       
-      get_query <- DBI::sqlInterpolate(conn, get_query, .dots = key)
+      get_query <- DBI::sqlInterpolate(conn, get_query, .dots = dat[c("passkey")])
       
       input_set_id <- as.integer(DBI::dbGetQuery(
         conn,
