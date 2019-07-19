@@ -5,7 +5,7 @@ tabItem(
       width = 12,
       fluidRow(
         column(
-          3,
+          2,
           textInput("saved_passkey", "Passkey", value = "password1")
         )
       ),
