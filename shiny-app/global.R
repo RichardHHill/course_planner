@@ -4,6 +4,7 @@ library(shinyWidgets)
 library(shinyjs)
 library(dplyr)
 library(DT)
+library(shinycssloaders)
 
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")

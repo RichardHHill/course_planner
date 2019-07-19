@@ -12,7 +12,7 @@ tabItem(
       br(),
       br(),
       br(),
-      DTOutput("saved_inputs_table")
+      DTOutput("saved_inputs_table") %>% withSpinner(type = 8)
     )
   )
 )
