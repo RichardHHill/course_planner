@@ -21,10 +21,10 @@ $(document).on('shiny:connected', function() {
       //disable load button as well
       $("#saved_inputs_table .load_btn#" + this.id).prop('disabled', true);
       id_to_delete = this.id
-      Shiny.setInputValue("input_sets_row_to_delete", this.id, { priority: "event"});
+      Shiny.setInputValue("saved_inputs_row_to_delete", this.id, { priority: "event"});
     });
   
-    $(document).on("click", "#input_set_delete_cancel_button", function() {
+    $(document).on("click", "#saved_inputs_delete_cancel_button", function() {
       console.log("Cancel clicked");
       $("#saved_inputs_table .load_btn#" + id_to_delete).prop('disabled', false);
       $("#saved_inputs_table .delete_btn#" + id_to_delete).prop('disabled', false);
