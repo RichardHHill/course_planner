@@ -144,6 +144,8 @@ observeEvent(input$confirm_save_all, {
       )
     })
     
+    saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
+    
     session$sendCustomMessage(
       "show_toast",
       message = list(

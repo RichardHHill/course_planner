@@ -1,5 +1,8 @@
+saved_inputs_table_trigger <- reactiveVal(0)
 
 saved_inputs_table_prep <- reactive({
+  saved_inputs_table_trigger()
+  
   out <- conn %>% 
     tbl("input_ids") %>% 
     collect() %>% 

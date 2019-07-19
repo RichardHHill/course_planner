@@ -5,6 +5,8 @@ library(shinyjs)
 library(dplyr)
 library(DT)
 library(shinycssloaders)
+library(tychobratools)
+library(DBI)
 
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
