@@ -34,18 +34,26 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   })
   
   major_change_trigger <- reactiveVal(0)
+  remove_major_trigger <- reactiveVal(0)
   
-  observeEvent(major_names[[paste0("major_", id)]], {
+  observeEvent(major_data(), {
+    req(major_names[[paste0("major_", id)]])
     updatePickerInput(session, "pick_major", selected = major_names[[paste0("major_", id)]])
     
     index <- match(major_names[[paste0("major_", id)]], majors_table$display)
+    browser()
     major_convertor(majors_list[[majors_table$major[[index]]]])
     
+    remove_major_trigger(remove_major_trigger() + 1)
     major_change_trigger(major_change_trigger() + 1)
   })
   
   observeEvent(input$get_requirements, {
     major_change_trigger(major_change_trigger() + 1)
+  })
+  
+  observeEvent(input$deselect_major, {
+    remove_major_trigger(remove_major_trigger() + 1)
   })
   
   #adds ui for each requirement of the major
@@ -83,7 +91,6 @@ input_major_module <- function(input, output, session, id, parent_session, sched
           selected <- major_data() %>% 
             filter(tag == tag_, major_number == major_num) %>% 
             pull(course)
-          print(selected)
         } else {
           selected <- paste0(courses[[1]], helpers$course_code_to_name(courses[[1]]))
         }
@@ -169,7 +176,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   })
   
   
-  observeEvent(input$deselect_major, {
+  observeEvent(remove_major_trigger(), {
     removeUI(selector = paste0("#", ns("req_0")))
     removeUI(selector = paste0("#", ns("req_00")))
     major_data(NULL)
