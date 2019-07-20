@@ -35,7 +35,7 @@ input_major_module <- function(input, output, session, parent_session, schedule_
   observeEvent(input$get_requirements, {
     disable(id = "pick_major")
     disable(id = "get_requirements")
-
+    
     major <- major_convertor()
     req_count <- 0
     count <- 1
@@ -66,7 +66,10 @@ input_major_module <- function(input, output, session, parent_session, schedule_
             pickerInput(
               ns(tag),
               name,
-              choices = courses[!is.na(courses)]
+              choices = paste0(
+                courses[!is.na(courses)],
+                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              )
             ),
             br()
           )
@@ -80,8 +83,14 @@ input_major_module <- function(input, output, session, parent_session, schedule_
             pickerInput(
               ns(tag),
               name,
-              choices = courses[!is.na(courses)],
-              selected = courses[1:number],
+              choices = paste0(
+                courses[!is.na(courses)],
+                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              ),
+              selected = paste0(
+                courses[!is.na(courses)],
+                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              )[1:number],
               multiple = TRUE,
               options = pickerOptions(
                 maxOptions = number
@@ -143,7 +152,8 @@ input_major_module <- function(input, output, session, parent_session, schedule_
     for (i in seq_along(major_convertor())) {
       courses <- c(input[[course_tags[[i]]]], courses)
     }
-    courses
+    
+    substr(courses, 1, 10)
   })
 
   

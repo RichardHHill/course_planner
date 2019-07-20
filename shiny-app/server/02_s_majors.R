@@ -1,7 +1,7 @@
 
 schedule_list <- reactive({
   all <- unlist(reactiveValuesToList(semesters))
-  gsub("^\\s+|\\s+$", "", substr(all, 1, 10)) #gsub strips any leading or trailing white space
+  substr(all, 1, 10)
 })
 
 

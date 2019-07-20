@@ -2,18 +2,19 @@
 (function() {
   #' course_code_to_name
   #' 
-  #' @param code The 9-character course code
+  #' @param code The 10-character course code
   #' 
   #' @return The equivalent name
   #' 
   #' @examples
   #' 
   course_code_to_name <- function(code) {
-    department <- substr(code, 1, 4)
-    
+    department <- substr(code, 1, 5)
+    department <- gsub(" ", "", department)
+
     department_table <- department_list[[department]]
     
-    index <- match(code, department_table$course_code)
+    index <- match(substr(code, 1, 10), department_table$course_code)
     
     out <- department_table$course_name[[index]]
 

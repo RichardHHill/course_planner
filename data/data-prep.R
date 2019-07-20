@@ -83,6 +83,18 @@ department_list <- list(
   "HISP" = hisp_courses
 )
 
+for (i in seq_along(department_list)) {
+  course_codes <- department_list[[i]]$course_code
+  
+  for (j in seq_along(course_codes)) {
+    if (nchar(course_codes[[j]]) == 9) {
+      course_codes[[j]] <- paste0(course_codes[[j]], " ")
+    }
+  }
+  
+  department_list[[i]]$course_code <- course_codes
+}
+
 saveRDS(department_list, "shiny-app/data/department_list.RDS")
 
 ###
@@ -128,4 +140,20 @@ majors_list <- list(
   "mathcs_scb" = mathcs_scb
 )
 
+for (i in seq_along(majors_list)) {
+  courses <- majors_list[[i]][c(-1,-2,-3), ]
+  
+  for (j in seq_along(courses)) {
+    for (k in seq_len(nrow(courses))) {
+      course <- courses[k,j]
+      if (!is.na(course) & nchar(course == 9)) {
+        courses[k,j] <- paste0(courses[k,j], " ")
+      }
+    }
+  }
+  
+  majors_list[[i]][c(-1,-2,-3), ] <- courses
+}
+
 saveRDS(majors_list, "shiny-app/data/majors_list.RDS")
+

@@ -34,6 +34,7 @@ major_table_module <- function(input, output, server, major_course_vector, name,
   major_courses_table_prep <- reactive({
     req(major_course_vector())
     selected_courses <- major_course_vector()
+    
     course_names <- unlist(lapply(selected_courses, helpers$course_code_to_name))
     
     in_schedule <- selected_courses %in% schedule_list()
