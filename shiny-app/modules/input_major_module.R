@@ -44,11 +44,12 @@ input_major_module <- function(input, output, session, id, parent_session, sched
     major_change_trigger(major_change_trigger() + 1)
   })
   
+  observeEvent(input$get_requirements, {
+    major_change_trigger(major_change_trigger() + 1)
+  })
+  
   #adds ui for each requirement of the major
-  observeEvent({
-    input$get_requirements
-    major_change_trigger()
-  }, {
+  observeEvent(major_change_trigger(), {
     req(major_change_trigger() >0) #otherwise runs on start
     disable(id = "pick_major")
     disable(id = "get_requirements")
