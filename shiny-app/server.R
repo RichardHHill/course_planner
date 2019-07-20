@@ -8,4 +8,5 @@ server <- function(input, output, session) {
   source("server/04_s_save/04.1_s_save_data.R", local = TRUE)$value
   source("server/04_s_save/04.2_s_saved_table.R", local = TRUE)$value
   source("server/04_s_save/04.3_s_delete.R", local = TRUE)$value
+  source("server/04_s_save/04.4_s_reload.R", local = TRUE)$value
 }

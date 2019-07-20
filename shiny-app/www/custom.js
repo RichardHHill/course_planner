@@ -29,9 +29,12 @@ $(document).on('shiny:connected', function() {
       $("#saved_inputs_table .load_btn#" + id_to_delete).prop('disabled', false);
       $("#saved_inputs_table .delete_btn#" + id_to_delete).prop('disabled', false);
     })
+  })();
   
-    
-  })()
+  $(document).on("click", "#saved_inputs_table .load_btn", function() {
+    $(this).tooltip('hide');
+    Shiny.setInputValue("saved_inputs_row_to_load", this.id, { priority: "event"});
+  });
 });
 
 
