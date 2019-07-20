@@ -34,7 +34,7 @@ observeEvent(input$saved_inputs_row_to_load, {
   majors <- majors_df %>% 
     pull(major_number) %>% 
     unique()
-  
+
   for (i in seq_along(majors)) {
     major_info <- majors_df %>% 
       filter(major_number == majors[[i]])

@@ -26,22 +26,35 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   course_tags <- reactiveVal() #stores tags of generated ui
   
   #turn the display name to the referenced data frame
-  major_convertor <- reactive({
-    index <- match(input$pick_major, majors_table$display)
-    majors_list[[majors_table$major[[index]]]]
-  })
+  major_convertor <- reactiveVal()
   
   observe({
-    req(major_names[[paste0("major_", id)]])
+    index <- match(input$pick_major, majors_table$display)
+    major_convertor(majors_list[[majors_table$major[[index]]]])
+  })
+  
+  major_change_trigger <- reactiveVal(0)
+  
+  observeEvent(major_names[[paste0("major_", id)]], {
     updatePickerInput(session, "pick_major", selected = major_names[[paste0("major_", id)]])
+    
+    index <- match(major_names[[paste0("major_", id)]], majors_table$display)
+    major_convertor(majors_list[[majors_table$major[[index]]]])
+    
+    major_change_trigger(major_change_trigger() + 1)
   })
   
   #adds ui for each requirement of the major
-  observeEvent(input$get_requirements, {
+  observeEvent({
+    input$get_requirements
+    major_change_trigger()
+  }, {
+    req(major_change_trigger() >0) #otherwise runs on start
     disable(id = "pick_major")
     disable(id = "get_requirements")
     
     major <- major_convertor()
+    
     req_count <- 0
     count <- 1
     tags_to_remove <- vector(mode = "character", length = length(major))
