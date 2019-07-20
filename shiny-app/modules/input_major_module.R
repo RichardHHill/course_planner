@@ -19,7 +19,7 @@ input_major_module_ui <- function(id) {
   )
 }
 
-input_major_module <- function(input, output, session, id, parent_session, schedule_list, major_names) {
+input_major_module <- function(input, output, session, id, parent_session, schedule_list, major_names, major_data) {
   ns <- session$ns
   
   major_output_shown <- reactiveVal(FALSE) #to show and hide the ui table under semesters
@@ -74,25 +74,19 @@ input_major_module <- function(input, output, session, id, parent_session, sched
       courses <- major[[length(major) - i + 1]][-c(1,2,3)] 
       tag <- paste0("req_", length(major) - count + 1)
       course_tags(c(course_tags(), tag))
+      tag_ <- tag # for filter
       
       if (number == 1) {
-        insertUI(
-          selector = paste0("#", ns("get_requirements")),
-          where = "afterEnd",
-          div(
-            id = ns(tag),
-            pickerInput(
-              ns(tag),
-              name,
-              choices = paste0(
-                courses[!is.na(courses)],
-                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
-              )
-            ),
-            br()
-          )
-        )
-      } else {
+        if(!is.null(major_data())) {
+          major_num <- paste0("major_", id)
+          selected <- major_data() %>% 
+            filter(tag == tag_, major_number == major_num) %>% 
+            pull(course)
+          print(selected)
+        } else {
+          selected <- paste0(courses[[1]], helpers$course_code_to_name(courses[[1]]))
+        }
+          
         insertUI(
           selector = paste0("#", ns("get_requirements")),
           where = "afterEnd",
@@ -105,10 +99,37 @@ input_major_module <- function(input, output, session, id, parent_session, sched
                 courses[!is.na(courses)],
                 unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
               ),
-              selected = paste0(
+              selected = selected
+            ),
+            br()
+          )
+        )
+      } else {
+        if(!is.null(major_data())) {
+          major_num <- paste0("major_", id)
+          selected <- major_data() %>% 
+            filter(tag == tag_, major_number == major_num) %>% 
+            pull(course)
+        } else {
+          selected <- paste0(
+            courses[!is.na(courses)],
+            unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+          )[1:number]
+        }
+        
+        insertUI(
+          selector = paste0("#", ns("get_requirements")),
+          where = "afterEnd",
+          div(
+            id = ns(tag),
+            pickerInput(
+              ns(tag),
+              name,
+              choices = paste0(
                 courses[!is.na(courses)],
                 unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
-              )[1:number],
+              ),
+              selected = selected,
               multiple = TRUE,
               options = pickerOptions(
                 maxOptions = number
@@ -150,6 +171,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   observeEvent(input$deselect_major, {
     removeUI(selector = paste0("#", ns("req_0")))
     removeUI(selector = paste0("#", ns("req_00")))
+    major_data(NULL)
     tags_to_remove <- course_tags()
     
     for (i in seq_along(tags_to_remove)) {

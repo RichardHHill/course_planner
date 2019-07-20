@@ -31,6 +31,8 @@ observeEvent(input$saved_inputs_row_to_load, {
     collect() %>% 
     filter(id == id_to_load)
   
+  major_data(majors_df)
+  
   majors <- majors_df %>% 
     pull(major_number) %>% 
     unique()
@@ -47,6 +49,8 @@ observeEvent(input$saved_inputs_row_to_load, {
     
     major_names[[major_number]] <- name
   }
+  
+  
   
   progress$close()
 })
