@@ -17,12 +17,7 @@ tabItem(
       width = 12,
       fluidRow(
         column(
-          6,
-          actionButton("add_course_by_department", "Add Course by Department"),
-          actionButton("add_course_custom", "Add Custom Course")
-        ),
-        column(
-          6,
+          12,
           align = "right",
           actionButton(
             "enable_delete_mode",
