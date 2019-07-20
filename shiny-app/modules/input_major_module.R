@@ -19,7 +19,7 @@ input_major_module_ui <- function(id) {
   )
 }
 
-input_major_module <- function(input, output, session, parent_session, schedule_list) {
+input_major_module <- function(input, output, session, id, parent_session, schedule_list, major_names) {
   ns <- session$ns
   
   major_output_shown <- reactiveVal(FALSE) #to show and hide the ui table under semesters
@@ -29,6 +29,11 @@ input_major_module <- function(input, output, session, parent_session, schedule_
   major_convertor <- reactive({
     index <- match(input$pick_major, majors_table$display)
     majors_list[[majors_table$major[[index]]]]
+  })
+  
+  observe({
+    req(major_names[[paste0("major_", id)]])
+    updatePickerInput(session, "pick_major", selected = major_names[[paste0("major_", id)]])
   })
   
   #adds ui for each requirement of the major
