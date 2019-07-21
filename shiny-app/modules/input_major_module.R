@@ -35,10 +35,13 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   
   major_change_trigger <- reactiveVal(0)
   remove_major_trigger <- reactiveVal(0)
+  picker_value <- reactiveVal()
+  
   
   observeEvent(load_trigger[[paste0("major_", id)]], {
     req(major_names[[paste0("major_", id)]])
     updatePickerInput(session, "pick_major", selected = major_names[[paste0("major_", id)]])
+    picker_value(major_names[[paste0("major_", id)]])
     
     index <- match(major_names[[paste0("major_", id)]], majors_table$display)
     
@@ -57,17 +60,22 @@ input_major_module <- function(input, output, session, id, parent_session, sched
     major_change_trigger(major_change_trigger() + 1)
   })
   
-  observeEvent(input$deselect_major, {
-    remove_major_trigger(remove_major_trigger() + 1)
+  name_of_major <- reactiveVal(isolate({input$pick_major}))
+  
+  observeEvent(input$pick_major, {
+    if (name_of_major() != input$pick_major) {
+      remove_major_trigger(remove_major_trigger() + 1)
+    }
   })
   
   #adds ui for each requirement of the major
   observeEvent(major_change_trigger(), {
     req(major_change_trigger() >0) #otherwise runs on start
-    disable(id = "pick_major")
     disable(id = "get_requirements")
     
     major <- major_convertor()
+    
+    name_of_major(major[1,2])
     
     req_count <- 0
     count <- 1
@@ -172,11 +180,6 @@ input_major_module <- function(input, output, session, id, parent_session, sched
         id = ns("req_0"),
         br(),
         actionButton(
-          ns("deselect_major"),
-          "Deselect Major",
-          style="color: #fff; background-color: #aa3636; border-color: #aa3636"
-        ),
-        actionButton(
           ns("major_to_courses"),
           "Go to Courses",
           style="color: #fff; background-color: #07b710; border-color: #07b710"
@@ -199,7 +202,6 @@ input_major_module <- function(input, output, session, id, parent_session, sched
       removeUI(selector = paste0("#", ns(tags_to_remove[[i]])))
     }
     
-    enable(id = "pick_major")
     enable(id = "get_requirements")
     major_output_shown(FALSE)
     course_tags(NULL)
