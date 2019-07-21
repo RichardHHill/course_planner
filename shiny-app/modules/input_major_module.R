@@ -19,7 +19,7 @@ input_major_module_ui <- function(id) {
   )
 }
 
-input_major_module <- function(input, output, session, id, parent_session, schedule_list, major_names, major_data) {
+input_major_module <- function(input, output, session, id, parent_session, schedule_list, major_names, major_data, load_trigger) {
   ns <- session$ns
   
   major_output_shown <- reactiveVal(FALSE) #to show and hide the ui table under semesters
@@ -36,12 +36,12 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   major_change_trigger <- reactiveVal(0)
   remove_major_trigger <- reactiveVal(0)
   
-  observeEvent(major_data(), {
+  observeEvent(load_trigger[[paste0("major_", id)]], {
     req(major_names[[paste0("major_", id)]])
     updatePickerInput(session, "pick_major", selected = major_names[[paste0("major_", id)]])
     
     index <- match(major_names[[paste0("major_", id)]], majors_table$display)
-    browser()
+    
     major_convertor(majors_list[[majors_table$major[[index]]]])
     
     remove_major_trigger(remove_major_trigger() + 1)
@@ -85,11 +85,19 @@ input_major_module <- function(input, output, session, id, parent_session, sched
       course_tags(c(course_tags(), tag))
       tag_ <- tag # for filter
       
+      if (!is.null(major_data())) {
+        major_num <- paste0("major_", id)
+        data <- major_data() %>% 
+          filter(major_number == major_num, major_name == major_names[[major_num]])
+      } else {
+        data <- tibble(id = character(0))
+      }
+      
       if (number == 1) {
-        if(!is.null(major_data())) {
+        if(nrow(data) > 0) {
           major_num <- paste0("major_", id)
-          selected <- major_data() %>% 
-            filter(tag == tag_, major_number == major_num) %>% 
+          selected <- data %>% 
+            filter(tag == tag_) %>% 
             pull(course)
         } else {
           selected <- paste0(courses[[1]], helpers$course_code_to_name(courses[[1]]))
@@ -113,10 +121,10 @@ input_major_module <- function(input, output, session, id, parent_session, sched
           )
         )
       } else {
-        if(!is.null(major_data())) {
+        if(nrow(data) > 0) {
           major_num <- paste0("major_", id)
-          selected <- major_data() %>% 
-            filter(tag == tag_, major_number == major_num) %>% 
+          selected <- data %>% 
+            filter(tag == tag_) %>% 
             pull(course)
         } else {
           selected <- paste0(
@@ -179,7 +187,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   observeEvent(remove_major_trigger(), {
     removeUI(selector = paste0("#", ns("req_0")))
     removeUI(selector = paste0("#", ns("req_00")))
-    major_data(NULL)
+    
     tags_to_remove <- course_tags()
     
     for (i in seq_along(tags_to_remove)) {
@@ -188,12 +196,14 @@ input_major_module <- function(input, output, session, id, parent_session, sched
     
     enable(id = "pick_major")
     enable(id = "get_requirements")
+    #removeClass(select = paste0("#", ns("pick_major")), class = "disabled")
     major_output_shown(FALSE)
     course_tags(NULL)
   })
   
   major_course_vector <- reactive({
     req(course_tags())
+    req(length(course_tags()) == length(major_convertor()))
     
     courses <- c()
     course_tags <- course_tags()

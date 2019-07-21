@@ -1,6 +1,8 @@
+load_trigger <- reactiveValues()
 
 observeEvent(input$saved_inputs_row_to_load, {
   progress <- Progress$new(session, min = 0, max = 2)
+  major_data(NULL)
   
   row <- as.numeric(input$saved_inputs_row_to_load)
   
@@ -32,16 +34,18 @@ observeEvent(input$saved_inputs_row_to_load, {
     filter(id == id_to_load)
   
   major_data(majors_df)
-  
+
   majors <- majors_df %>% 
     pull(major_number) %>% 
     unique()
-
+  
   for (i in seq_along(majors)) {
     major_info <- majors_df %>% 
       filter(major_number == majors[[i]])
     
     major_number <- as.character(major_info[1,2])
+    
+    load_trigger[[major_number]] <- Sys.time()
     
     name <- major_info %>% 
       filter(tag == "major") %>% 
@@ -49,8 +53,6 @@ observeEvent(input$saved_inputs_row_to_load, {
     
     major_names[[major_number]] <- name
   }
-  
-  
   
   progress$close()
 })
