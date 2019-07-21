@@ -39,6 +39,9 @@ observeEvent(input$saved_inputs_row_to_load, {
     pull(major_number) %>% 
     unique()
   
+  #To remove major if there is no replacement
+  load_trigger$delete <- Sys.time()
+  
   for (i in seq_along(majors)) {
     major_info <- majors_df %>% 
       filter(major_number == majors[[i]])

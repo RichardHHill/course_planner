@@ -48,6 +48,11 @@ input_major_module <- function(input, output, session, id, parent_session, sched
     major_change_trigger(major_change_trigger() + 1)
   })
   
+  #If this major is not in the saved data
+  observeEvent(load_trigger$delete, {
+    remove_major_trigger(remove_major_trigger() + 1)
+  })
+  
   observeEvent(input$get_requirements, {
     major_change_trigger(major_change_trigger() + 1)
   })
@@ -196,7 +201,6 @@ input_major_module <- function(input, output, session, id, parent_session, sched
     
     enable(id = "pick_major")
     enable(id = "get_requirements")
-    #removeClass(select = paste0("#", ns("pick_major")), class = "disabled")
     major_output_shown(FALSE)
     course_tags(NULL)
   })
