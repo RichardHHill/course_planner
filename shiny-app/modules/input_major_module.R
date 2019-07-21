@@ -40,6 +40,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   
   observeEvent(load_trigger[[paste0("major_", id)]], {
     req(major_names[[paste0("major_", id)]])
+    
     updatePickerInput(session, "pick_major", selected = major_names[[paste0("major_", id)]])
     picker_value(major_names[[paste0("major_", id)]])
     
@@ -70,9 +71,9 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   
   #adds ui for each requirement of the major
   observeEvent(major_change_trigger(), {
-    req(major_change_trigger() >0) #otherwise runs on start
+    req(major_change_trigger() > 0) #otherwise runs on start
     disable(id = "get_requirements")
-    
+
     major <- major_convertor()
     
     name_of_major(major[1,2])
@@ -101,7 +102,8 @@ input_major_module <- function(input, output, session, id, parent_session, sched
       if (!is.null(major_data())) {
         major_num <- paste0("major_", id)
         data <- major_data() %>% 
-          filter(major_number == major_num, major_name == major_names[[major_num]])
+          filter(major_number == major_num) %>% 
+          filter(major_name == major_names[[major_num]])
       } else {
         data <- tibble(id = character(0))
       }
