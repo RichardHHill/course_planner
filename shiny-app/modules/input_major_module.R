@@ -103,7 +103,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
         major_num <- paste0("major_", id)
         data <- major_data() %>% 
           filter(major_number == major_num) %>% 
-          filter(major_name == major_names[[major_num]])
+          filter(major_name == major[1,2])
       } else {
         data <- tibble(id = character(0))
       }
