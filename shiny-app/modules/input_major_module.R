@@ -97,7 +97,6 @@ input_major_module <- function(input, output, session, id, parent_session, sched
       courses <- major[[length(major) - i + 1]][-c(1,2,3)] 
       tag <- paste0("req_", length(major) - count + 1)
       course_tags(c(course_tags(), tag))
-      tag_ <- tag # for filter
       
       if (!is.null(major_data())) {
         major_num <- paste0("major_", id)
@@ -112,7 +111,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
         if(nrow(data) > 0) {
           major_num <- paste0("major_", id)
           selected <- data %>% 
-            filter(tag == tag_) %>% 
+            filter(tag == `tag`) %>% 
             pull(course)
         } else {
           selected <- paste0(courses[[1]], helpers$course_code_to_name(courses[[1]]))
@@ -139,7 +138,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
         if(nrow(data) > 0) {
           major_num <- paste0("major_", id)
           selected <- data %>% 
-            filter(tag == tag_) %>% 
+            filter(tag == `tag`) %>% 
             pull(course)
         } else {
           selected <- paste0(
