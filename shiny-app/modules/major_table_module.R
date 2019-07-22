@@ -46,7 +46,7 @@ major_table_module <- function(input, output, server, major_course_vector, name,
       }
     })
     
-    need_approval <- c("FlexCourse", "Capstone  ")
+    need_approval <- c("FlexCourse", "Capstone  ", "Approved  ")
     
     course_names[selected_courses %in% need_approval] <- "To be approved by a Concentration Advisor"
     in_schedule[selected_courses %in% need_approval] <- ""
