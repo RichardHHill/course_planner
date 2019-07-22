@@ -3,25 +3,6 @@ library(dplyr)
 
 file_path <- "data/provided/Department Courses.xlsx"
 
-majors_table <- tibble(
-  major = c(
-    "math_ab",
-    "econ_ab",
-    "apma_ab",
-    "mathcs_scb",
-    "bds_ab"
-  ),
-  display = c(
-    "Math AB",
-    "Econ AB",
-    "Apma AB",
-    "Math-CS ScB",
-    "Behavioral Decision Sciences AB"
-  )
-)
-
-saveRDS(majors_table, "shiny-app/data/majors.RDS")
-
 ###
 # Departments
 ###
@@ -151,12 +132,30 @@ bds_ab <- read.xlsx(
   colNames = FALSE
 )
 
+psych_ab <- read.xlsx(
+  file_path,
+  sheet = 3,
+  rows = 2:22,
+  cols = 1:9,
+  colNames = FALSE
+)
+
+psych_scb <- read.xlsx(
+  file_path,
+  sheet = 3,
+  rows = 2:22,
+  cols = 12:22,
+  colNames = FALSE
+)
+
 majors_list <- list(
   math_ab = math_ab,
   econ_ab = econ_ab,
   apma_ab = apma_ab,
   mathcs_scb = mathcs_scb,
-  bds_ab = bds_ab
+  bds_ab = bds_ab,
+  psych_ab = psych_ab,
+  psych_scb = psych_scb
 )
 
 for (i in seq_along(majors_list)) {
@@ -175,4 +174,27 @@ for (i in seq_along(majors_list)) {
 }
 
 saveRDS(majors_list, "shiny-app/data/majors_list.RDS")
+
+majors_table <- tibble(
+  major = c(
+    "math_ab",
+    "econ_ab",
+    "apma_ab",
+    "mathcs_scb",
+    "bds_ab",
+    "psych_ab",
+    "psych_scb"
+  ),
+  display = c(
+    "Math AB",
+    "Econ AB",
+    "Apma AB",
+    "Math-CS ScB",
+    "Behavioral Decision Sciences AB",
+    "Psychology AB",
+    "Psychology ScB"
+  )
+)
+
+saveRDS(majors_table, "shiny-app/data/majors.RDS")
 

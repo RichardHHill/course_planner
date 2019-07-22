@@ -223,7 +223,9 @@ input_major_module <- function(input, output, session, id, parent_session, sched
 
   
   output$major_note <- renderText({
-    as.character(major_convertor()[1,1])
+    out <- as.character(major_convertor()[1,1])
+    
+    if (is.na(out)) "" else out
   })
   
   
