@@ -11,14 +11,14 @@
   course_code_to_name <- function(code) {
     department <- substr(code, 1, 5)
     department <- gsub(" ", "", department)
-
-    department_table <- department_list[[department]]
     
-    index <- match(substr(code, 1, 10), department_table$course_code)
-    
-    out <- department_table$course_name[[index]]
-
-    if (is.null(out)) {
+    if (department %in% names(department_list)) {
+      department_table <- department_list[[department]]
+      
+      index <- match(substr(code, 1, 10), department_table$course_code)
+      
+      if (is.na(index)) out <- "" else out <- department_table$course_name[[index]]
+    } else {
       out <- ""
     }
     

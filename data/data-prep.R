@@ -8,13 +8,15 @@ majors_table <- tibble(
     "math_ab",
     "econ_ab",
     "apma_ab",
-    "mathcs_scb"
+    "mathcs_scb",
+    "bds_ab"
   ),
   display = c(
     "Math AB",
     "Econ AB",
     "Apma AB",
-    "Math-CS ScB"
+    "Math-CS ScB",
+    "Behavioral Decision Sciences AB"
   )
 )
 
@@ -73,6 +75,13 @@ hisp_courses <- read.xlsx(
   cols = 19:20
 )
 
+clps_courses <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:54,
+  cols = 22:23
+)
+
 department_list <- list(
   "MATH" = math_courses,
   "ECON" = econ_courses,
@@ -80,15 +89,16 @@ department_list <- list(
   "PHYS" = phys_courses,
   "CSCI" = csci_courses,
   "FREN" = fren_courses,
-  "HISP" = hisp_courses
+  "HISP" = hisp_courses,
+  "CLPS" = clps_courses
 )
 
 for (i in seq_along(department_list)) {
   course_codes <- department_list[[i]]$course_code
   
   for (j in seq_along(course_codes)) {
-    if (nchar(course_codes[[j]]) == 9) {
-      course_codes[[j]] <- paste0(course_codes[[j]], " ")
+    if (nchar(course_codes[[j]]) < 10) {
+      course_codes[[j]] <- paste0(course_codes[[j]], paste(rep(" ", 10 - nchar(course_codes[[j]])), collapse = ""))
     }
   }
   
@@ -133,11 +143,20 @@ mathcs_scb <- read.xlsx(
   colNames = FALSE
 )
 
+bds_ab <- read.xlsx(
+  file_path,
+  sheet = 2,
+  rows = 26:49,
+  cols = 12:20,
+  colNames = FALSE
+)
+
 majors_list <- list(
-  "math_ab" = math_ab,
-  "econ_ab" = econ_ab,
-  "apma_ab" = apma_ab,
-  "mathcs_scb" = mathcs_scb
+  math_ab = math_ab,
+  econ_ab = econ_ab,
+  apma_ab = apma_ab,
+  mathcs_scb = mathcs_scb,
+  bds_ab = bds_ab
 )
 
 for (i in seq_along(majors_list)) {
@@ -146,8 +165,8 @@ for (i in seq_along(majors_list)) {
   for (j in seq_along(courses)) {
     for (k in seq_len(nrow(courses))) {
       course <- courses[k,j]
-      if (!is.na(course) & nchar(course == 9)) {
-        courses[k,j] <- paste0(courses[k,j], " ")
+      if (!is.na(course) & nchar(course) < 10) {
+        courses[k,j] <- paste0(courses[k,j], paste(rep(" ", 10 - nchar(course)), collapse = ""))
       }
     }
   }
