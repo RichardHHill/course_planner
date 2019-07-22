@@ -63,6 +63,20 @@ clps_courses <- read.xlsx(
   cols = 22:23
 )
 
+pols_courses <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:37,
+  cols = 25:26
+)
+
+plcy_courses <- read.xlsx(
+  file_path,
+  sheet = 1,
+  rows = 2:17,
+  cols = 28:29
+)
+
 department_list <- list(
   "MATH" = math_courses,
   "ECON" = econ_courses,
@@ -71,7 +85,9 @@ department_list <- list(
   "CSCI" = csci_courses,
   "FREN" = fren_courses,
   "HISP" = hisp_courses,
-  "CLPS" = clps_courses
+  "CLPS" = clps_courses,
+  "POLS" = pols_courses,
+  "PLCY" = plcy_courses
 )
 
 for (i in seq_along(department_list)) {
@@ -148,6 +164,14 @@ psych_scb <- read.xlsx(
   colNames = FALSE
 )
 
+public_ab <- read.xlsx(
+  file_path,
+  sheet = 3,
+  rows = 26:33,
+  cols = 1:7,
+  colNames = FALSE
+)
+
 majors_list <- list(
   math_ab = math_ab,
   econ_ab = econ_ab,
@@ -155,7 +179,8 @@ majors_list <- list(
   mathcs_scb = mathcs_scb,
   bds_ab = bds_ab,
   psych_ab = psych_ab,
-  psych_scb = psych_scb
+  psych_scb = psych_scb,
+  public_ab = public_ab
 )
 
 for (i in seq_along(majors_list)) {
@@ -183,7 +208,8 @@ majors_table <- tibble(
     "mathcs_scb",
     "bds_ab",
     "psych_ab",
-    "psych_scb"
+    "psych_scb",
+    "public_ab"
   ),
   display = c(
     "Math AB",
@@ -192,7 +218,8 @@ majors_table <- tibble(
     "Math-CS ScB",
     "Behavioral Decision Sciences AB",
     "Psychology AB",
-    "Psychology ScB"
+    "Psychology ScB",
+    "Public Policy AB"
   )
 )
 
