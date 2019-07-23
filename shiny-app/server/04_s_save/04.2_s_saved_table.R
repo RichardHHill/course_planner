@@ -36,6 +36,12 @@ output$saved_inputs_table <- renderDT({
     out,
     rownames = FALSE,
     escape = -1,
-    selection = "none"
+    selection = "none",
+    options = list(
+      columnDefs = list(
+        list(width = "10%", targets = 0),
+        list(width = "45%", targets = c(1,2), className = "dt-center")
+      )
+    )
   )
 })

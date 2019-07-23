@@ -9,7 +9,6 @@ observeEvent(input$saved_inputs_row_to_load, {
   id_to_load <- saved_inputs_table_prep()[row, ] %>% 
     pull(id)
   
-  
   progress$inc(amount = 1, message = "Loading Courses")
   
   semesters_df <- conn %>%

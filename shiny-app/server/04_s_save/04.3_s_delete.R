@@ -49,7 +49,7 @@ observeEvent(input$saved_inputs_delete_button, {
     })
     
     saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
-    progress$close()
+
     session$sendCustomMessage(
       "show_toast",
       message = list(
@@ -72,4 +72,6 @@ observeEvent(input$saved_inputs_delete_button, {
     print("error deleting input set")
     print(error)
   })
+  
+  progress$close()
 })

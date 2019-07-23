@@ -100,9 +100,9 @@ observeEvent(input$confirm_save_all, {
   majors <- major_inputs_df()
   
   progress <- Progress$new(session, min = 0, max = 3)
+  progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
   tryCatch({
     DBI::dbWithTransaction(conn, {
-      progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
       
       tychobratools::add_row(conn, "input_ids", dat)
       
@@ -170,8 +170,3 @@ observeEvent(input$confirm_save_all, {
   
   progress$close()
 })
-
-
-
-
-

@@ -58,6 +58,7 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   })
   
   observeEvent(input$get_requirements, {
+    disable(id = "get_requirements")
     major_change_trigger(major_change_trigger() + 1)
   })
   
@@ -73,7 +74,6 @@ input_major_module <- function(input, output, session, id, parent_session, sched
   observeEvent(major_change_trigger(), {
     req(major_change_trigger() > 0) #otherwise runs on start
     disable(id = "get_requirements")
-
     major <- major_convertor()
     
     name_of_major(major[1,2])
