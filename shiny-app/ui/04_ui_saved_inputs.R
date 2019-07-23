@@ -6,7 +6,7 @@ tabItem(
       fluidRow(
         column(
           2,
-          textInput("saved_passkey", "Passkey", value = "password1")
+          textInput("saved_passkey", "Passkey")
         )
       ),
       br(),

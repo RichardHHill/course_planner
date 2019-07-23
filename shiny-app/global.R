@@ -7,6 +7,7 @@ library(DT)
 library(shinycssloaders)
 library(tychobratools)
 library(DBI)
+library(dbplyr)
 
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
