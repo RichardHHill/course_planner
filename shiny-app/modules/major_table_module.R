@@ -94,7 +94,13 @@ major_table_module <- function(input, output, server, major_course_vector, name,
     hold <- input$major_courses_table_cell_edit
     out <- major_courses_table_prep()
     
-    out[hold$row, hold$col + 1] <- hold$value
+    if (nchar(hold$value) > 10) {
+      code <- substr(hold$value, 1, 10)
+    } else if (nchar(hold$value) < 10) {
+      code <- paste0(hold$value, strrep(" ", 10 - nchar(hold$value)))
+    }
+    
+    out[hold$row, hold$col + 1] <- code
     
     major_courses_table_prep(out)
   })
