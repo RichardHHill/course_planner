@@ -82,7 +82,12 @@ major_table_module <- function(input, output, server, major_course_vector, name,
         dom = "t",
         pageLength = 25
       ),
-      editable = TRUE,
+      editable = list(
+        target = "cell",
+        disable = list(
+          columns = 2
+        )
+      ),
       selection = "none"
     )
   })
