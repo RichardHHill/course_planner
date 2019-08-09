@@ -12,9 +12,6 @@ observeEvent(input$get_requirements, {
   
   major <- majors_list[[input$pick_major]]
   
-  req_count <- 0
-  count <- 1
-  
   insertUI(
     selector = paste0("#", "get_requirements"),
     where = "afterEnd",
@@ -23,6 +20,9 @@ observeEvent(input$get_requirements, {
       textOutput("major_note")
     )
   )
+  
+  req_count <- 0
+  count <- 1
   
   for (i in seq_along(major)) {
     name <- major[[length(major) - i + 1]][[2]]
@@ -115,29 +115,32 @@ observeEvent(input$deselect_major, {
 })
 
 
+major_course_vector <- reactive({
+  req(course_tags())
+
+  courses <- c()
+  course_tags <- course_tags()
+  for (i in seq_along(majors_list[[input$pick_major]])) {
+    courses <- c(input[[course_tags[[i]]]], courses)
+  }
+  
+  substr(courses, 1, 10)
+})
 
 
+major_course_table_prep <- reactive({
+  req(major_course_vector())
+  
+  tibble(
+    course = major_course_vector()
+  )
+})
 
-# # Used to reload major data
-# major_names <- reactiveValues()
-# major_data <- reactiveVal()
-# 
-# 
-# major_1_return <- callModule(input_major_module, "1", id = 1, parent_session = session, major_names = major_names, major_data = major_data, load_trigger = load_trigger)
-# 
-# callModule(major_table_module, "1", major_course_vector = major_1_return$courses,
-#            name = major_1_return$name, shown = major_1_return$shown, schedule_list = schedule_list)
-# 
-# major_2_return <- callModule(input_major_module, "2", id = 2, parent_session = session, major_names = major_names, major_data = major_data, load_trigger = load_trigger)
-# 
-# callModule(major_table_module, "2", major_course_vector = major_2_return$courses,
-#            name = major_2_return$name, shown = major_2_return$shown, schedule_list = schedule_list)
-# 
-# major_3_return <- callModule(input_major_module, "3", id = 3, parent_session = session, major_names = major_names, major_data = major_data, load_trigger = load_trigger)
-# 
-# callModule(major_table_module, "3", major_course_vector = major_3_return$courses,
-#            name = major_3_return$name, shown = major_3_return$shown, schedule_list = schedule_list)
-# 
-# all_majors <- reactive({
-#   list(major_1_return$data(), major_2_return$data(), major_3_return$data())
-# })
+output$major_course_table <- renderDT({
+  out <- major_course_table_prep()
+  
+  datatable(
+    out
+  )
+})
+

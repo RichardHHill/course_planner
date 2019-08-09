@@ -27,7 +27,8 @@ tabItem(
     ),
     box(
       width = 4,
-      title = "Selected Courses"
+      title = "Selected Courses",
+      DTOutput("major_course_table")
     ),
     box(
       width = 4,
