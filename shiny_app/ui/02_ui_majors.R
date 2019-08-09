@@ -28,6 +28,21 @@ tabItem(
     box(
       width = 4,
       title = "Selected Courses",
+      div(
+        id = "major_chosen",
+        column(
+          12,
+          align = "center",
+          h3("Double click a cell to edit"),
+          br(),
+          actionButton(
+            "submit_major",
+            "Submit Major",
+            style = "color: #fff; background-color: #07b710; border-color: #07b710;"
+          )
+        )
+      ) %>% hidden(),
+      br(),
       DTOutput("major_course_table")
     ),
     box(

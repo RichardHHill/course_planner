@@ -89,7 +89,7 @@ observeEvent(input$get_requirements, {
       actionButton(
         "deselect_major",
         "Deselect Major",
-        style="color: #fff; background-color: #dd4b39; border-color: #d73925"
+        style = "color: #fff; background-color: #dd4b39; border-color: #d73925"
       ),
       br(),
       textOutput("major_is_complete"),
@@ -114,6 +114,13 @@ observeEvent(input$deselect_major, {
   course_tags(NULL)
 })
 
+observe({
+  if (length(course_tags()) == 0) {
+    hideElement("major_chosen")
+  } else {
+    showElement("major_chosen")
+  }
+})
 
 major_course_vector <- reactive({
   req(course_tags())
@@ -131,16 +138,28 @@ major_course_vector <- reactive({
 major_course_table_prep <- reactive({
   req(major_course_vector())
   
+  course_codes <- major_course_vector()
+  course_names <- unlist(lapply(course_codes, helpers$course_code_to_name))
+  
   tibble(
-    course = major_course_vector()
+    Course = course_codes,
+    Name = course_names
   )
 })
+
 
 output$major_course_table <- renderDT({
   out <- major_course_table_prep()
   
   datatable(
-    out
+    out,
+    rownames = FALSE,
+    options = list(
+      dom = "t"
+    ),
+    editable = list(
+      target = "cell"
+    )
   )
 })
 
