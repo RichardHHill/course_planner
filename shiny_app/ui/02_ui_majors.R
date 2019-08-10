@@ -11,39 +11,48 @@ tabItem(
     )
   ),
   fluidRow(
-    box(
-      width = 4,
-      title = "Choose a Major",
-      pickerInput(
-        "pick_major",
-        "",
-        choices = setNames(majors_table$major, majors_table$display)
-      ),
-      br(),
-      actionButton(
-        "get_requirements",
-        "Get Requirements"
-      )
-    ),
-    box(
-      width = 4,
-      title = "Selected Courses",
-      div(
-        id = "major_chosen",
-        column(
-          12,
-          align = "center",
-          h3("Double click a cell to edit"),
-          br(),
-          actionButton(
-            "submit_major",
-            "Submit Major",
-            style = "color: #fff; background-color: #07b710; border-color: #07b710;"
-          )
+    column(
+      4,
+      box(
+        width = 12,
+        title = "Select Major",
+        id = "select_major_box",
+        collapsible = TRUE,
+        pickerInput(
+          "pick_major",
+          "",
+          choices = setNames(majors_table$major, majors_table$display)
+        ),
+        br(),
+        actionButton(
+          "get_requirements",
+          "Get Requirements"
         )
-      ) %>% hidden(),
-      br(),
-      DTOutput("major_course_table")
+      ),
+      div(
+        id = "chosen_major_courses_box",
+        box(
+          width = 12,
+          title = "Selected Courses",
+          div(
+            id = "major_chosen",
+            column(
+              12,
+              align = "center",
+              h2("Double click a cell to edit"),
+              br(),
+              textInput("submit_major_name", "Name", width = "33%"),
+              actionButton(
+                "submit_major",
+                "Submit Major",
+                style = "color: #fff; background-color: #07b710; border-color: #07b710;"
+              )
+            )
+          ),
+          br(),
+          DTOutput("major_courses_table")
+        )
+      ) %>% hidden()
     ),
     box(
       width = 4,

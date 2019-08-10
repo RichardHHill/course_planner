@@ -3,7 +3,6 @@ head <- dashboardHeader(
 )
 
 sidebar <- dashboardSidebar(
-  useShinyjs(),
   sidebarMenu(
     id = "sidebar",
     menuItem(
@@ -36,7 +35,8 @@ body <- dashboardBody(
     tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"),
     tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
   ),
-  
+  useShinyjs(),
+  extendShinyjs(script = "www/shinyjs.js"),
   tabItems(
     source("ui/01_ui_dashboard.R", local = TRUE)$value,
     source("ui/02_ui_majors.R", local = TRUE)$value,
