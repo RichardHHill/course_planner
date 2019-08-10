@@ -1,7 +1,7 @@
 
 built_majors <- reactiveVal(
   tibble(
-    Course = character(0),
+    Code = character(0),
     Name = character(0),
     major_name = character(0),
     id = character(0)
@@ -12,6 +12,31 @@ observeEvent(input$submit_major, {
   dat <- major_courses_table_prep()
   
   dat$major_name <- input$submit_major_name
+  dat$id <- digest::digest(dat)
+  
+  built_majors(
+    rbind(
+      built_majors(),
+      dat
+    )
+  )
+})
+
+observeEvent(input$submit_custom_major, {
+  dat <- hot_to_r(input$major_handson_table) %>% 
+    filter(Code != "" | Name != "")
+  
+  dat$Code <- lapply(dat$Code, function(x) {
+    if (nchar(x) > 10) {
+      x <- substr(x, 1, 10)
+    } else if (nchar(x) < 10) {
+      x <- paste0(x, strrep(" ", 10 - nchar(x)))
+    }
+    x
+  })
+  
+  
+  dat$major_name <- input$submit_custom_major_name
   dat$id <- digest::digest(dat)
   
   built_majors(

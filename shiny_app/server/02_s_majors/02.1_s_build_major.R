@@ -148,7 +148,7 @@ observe({
   course_names <- unlist(lapply(course_codes, helpers$course_code_to_name))
   
   out <- tibble(
-    Course = course_codes,
+    Code = course_codes,
     Name = course_names
   )
   
@@ -159,20 +159,21 @@ observeEvent(input$major_courses_table_cell_edit, {
   hold <- input$major_courses_table_cell_edit
   out <- major_courses_table_prep()
   
+  val <- hold$value
+  
   if (hold$col == 0) {
-    if (nchar(hold$value) > 10) {
-      val <- substr(hold$value, 1, 10)
-    } else if (nchar(hold$value) < 10) {
-      val <- paste0(hold$value, strrep(" ", 10 - nchar(hold$value)))
+    if (nchar(val) > 10) {
+      val <- substr(val, 1, 10)
+    } else if (nchar(val) < 10) {
+      val <- paste0(val, strrep(" ", 10 - nchar(val)))
     }
-  } else {
-    val <- hold$value
   }
 
   out[hold$row, hold$col + 1] <- val
 
   major_courses_table_prep(out)
 })
+
 
 output$major_courses_table <- renderDT({
   out <- major_courses_table_prep()

@@ -8,6 +8,7 @@ library(shinycssloaders)
 library(tychobratools)
 library(DBI)
 library(dbplyr)
+library(rhandsontable)
 
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")

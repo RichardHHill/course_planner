@@ -68,11 +68,14 @@ tabItem(
           "Submit Major",
           style = "color: #fff; background-color: #07b710; border-color: #07b710;"
         )
-      )
+      ),
+      br(),
+      rHandsontableOutput("major_handson_table"),
+      "The Code is a course code (up to 10 digits) such as ECON 0110"
     ),
     box(
       width = 4,
-      title = "Majors",
+      title = "Built Majors",
       DTOutput("built_majors_table")
     )
   )
