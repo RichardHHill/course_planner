@@ -4,7 +4,7 @@ built_majors <- reactiveVal(
     Code = character(0),
     Name = character(0),
     major_name = character(0),
-    id = character(0)
+    major_id = character(0)
   )
 )
 
@@ -12,7 +12,7 @@ observeEvent(input$submit_major, {
   dat <- major_courses_table_prep()
   
   dat$major_name <- input$submit_major_name
-  dat$id <- digest::digest(dat)
+  dat$major_id <- digest::digest(dat)
   
   built_majors(
     rbind(
@@ -37,7 +37,7 @@ observeEvent(input$submit_custom_major, {
   
   
   dat$major_name <- input$submit_custom_major_name
-  dat$id <- digest::digest(dat)
+  dat$major_id <- digest::digest(dat)
   
   built_majors(
     rbind(
@@ -49,7 +49,7 @@ observeEvent(input$submit_custom_major, {
 
 built_majors_table_prep <- reactive({
   out <- built_majors() %>% 
-    select(major_name, id) %>% 
+    select(major_name, major_id) %>% 
     distinct()
   
   if (nrow(out) > 0) {

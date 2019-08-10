@@ -22,44 +22,6 @@ semester_courses_df <- reactive({
 })
 
 
-major_inputs_df <- reactive({
-  majors <- all_majors()
-  
-  out <- tibble(
-    major_number = character(0),
-    major_name = character(0),
-    tag = character(0),
-    course = character(0)
-  )
-  
-  for (i in seq_along(majors)) {
-    if (length(majors[[i]]) > 1) {
-      course_list <- majors[[i]]
-      courses <- list()
-      
-      for (j in seq_along(course_list)) {
-        tag <- names(course_list)[[j]]
-        tag_courses <- course_list[[j]]
-        names(tag_courses) <- rep(tag, length(tag_courses))
-        courses <- c(courses, tag_courses)
-      }
-      
-      out <- bind_rows(
-        out,
-        tibble(
-          major_number = paste0("major_", i),
-          major_name = majors[[i]]$major,
-          tag = names(courses),
-          course = unlist(courses)
-        )
-      )
-    }
-  }
-  
-  out
-})
-
-
 observeEvent(input$save_all_inputs, {
   showModal(
     modalDialog(
@@ -97,7 +59,7 @@ observeEvent(input$confirm_save_all, {
   removeModal()
   dat <- list(passkey = input$passkey, name = input$saved_name)
   semester_courses <- semester_courses_df()
-  majors <- major_inputs_df()
+  majors <- built_majors()
   
   progress <- Progress$new(session, min = 0, max = 3)
   progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
@@ -117,31 +79,29 @@ observeEvent(input$confirm_save_all, {
       
       progress$inc(amount = 1, message = "Saving Inputs", detail = "Semester Courses")
       
-      semester_courses <- cbind(
-        tibble(id = rep(input_set_id, nrow(semester_courses))),
-        semester_courses
-      )
-      
-      DBI::dbWriteTable(
-        conn,
-        name = "semester_courses",
-        value = semester_courses,
-        append = TRUE
-      )
+      if (nrow(semester_courses) > 0) {
+        semester_courses$id <- input_set_id 
+        
+        DBI::dbWriteTable(
+          conn,
+          name = "semester_courses",
+          value = semester_courses,
+          append = TRUE
+        )
+      }
       
       progress$inc(amount = 1, message = "Saving Inputs", detail = "Majors")
       
-      majors <- cbind(
-        tibble(id = rep(input_set_id, nrow(majors))),
-        majors
-      )
+      if (nrow(majors) > 0) {
+        majors$id <- input_set_id
       
-      DBI::dbWriteTable(
-        conn,
-        name = "majors",
-        value = majors,
-        append = TRUE
-      )
+        DBI::dbWriteTable(
+          conn,
+          name = "majors",
+          value = majors,
+          append = TRUE
+        )
+      }
     })
     
     saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
