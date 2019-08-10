@@ -31,9 +31,30 @@ tables_list <- reactive({
     )
   })
   
+
+  
   names(out) <- names
     
   out
 })
 
-observe(print(tables_list()))
+
+
+output$major_tables_ui <- renderUI({
+  major_ids <- built_majors()$major_id %>% unique()
+  
+  lapply(tables_list(), function(x) {
+    box(
+      datatable(
+        x,
+        width = "100%",
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        ),
+        escape = -3,
+        selection = "none"
+      )
+    )
+  })
+})

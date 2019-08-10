@@ -44,8 +44,9 @@ tabItem(
     )
   ),
   fluidRow(
-    major_table_module_ui("1"),
-    major_table_module_ui("2"),
-    major_table_module_ui("3")
+    box(
+      width = 12,
+      uiOutput("major_tables_ui")
+    )
   )
 )
