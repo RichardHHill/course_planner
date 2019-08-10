@@ -27,5 +27,3 @@ department_list <- readRDS("data/department_list.RDS")
 helpers <- source("helpers/course_helpers.R", local = TRUE)$value
 
 source("modules/semester_module.R")
-source("modules/input_major_module.R")
-source("modules/major_table_module.R")
