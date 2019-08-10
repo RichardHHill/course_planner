@@ -57,7 +57,7 @@ tabItem(
     box(
       width = 4,
       title = "Majors",
-      fluidRow(column(12,h3("To Do: Show, delete, reload")))
+      DTOutput("built_majors_table")
     )
   )
   # fluidRow(

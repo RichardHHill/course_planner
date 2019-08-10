@@ -159,17 +159,20 @@ observeEvent(input$major_courses_table_cell_edit, {
   hold <- input$major_courses_table_cell_edit
   out <- major_courses_table_prep()
   
-  # if (nchar(hold$value) > 10) {
-  #   code <- substr(hold$value, 1, 10)
-  # } else if (nchar(hold$value) < 10) {
-  #   code <- paste0(hold$value, strrep(" ", 10 - nchar(hold$value)))
-  # }
-  # 
-  out[hold$row, hold$col + 1] <- hold$value
-  
+  if (hold$col == 0) {
+    if (nchar(hold$value) > 10) {
+      val <- substr(hold$value, 1, 10)
+    } else if (nchar(hold$value) < 10) {
+      val <- paste0(hold$value, strrep(" ", 10 - nchar(hold$value)))
+    }
+  } else {
+    val <- hold$value
+  }
+
+  out[hold$row, hold$col + 1] <- val
+
   major_courses_table_prep(out)
 })
-observe(print(major_courses_table_prep())) 
 
 output$major_courses_table <- renderDT({
   out <- major_courses_table_prep()
