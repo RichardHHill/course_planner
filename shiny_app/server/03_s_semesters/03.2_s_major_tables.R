@@ -16,7 +16,7 @@ tables_list <- reactive({
     
     course_codes <- toupper(major$Code)
     
-    in_schedule <- major$Code %in% schedule_list()
+    in_schedule <- course_codes %in% schedule_list()
     in_schedule <- lapply(in_schedule, function(x) {
       if (isTRUE(x)) {
         as.character(icon("check-circle"))
