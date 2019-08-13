@@ -29,7 +29,8 @@ observeEvent(input$saved_inputs_row_to_load, {
   majors_df <- conn %>% 
     tbl("majors") %>% 
     collect() %>% 
-    filter(id == id_to_load)
+    filter(id == id_to_load) %>% 
+    select(-id)
   
   built_majors(majors_df)
   
