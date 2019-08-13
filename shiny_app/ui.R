@@ -3,6 +3,19 @@ head <- dashboardHeader(
 )
 
 sidebar <- dashboardSidebar(
+  fluidRow(
+    column(
+      12,
+      align = "center",
+      actionButton(
+        "save_all_inputs",
+        "Save Inputs",
+        style = "background-color: #07b710; color: #fff; border-color: #07b710",
+        icon = icon("plus"),
+        width = "90%"
+      )
+    )
+  ),
   sidebarMenu(
     id = "sidebar",
     menuItem(

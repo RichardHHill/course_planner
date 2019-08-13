@@ -1,18 +1,6 @@
 tabItem(
   tabName = "select_courses",
   fluidRow(
-    column(
-      12,
-      actionButton(
-        "save_all_inputs",
-        "Save Inputs",
-        style = "background-color: #46c410; color: #fff",
-        icon = icon("plus")
-      )
-    )
-  ),
-  br(),
-  fluidRow(
     box(
       width = 12,
       fluidRow(
