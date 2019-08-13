@@ -8,6 +8,7 @@ tables_list <- reactive({
     select(major_name, major_id) %>% 
     distinct() %>% 
     pull(major_name)
+
   
   out <- lapply(major_ids, function(id) {
     major <- built_majors %>% 
@@ -39,18 +40,23 @@ tables_list <- reactive({
 })
 
 
-
 output$major_tables_ui <- renderUI({
-  major_ids <- built_majors()$major_id %>% unique()
+  tables <- tables_list()
   
-  lapply(tables_list(), function(x) {
+  lapply(seq_along(tables), function(x) {
+    
     box(
+      width = 4,
+      title = names(tables)[[x]],
       datatable(
-        x,
+        tables[[x]],
         width = "100%",
         rownames = FALSE,
+        colnames = c("Code", "Name", ""),
         options = list(
-          dom = "t"
+          dom = "t",
+          pageLength = 25,
+          scrollY = "400px"
         ),
         escape = -3,
         selection = "none"
