@@ -182,7 +182,8 @@ output$major_courses_table <- renderDT({
     out,
     rownames = FALSE,
     options = list(
-      dom = "t"
+      dom = "t",
+      pageLength = 25
     ),
     editable = list(
       target = "cell"

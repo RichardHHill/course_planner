@@ -76,6 +76,8 @@ output$built_majors_table <- renderDT({
   datatable(
     out,
     rownames = FALSE,
-    escape = -1
+    escape = -1,
+    colnames = c("", "Major Name"),
+    selection = "none"
   )
 })

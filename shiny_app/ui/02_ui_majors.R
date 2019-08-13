@@ -70,8 +70,14 @@ tabItem(
         )
       ),
       br(),
-      rHandsontableOutput("major_handson_table"),
-      "The Code is a course code (up to 10 digits) such as ECON 0110"
+      fluidRow(
+        column(
+          12,
+          br(),
+          rHandsontableOutput("major_handson_table"),
+          "The Code is a course code (up to 10 digits) such as ECON 0110"
+        )
+      )
     ),
     box(
       width = 4,
