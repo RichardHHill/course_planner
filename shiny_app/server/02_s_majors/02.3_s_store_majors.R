@@ -65,7 +65,7 @@ built_majors_table_prep <- reactive({
     
     buttons <- paste0(
       '<div class="btn-group width_75" role="group" aria-label="Basic example">
-      <button class="btn btn-primary btn-sm edit_btn" data-toggle="tooltip" data-placement="top" title="Edit Major" id = ', rows, ' style="margin: 0"><i class="fa fa-pencil-square-o"></i></button>
+      <button class="btn btn-primary btn-sm edit_btn" data-toggle="tooltip" data-placement="top" title="Reload Major" id = ', rows, ' style="margin: 0"><i class="fa fa-arrow-left"></i></button>
       <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Major" id = ', rows, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
     )
     

@@ -36,9 +36,9 @@ $(document).on('shiny:connected', function() {
     Shiny.setInputValue("saved_inputs_row_to_load", this.id, { priority: "event"});
   });
   
-  $(document).on("click", "#built_majors_table .load_btn", function() {
+  $(document).on("click", "#built_majors_table .edit_btn", function() {
     $(this).tooltip('hide');
-    Shiny.setInputValue("built_majors_row_to_load", this.id, { priority: "event"});
+    Shiny.setInputValue("built_majors_row_to_edit", this.id, { priority: "event"});
   });
   
   $(document).on("click", "#built_majors_table .delete_btn", function() {
