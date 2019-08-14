@@ -6,7 +6,10 @@ custom_table <- reactiveVal(
   )
 )
 
+custom_table_trigger <- reactiveVal(0)
+
 output$major_handson_table <- renderRHandsontable({
+  custom_table_trigger()
   rhandsontable(
     data = custom_table(),
     colWidths = c(90, 280)
@@ -29,4 +32,5 @@ observeEvent(input$built_majors_row_to_edit, {
   )
   
   custom_table(out)
+  custom_table_trigger(custom_table_trigger() + 1)
 })

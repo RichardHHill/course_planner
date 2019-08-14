@@ -9,6 +9,7 @@ library(tychobratools)
 library(DBI)
 library(dbplyr)
 library(rhandsontable)
+library(V8)
 
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
