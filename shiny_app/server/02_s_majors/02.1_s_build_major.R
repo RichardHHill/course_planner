@@ -94,7 +94,8 @@ observeEvent(input$get_requirements, {
       actionButton(
         "select_major_choices",
         "Select Choices",
-        style = "color: #fff; background-color: #07b710; border-color: #07b710;"
+        style = "color: #fff; background-color: #07b710; border-color: #07b710;",
+        icon = icon("arrow-right")
       ),
       br(),
       textOutput("major_is_complete"),
@@ -120,12 +121,6 @@ observeEvent(input$deselect_major, {
   course_tags(NULL)
 })
 
-observeEvent(input$select_major_choices, {
-  js$toggle_collapse("select_major_box")
-  showElement("chosen_major_courses_box")
-})
-
-
 major_course_vector <- reactive({
   req(course_tags())
 
@@ -137,57 +132,3 @@ major_course_vector <- reactive({
   
   substr(courses, 1, 10)
 })
-
-
-major_courses_table_prep <- reactiveVal()
-
-observe({
-  req(major_course_vector())
-  
-  course_codes <- major_course_vector()
-  course_names <- unlist(lapply(course_codes, helpers$course_code_to_name))
-  
-  out <- tibble(
-    Code = course_codes,
-    Name = course_names
-  )
-  
-  major_courses_table_prep(out)
-})
-
-observeEvent(input$major_courses_table_cell_edit, {
-  hold <- input$major_courses_table_cell_edit
-  out <- major_courses_table_prep()
-  
-  val <- hold$value
-  
-  if (hold$col == 0) {
-    if (nchar(val) > 10) {
-      val <- substr(val, 1, 10)
-    } else if (nchar(val) < 10) {
-      val <- paste0(val, strrep(" ", 10 - nchar(val)))
-    }
-  }
-
-  out[hold$row, hold$col + 1] <- val
-
-  major_courses_table_prep(out)
-})
-
-
-output$major_courses_table <- renderDT({
-  out <- major_courses_table_prep()
-  
-  datatable(
-    out,
-    rownames = FALSE,
-    options = list(
-      dom = "t",
-      pageLength = 25
-    ),
-    editable = list(
-      target = "cell"
-    )
-  )
-})
-

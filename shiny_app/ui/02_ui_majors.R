@@ -29,36 +29,12 @@ tabItem(
             "get_requirements",
             "Get Requirements"
           )
-        ),
-        div(
-          id = "chosen_major_courses_box",
-          box(
-            width = 12,
-            title = "Selected Courses",
-            div(
-              id = "major_chosen",
-              column(
-                12,
-                align = "center",
-                h2("Double click a cell to edit"),
-                br(),
-                textInput("submit_major_name", "Name", width = "33%"),
-                actionButton(
-                  "submit_major",
-                  "Submit Major",
-                  style = "color: #fff; background-color: #07b710; border-color: #07b710;"
-                )
-              )
-            ),
-            br(),
-            DTOutput("major_courses_table")
-          )
-        ) %>% hidden()
+        )
       )
     ),
     box(
       width = 4,
-      title = "Custom Major",
+      title = "Customize Major",
       column(
         12,
         align = "center",

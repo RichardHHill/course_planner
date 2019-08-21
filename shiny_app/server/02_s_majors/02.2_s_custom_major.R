@@ -34,3 +34,26 @@ observeEvent(input$built_majors_row_to_edit, {
   custom_table(out)
   custom_table_trigger(custom_table_trigger() + 1)
 })
+
+observeEvent(input$select_major_choices, {
+  req(major_course_vector())
+  
+  course_codes <- major_course_vector()
+  course_names <- unlist(lapply(course_codes, helpers$course_code_to_name))
+  
+  out <- tibble(
+    Code = course_codes,
+    Name = course_names
+  )
+  
+  out <- rbind(
+    out,
+    tibble(
+      Code = rep("", 25 - nrow(out)),
+      Name = rep("", 25 - nrow(out))
+    )
+  )
+  
+  custom_table(out)
+  custom_table_trigger(custom_table_trigger() + 1)
+})
