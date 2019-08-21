@@ -12,7 +12,7 @@ output$major_handson_table <- renderRHandsontable({
   custom_table_trigger()
   rhandsontable(
     data = custom_table(),
-    colWidths = c(90, 280)
+    colWidths = c(80, 245)
   )
 })
 
@@ -55,5 +55,15 @@ observeEvent(input$select_major_choices, {
   )
   
   custom_table(out)
+  custom_table_trigger(custom_table_trigger() + 1)
+})
+
+observeEvent(input$clear_custom_major, {
+  custom_table(
+    tibble(
+      Code = rep("", 25),
+      Name = rep("", 25)
+    )
+  )
   custom_table_trigger(custom_table_trigger() + 1)
 })

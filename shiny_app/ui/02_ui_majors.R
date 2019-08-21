@@ -43,6 +43,11 @@ tabItem(
           "submit_custom_major",
           "Submit Major",
           style = "color: #fff; background-color: #07b710; border-color: #07b710;"
+        ),
+        actionButton(
+          "clear_custom_major",
+          "Clear",
+          style = "color: #fff; background-color: #dd4b39; border-color: #d73925"
         )
       ),
       br(),
