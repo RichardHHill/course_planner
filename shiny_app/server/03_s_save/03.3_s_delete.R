@@ -31,8 +31,7 @@ observeEvent(input$saved_inputs_delete_button, {
   removeModal()
   row <- as.numeric(input$saved_inputs_row_to_delete)
   
-  id_to_delete <- saved_inputs_table_prep()[row, ] %>% 
-    pull(id)
+  id_to_delete <- saved_inputs_table_prep()[row, ]$id
   
   progress <- Progress$new(session, min = 0, max = 3)
   

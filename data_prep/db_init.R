@@ -33,8 +33,8 @@ DBI::dbWriteTable(
 
 majors <- tibble(
   id = numeric(0),
-  Code = character(0),
-  Name = character(0),
+  code = character(0),
+  name = character(0),
   major_name = character(0),
   major_id = character(0)
 )

@@ -5,7 +5,8 @@ semester_courses_df <- reactive({
   
   out <- tibble(
     semester = character(0),
-    course = character(0)
+    code = character(0),
+    name = character(0)
   )
   
   for (i in seq_along(names)) {
@@ -58,6 +59,7 @@ observeEvent(input$save_all_inputs, {
 
 observeEvent(input$confirm_save_all, {
   removeModal()
+  
   dat <- list(passkey = input$passkey, name = input$saved_name)
   semester_courses <- semester_courses_df()
   majors <- built_majors()
@@ -71,7 +73,7 @@ observeEvent(input$confirm_save_all, {
       
       get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
       
-      get_query <- DBI::sqlInterpolate(conn, get_query, .dots = dat[c("passkey")])
+      get_query <- DBI::sqlInterpolate(conn, get_query, .dots = dat["passkey"])
       
       input_set_id <- as.integer(DBI::dbGetQuery(
         conn,

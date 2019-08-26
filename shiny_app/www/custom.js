@@ -25,7 +25,6 @@ $(document).on('shiny:connected', function() {
     });
   
     $(document).on("click", "#saved_inputs_delete_cancel_button", function() {
-      console.log("Cancel clicked");
       $("#saved_inputs_table .load_btn#" + id_to_delete).prop('disabled', false);
       $("#saved_inputs_table .delete_btn#" + id_to_delete).prop('disabled', false);
     })

@@ -5,8 +5,7 @@ observeEvent(input$saved_inputs_row_to_load, {
   
   row <- as.numeric(input$saved_inputs_row_to_load)
   
-  id_to_load <- saved_inputs_table_prep()[row, ] %>% 
-    pull(id)
+  id_to_load <- saved_inputs_table_prep()[row, ]$id
   
   progress$inc(amount = 1, message = "Loading Courses")
   
@@ -28,7 +27,7 @@ observeEvent(input$saved_inputs_row_to_load, {
   
   majors_df <- conn %>% 
     tbl("majors") %>% 
-    collect() %>% 
+    collect %>% 
     filter(id == id_to_load) %>% 
     select(-id)
   

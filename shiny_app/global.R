@@ -16,10 +16,7 @@ library(stringr)
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 #Sys.setenv(R_CONFIG_ACTIVE = "production")
 app_config <- config::get()
-conn <- tychobratools::db_connect(app_config$db)
-
-
-options(scipen = 999)
+conn <- db_connect(app_config$db)
 
 majors_table <- readRDS("data/majors.RDS")
 majors_list <- readRDS("data/majors_list.RDS")

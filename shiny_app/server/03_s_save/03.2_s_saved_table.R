@@ -5,7 +5,7 @@ saved_inputs_table_prep <- reactive({
   
   out <- conn %>% 
     tbl("input_ids") %>% 
-    collect() %>% 
+    collect %>% 
     filter(passkey == input$saved_passkey) %>% 
     arrange(desc(time_created)) %>% 
     select(id, name)
@@ -35,6 +35,7 @@ output$saved_inputs_table <- renderDT({
   datatable(
     out,
     rownames = FALSE,
+    colnames = c("", "Id", "Name"),
     escape = -1,
     selection = "none",
     options = list(
