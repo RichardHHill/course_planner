@@ -12,13 +12,13 @@ observeEvent(input$saved_inputs_row_to_load, {
   
   semesters_df <- conn %>%
     tbl("semester_courses") %>% 
-    collect() %>% 
+    collect %>% 
     filter(id == id_to_load)
   
   for (i in 1:8) {
     courses <- semesters_df %>% 
       filter(semester == paste0("semester", i)) %>% 
-      pull(course)
+      select(code, name)
     
     semesters[[paste0("semester", i)]] <- courses
   }

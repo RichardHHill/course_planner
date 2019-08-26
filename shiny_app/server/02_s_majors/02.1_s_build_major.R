@@ -40,11 +40,14 @@ observeEvent(input$get_requirements, {
           pickerInput(
             tag,
             name,
-            choices = paste0(
+            choices = setNames(
               courses[!is.na(courses)],
-              unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              paste(
+                courses[!is.na(courses)],
+                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              )
             ),
-            selected = paste0(courses[[1]], helpers$course_code_to_name(courses[[1]]))
+            selected = courses[[1]]
           ),
           br()
         )
@@ -58,14 +61,14 @@ observeEvent(input$get_requirements, {
           pickerInput(
             tag,
             name,
-            choices = paste0(
+            choices = setNames(
               courses[!is.na(courses)],
-              unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              paste(
+                courses[!is.na(courses)],
+                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+              )
             ),
-            selected = paste0(
-              courses[!is.na(courses)],
-              unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
-            )[1:number],
+            selected = courses[!is.na(courses)][1:number],
             multiple = TRUE,
             options = pickerOptions(
               maxOptions = number
@@ -130,5 +133,5 @@ major_course_vector <- reactive({
     courses <- c(input[[course_tags[[i]]]], courses)
   }
   
-  substr(courses, 1, 10)
+  courses
 })

@@ -2,7 +2,7 @@ library(dplyr)
 library(RPostgres)
 
 Sys.setenv("R_CONFIG_ACTIVE" = "default")
-app_config <- config::get(file = "shiny-app/config.yml")
+app_config <- config::get(file = "shiny_app/config.yml")
 conn <- tychobratools::db_connect(app_config$db)
 
 DBI::dbExecute(conn, "DROP TABLE IF EXISTS input_ids")
@@ -19,7 +19,8 @@ DBI::dbExecute(conn, ids_table_query)
 semester_courses <- tibble(
   id = numeric(0),
   semester = character(0),
-  course = character(0)
+  code = character(0),
+  name = character(0)
 )
 
 DBI::dbWriteTable(

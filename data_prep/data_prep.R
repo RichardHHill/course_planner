@@ -1,7 +1,7 @@
 library(openxlsx)
 library(dplyr)
 
-file_path <- "data/provided/Department Courses.xlsx"
+file_path <- "data_prep/provided/Department Courses.xlsx"
 
 ###
 # Departments
@@ -32,19 +32,7 @@ department_list <- lapply(1:nrow(department_excel_tribble), function(row) {
 
 names(department_list) <- department_excel_tribble$name
 
-for (i in seq_along(department_list)) {
-  course_codes <- department_list[[i]]$course_code
-  
-  for (j in seq_along(course_codes)) {
-    if (nchar(course_codes[[j]]) < 10) {
-      course_codes[[j]] <- paste0(course_codes[[j]], paste(rep(" ", 10 - nchar(course_codes[[j]])), collapse = ""))
-    }
-  }
-  
-  department_list[[i]]$course_code <- course_codes
-}
-
-saveRDS(department_list, "shiny-app/data/department_list.RDS")
+saveRDS(department_list, "shiny_app/data/department_list.RDS")
 
 ###
 # Majors
@@ -84,26 +72,11 @@ majors_list <- lapply(1:nrow(major_excel_tribble), function(row) {
 })
 names(majors_list) <- major_excel_tribble$tag
 
-for (i in seq_along(majors_list)) {
-  courses <- majors_list[[i]][c(-1,-2,-3), ]
-  
-  for (j in seq_along(courses)) {
-    for (k in seq_len(nrow(courses))) {
-      course <- courses[k,j]
-      if (!is.na(course) & nchar(course) < 10) {
-        courses[k,j] <- paste0(courses[k,j], paste(rep(" ", 10 - nchar(course)), collapse = ""))
-      }
-    }
-  }
-  
-  majors_list[[i]][c(-1,-2,-3), ] <- courses
-}
-
-saveRDS(majors_list, "shiny-app/data/majors_list.RDS")
+saveRDS(majors_list, "shiny_app/data/majors_list.RDS")
 
 majors_table <- tibble(
   major = names(majors_list),
   display = lapply(names(majors_list), function(x) majors_list[[x]][1,2])
 )
 
-saveRDS(majors_table, "shiny-app/data/majors.RDS")
+saveRDS(majors_table, "shiny_app/data/majors.RDS")

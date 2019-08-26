@@ -13,11 +13,12 @@ semester_courses_df <- reactive({
       out,
       tibble(
         semester = names[[i]],
-        course = semesters[[names[[i]]]]
+        code = semesters[[names[[i]]]]$code,
+        name = semesters[[names[[i]]]]$name
       )
     )
   }
-  
+
   out
 })
 

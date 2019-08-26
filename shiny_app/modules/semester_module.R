@@ -69,9 +69,12 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
               pickerInput(
                 ns("course_to_add"),
                 "Course",
-                choices = paste(
+                choices = setNames(
                   department_list[[1]][[1]],
-                  department_list[[1]][[2]]
+                  paste(
+                    department_list[[1]][[1]],
+                    department_list[[1]][[2]]
+                  )
                 )
               )
             )
@@ -108,9 +111,12 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
         session,
         "course_to_add", 
         "Course",
-        choices = paste(
+        choices = setNames(
           department_list[[department]][[1]],
-          department_list[[department]][[2]]
+          paste(
+            department_list[[department]][[1]],
+            department_list[[department]][[2]]
+          )
         )
       )
     })
@@ -124,51 +130,47 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
     
     if (type == "Custom") {
       code <- input$code_to_add
-      
-      if (nchar(code) > 10) {
-        code <- substr(code,1,10)
-      } else if (nchar(code) < 10) {
-        code <- paste0(code, strrep(" ", 10 - nchar(code)))
-      }
-      
-      course <- paste(code, input$name_to_add)
+      course <- input$name_to_add
     } else {
-      course <- input$course_to_add
+      code <- input$course_to_add
+      course <- helpers$course_code_to_name(code)
     }
     
-    semesters[[semester]] <- c(semesters[[semester]], course)
+    semesters[[semester]] <- rbind(
+      semesters[[semester]], 
+      tibble(
+        code = code,
+        name = course
+      )
+    )
   })
   
   semester_out <- reactiveVal()
   
   observe({
     out <- semesters[[paste0("semester", id)]]
-    ids <- seq_along(out)
+    req(out)
+    ids <- seq_len(nrow(out))
     
-    table <- tibble(
-      "Code" = substr(out, 1, 10),
-      "Course" = substr(out, 11, nchar(out))
-    )
-    
-    if (delete_mode() & length(out) > 0) {
+    if (delete_mode() & nrow(out) > 0) {
       buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', ids, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
       
       buttons <- tibble(
         "Remove" = buttons
       )
-      table <- bind_cols(
+      out <- bind_cols(
         buttons,
-        table
+        out
       )
     }
     
-    semester_out(table)
+    semester_out(out)
   })
   
   
   output$semester_table <- renderDT({
     #Require the list of courses 
-    req(semesters[[paste0("semester", id)]], nrow(semester_out()))
+    req(semesters[[paste0("semester", id)]], nrow(semester_out()) > 0)
     
     out <- semester_out()
     datatable(
@@ -187,7 +189,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   observeEvent(semester_remove(), {
     row <- as.numeric(semester_remove())
     
-    semesters[[paste0("semester", id)]] <- semesters[[paste0("semester", id)]][-row]
+    semesters[[paste0("semester", id)]] <- semesters[[paste0("semester", id)]][-row,]
     semester_out(semester_out()[-row,])
   })
 }
