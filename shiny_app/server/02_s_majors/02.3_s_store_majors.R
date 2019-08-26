@@ -12,6 +12,7 @@ observeEvent(input$submit_major, {
   dat <- major_courses_table_prep()
   
   dat$major_name <- input$submit_major_name
+  
   id <- digest::digest(dat)
   
   if (!(id %in% built_majors()$major_id)) {
@@ -28,7 +29,12 @@ observeEvent(input$submit_major, {
 
 observeEvent(input$submit_custom_major, {
   dat <- hot_to_r(input$major_handson_table) %>% 
-    filter(code != "" | name != "")
+    filter(code != "" | name != "") %>% 
+    mutate(
+      code = trimws(code),
+      name = trimws(name)
+    )
+    
   req(nrow(dat) > 0)
   
   dat$major_name <- input$submit_custom_major_name
@@ -52,7 +58,7 @@ built_majors_table_prep <- reactive({
     distinct
   
   if (nrow(out) > 0) {
-    rows <- seq_len(nrow(out))
+    rows <- 1:nrow(out)
     
     buttons <- paste0(
       '<div class="btn-group width_75" role="group" aria-label="Basic example">

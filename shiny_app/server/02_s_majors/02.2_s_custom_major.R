@@ -10,6 +10,7 @@ custom_table_trigger <- reactiveVal(0)
 
 output$major_handson_table <- renderRHandsontable({
   custom_table_trigger()
+  
   rhandsontable(
     data = custom_table(),
     stretchH = "last"

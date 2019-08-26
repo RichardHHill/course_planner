@@ -34,7 +34,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   observeEvent(input$add_course, {
     showModal(
       modalDialog(
-        title = "Add Course",
+        title = paste0("Add Course to Semester ", id),
         size = "m",
         footer = list(
           actionButton(ns("submit_course"), "Add Course"),
