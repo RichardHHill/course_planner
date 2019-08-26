@@ -3,5 +3,4 @@
 .RData
 .Ruserdata
 *.Rproj
-/shiny_app/data
 /shiny_app/rsconnect
