@@ -12,30 +12,27 @@ observeEvent(input$get_requirements, {
   major <- majors_list[[input$pick_major]]
   
   insertUI(
-    selector = paste0("#", "get_requirements"),
+    selector = "#get_requirements",
     where = "afterEnd",
     div(
-      id = "req_00",
+      id = "major_picker_ui",
       textOutput("major_note")
     )
   )
   
-  req_count <- 0
-  count <- 1
-  
-  for (i in seq_along(major)) {
-    name <- major[[length(major) - i + 1]][[2]]
-    number <- as.numeric(major[[length(major) - i + 1]][[3]])  
-    courses <- major[[length(major) - i + 1]][-c(1,2,3)] 
-    tag <- paste0("req_", length(major) - count + 1)
+  for (i in rev(seq_along(major))) {
+    name <- major[[i]][[2]]
+    number <- as.numeric(major[[i]][[3]])  
+    courses <- major[[i]][-c(1,2,3)] 
+    tag <- paste0("req_", i)
     course_tags(c(course_tags(), tag))
     
     if (number == 1) {
       insertUI(
-        selector = paste0("#", "get_requirements"),
+        selector = "#get_requirements",
         where = "afterEnd",
         div(
-          id = tag,
+          id = "major_picker_ui",
           pickerInput(
             tag,
             name,
@@ -53,10 +50,10 @@ observeEvent(input$get_requirements, {
       )
     } else {
       insertUI(
-        selector = paste0("#", "get_requirements"),
+        selector = "#get_requirements",
         where = "afterEnd",
         div(
-          id = tag,
+          id = "major_picker_ui",
           pickerInput(
             tag,
             name,
@@ -77,16 +74,13 @@ observeEvent(input$get_requirements, {
         )
       )
     }
-    
-    req_count <- req_count + number
-    count <- count + 1
   }
   
   insertUI(
-    selector = paste0("#", "get_requirements"),
+    selector = "#get_requirements",
     where = "afterEnd",
     div(
-      id = "req_0",
+      id = "major_picker_ui",
       br(),
       actionButton(
         "deselect_major",
@@ -108,15 +102,8 @@ observeEvent(input$get_requirements, {
 
 
 observeEvent(input$deselect_major, {
-  removeUI(selector = paste0("#", "req_0"))
-  removeUI(selector = paste0("#", "req_00"))
-  
-  tags_to_remove <- course_tags()
-  
-  for (i in seq_along(tags_to_remove)) {
-    removeUI(selector = paste0("#", tags_to_remove[[i]]))
-  }
-  
+  removeUI(selector = "#major_picker_ui", multiple = TRUE)
+
   enable(id = "pick_major")
   enable(id = "get_requirements")
   hideElement("chosen_major_courses_box")
