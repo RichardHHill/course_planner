@@ -5,14 +5,14 @@ delete_mode <- reactiveVal(FALSE)
 
 observeEvent(input$enable_delete_mode, {
   delete_mode(TRUE)
-  shinyjs::hide("enable_delete_mode")
-  shinyjs::show("disable_delete_mode")
+  hideElement("enable_delete_mode")
+  showElement("disable_delete_mode")
 })
 
 observeEvent(input$disable_delete_mode, {
   delete_mode(FALSE)
-  shinyjs::hide("disable_delete_mode")
-  shinyjs::show("enable_delete_mode")
+  hideElement("disable_delete_mode")
+  showElement("enable_delete_mode")
 })
 
 
