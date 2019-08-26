@@ -1,7 +1,6 @@
 
 schedule_list <- reactive({
-  all <- unlist(reactiveValuesToList(semesters))
-  substr(all, 1, 10)
+  unlist(lapply(reactiveValuesToList(semesters), function(df) df$code))
 })
 
 course_tags <- reactiveVal()
