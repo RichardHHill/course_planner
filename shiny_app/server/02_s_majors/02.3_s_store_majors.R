@@ -29,11 +29,11 @@ observeEvent(input$submit_major, {
 
 observeEvent(input$submit_custom_major, {
   dat <- hot_to_r(input$major_handson_table) %>% 
-    filter(code != "" | name != "") %>% 
     mutate(
       code = trimws(code),
       name = trimws(name)
-    )
+    ) %>% 
+    filter(code != "" | name != "")
     
   req(nrow(dat) > 0)
   

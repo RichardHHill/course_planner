@@ -15,9 +15,9 @@ tables_list <- reactive({
     major <- built_majors %>% 
       filter(major_id == id)
     
-    course_codes <- toupper(major$code)
+    course_codes <- major$code
     
-    in_schedule <- lapply(course_codes %in% schedule_list(), function(x) {
+    in_schedule <- lapply(toupper(course_codes) %in% toupper(schedule_list()), function(x) {
       if (isTRUE(x)) {
         as.character(icon("check-circle"))
       } else {
