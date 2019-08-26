@@ -12,8 +12,9 @@ output$major_handson_table <- renderRHandsontable({
   custom_table_trigger()
   rhandsontable(
     data = custom_table(),
-    colWidths = c(80, 245)
-  )
+    stretchH = "last"
+  ) %>% 
+    hot_cols(colWidths = 80)
 })
 
 observeEvent(input$built_majors_row_to_edit, {
