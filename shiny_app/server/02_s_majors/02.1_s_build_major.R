@@ -44,7 +44,7 @@ observeEvent(input$get_requirements, {
               courses[!is.na(courses)],
               paste(
                 courses[!is.na(courses)],
-                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+                unlist(lapply(courses[!is.na(courses)], course_code_to_name))
               )
             ),
             selected = courses[[1]]
@@ -65,7 +65,7 @@ observeEvent(input$get_requirements, {
               courses[!is.na(courses)],
               paste(
                 courses[!is.na(courses)],
-                unlist(lapply(courses[!is.na(courses)], helpers$course_code_to_name))
+                unlist(lapply(courses[!is.na(courses)], course_code_to_name))
               )
             ),
             selected = courses[!is.na(courses)][1:number],

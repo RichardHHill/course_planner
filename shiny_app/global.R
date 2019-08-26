@@ -25,6 +25,20 @@ majors_table <- readRDS("data/majors.RDS")
 majors_list <- readRDS("data/majors_list.RDS")
 department_list <- readRDS("data/department_list.RDS")
 
-helpers <- source("helpers/course_helpers.R", local = TRUE)$value
-
 source("modules/semester_module.R")
+
+course_code_to_name <- function(code) {
+  department <- word(code)
+  
+  if (department %in% names(department_list)) {
+    department_table <- department_list[[department]]
+    
+    index <- match(code, department_table$course_code)
+    
+    if (is.na(index)) out <- "" else out <- department_table$course_name[[index]]
+  } else {
+    out <- ""
+  }
+  
+  out
+}
