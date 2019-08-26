@@ -53,7 +53,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
           )
         ),
         conditionalPanel(
-          "input.pick_or_custom == 'Select Course'",
+          "input.pick_or_custom === 'Select Course'",
           ns = ns,
           fluidRow(
             column(
@@ -155,9 +155,8 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
     if (delete_mode() & nrow(out) > 0) {
       buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', ids, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
       
-      buttons <- tibble(
-        "Remove" = buttons
-      )
+      buttons <- tibble("Remove" = buttons)
+      
       out <- bind_cols(
         buttons,
         out
@@ -169,10 +168,10 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   
   
   output$semester_table <- renderDT({
-    #Require the list of courses 
     req(semesters[[paste0("semester", id)]], nrow(semester_out()) > 0)
     
     out <- semester_out()
+    
     datatable(
       out,
       rownames = FALSE,

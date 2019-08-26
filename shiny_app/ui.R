@@ -1,5 +1,5 @@
 head <- dashboardHeader(
-  title = "Dashboard"
+  title = "Course Planner"
 )
 
 sidebar <- dashboardSidebar(

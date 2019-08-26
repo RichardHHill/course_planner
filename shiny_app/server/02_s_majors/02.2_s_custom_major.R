@@ -1,8 +1,8 @@
 
 custom_table <- reactiveVal(
   tibble(
-    Code = rep("", 25),
-    Name = rep("", 25)
+    code = rep("", 25),
+    name = rep("", 25)
   )
 )
 
@@ -22,13 +22,13 @@ observeEvent(input$built_majors_row_to_edit, {
   
   out <- built_majors() %>% 
     filter(major_id == id) %>% 
-    select(Code, Name)
+    select(code, name)
   
   out <- rbind(
     out,
     tibble(
-      Code = rep("", 25 - nrow(out)),
-      Name = rep("", 25 - nrow(out))
+      code = rep("", 25 - nrow(out)),
+      name = rep("", 25 - nrow(out))
     )
   )
   
@@ -43,15 +43,15 @@ observeEvent(input$select_major_choices, {
   course_names <- unlist(lapply(course_codes, course_code_to_name))
   
   out <- tibble(
-    Code = course_codes,
-    Name = course_names
+    code = course_codes,
+    name = course_names
   )
   
   out <- rbind(
     out,
     tibble(
-      Code = rep("", 25 - nrow(out)),
-      Name = rep("", 25 - nrow(out))
+      code = rep("", 25 - nrow(out)),
+      name = rep("", 25 - nrow(out))
     )
   )
   
@@ -62,8 +62,8 @@ observeEvent(input$select_major_choices, {
 observeEvent(input$clear_custom_major, {
   custom_table(
     tibble(
-      Code = rep("", 25),
-      Name = rep("", 25)
+      code = rep("", 25),
+      name = rep("", 25)
     )
   )
   custom_table_trigger(custom_table_trigger() + 1)

@@ -1,8 +1,8 @@
 
 built_majors <- reactiveVal(
   tibble(
-    Code = character(0),
-    Name = character(0),
+    code = character(0),
+    name = character(0),
     major_name = character(0),
     major_id = character(0)
   )
@@ -28,7 +28,7 @@ observeEvent(input$submit_major, {
 
 observeEvent(input$submit_custom_major, {
   dat <- hot_to_r(input$major_handson_table) %>% 
-    filter(Code != "" | Name != "")
+    filter(code != "" | name != "")
   req(nrow(dat) > 0)
   
   dat$major_name <- input$submit_custom_major_name

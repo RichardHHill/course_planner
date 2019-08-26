@@ -3,10 +3,11 @@ tables_list <- reactive({
   req(built_majors())
   built_majors <- built_majors()
   
-  major_ids <- built_majors$major_id %>% unique()
+  major_ids <- unique(built_majors$major_id)
+  
   names <- built_majors %>% 
     select(major_name, major_id) %>% 
-    distinct() %>% 
+    distinct %>% 
     pull(major_name)
 
   
@@ -14,10 +15,9 @@ tables_list <- reactive({
     major <- built_majors %>% 
       filter(major_id == id)
     
-    course_codes <- toupper(major$Code)
+    course_codes <- toupper(major$code)
     
-    in_schedule <- course_codes %in% schedule_list()
-    in_schedule <- lapply(in_schedule, function(x) {
+    in_schedule <- lapply(course_codes %in% schedule_list(), function(x) {
       if (isTRUE(x)) {
         as.character(icon("check-circle"))
       } else {
@@ -26,8 +26,8 @@ tables_list <- reactive({
     })
     
     tibble(
-      Code = course_codes,
-      Name = major$Name,
+      code = course_codes,
+      name = major$name,
       in_schedule = unlist(in_schedule)
     )
   })
