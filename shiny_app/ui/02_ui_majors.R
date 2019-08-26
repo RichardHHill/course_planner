@@ -18,7 +18,6 @@ tabItem(
           width = 12,
           title = "Select Major",
           id = "select_major_box",
-          collapsible = TRUE,
           pickerInput(
             "pick_major",
             "",

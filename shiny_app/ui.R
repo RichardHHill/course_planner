@@ -44,7 +44,6 @@ body <- dashboardBody(
     tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
   ),
   useShinyjs(),
-  extendShinyjs(script = "www/shinyjs.js"),
   tabItems(
     source("ui/01_ui_courses.R", local = TRUE)$value,
     source("ui/02_ui_majors.R", local = TRUE)$value,
