@@ -5,24 +5,30 @@ schedule_list <- reactive({
 
 course_tags <- reactiveVal()
 
+major_note_prep <- reactiveVal("")
+
+output$major_note <- renderText(major_note_prep())
+
 observeEvent(input$get_requirements, {
   disable(id = "pick_major")
   disable(id = "get_requirements")
   
   major <- majors_list[[input$pick_major]]
   
+  major_note_prep(if (is.na(major[[1, 1]])) "" else major[[1, 1]])
+  
   insertUI(
     selector = "#get_requirements",
     where = "afterEnd",
     div(
-      id = "major_picker_ui",
+      class = "major_picker_ui",
       textOutput("major_note")
     )
   )
   
   for (i in rev(seq_along(major))) {
-    name <- major[[i]][[2]]
-    number <- as.numeric(major[[i]][[3]])  
+    name <- major[[2, i]]
+    number <- as.numeric(major[[3, i]])  
     courses <- major[[i]][-c(1,2,3)] 
     tag <- paste0("req_", i)
     course_tags(c(course_tags(), tag))
@@ -32,7 +38,7 @@ observeEvent(input$get_requirements, {
         selector = "#get_requirements",
         where = "afterEnd",
         div(
-          id = "major_picker_ui",
+          class = "major_picker_ui",
           pickerInput(
             tag,
             name,
@@ -53,7 +59,7 @@ observeEvent(input$get_requirements, {
         selector = "#get_requirements",
         where = "afterEnd",
         div(
-          id = "major_picker_ui",
+          class = "major_picker_ui",
           pickerInput(
             tag,
             name,
@@ -80,7 +86,7 @@ observeEvent(input$get_requirements, {
     selector = "#get_requirements",
     where = "afterEnd",
     div(
-      id = "major_picker_ui",
+      class = "major_picker_ui",
       br(),
       actionButton(
         "deselect_major",
@@ -102,7 +108,7 @@ observeEvent(input$get_requirements, {
 
 
 observeEvent(input$deselect_major, {
-  removeUI(selector = "#major_picker_ui", multiple = TRUE)
+  removeUI(selector = ".major_picker_ui", multiple = TRUE)
 
   enable(id = "pick_major")
   enable(id = "get_requirements")
