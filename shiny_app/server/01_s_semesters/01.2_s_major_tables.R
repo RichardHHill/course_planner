@@ -43,24 +43,37 @@ tables_list <- reactive({
 output$major_tables_ui <- renderUI({
   tables <- tables_list()
   
-  lapply(seq_along(tables), function(x) {
-    
+  if (length(tables) == 0) {
     box(
-      width = 4,
-      title = names(tables)[[x]],
-      datatable(
-        tables[[x]],
-        width = "100%",
-        rownames = FALSE,
-        colnames = c("Code", "Name", ""),
-        options = list(
-          dom = "t",
-          pageLength = 25,
-          scrollY = "400px"
-        ),
-        escape = -3,
-        selection = "none"
+      width = 12,
+      fluidRow(
+        column(
+          12,
+          align = "center",
+          h2("Built Majors Will Show Up Here")
+        )
       )
     )
-  })
+  } else {
+    lapply(seq_along(tables), function(x) {
+      
+      box(
+        width = 4,
+        title = names(tables)[[x]],
+        datatable(
+          tables[[x]],
+          width = "100%",
+          rownames = FALSE,
+          colnames = c("Code", "Name", ""),
+          options = list(
+            dom = "t",
+            pageLength = 25,
+            scrollY = "400px"
+          ),
+          escape = -3,
+          selection = "none"
+        )
+      )
+    })
+  }
 })
