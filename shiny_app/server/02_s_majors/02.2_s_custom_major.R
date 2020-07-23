@@ -41,7 +41,7 @@ observeEvent(input$select_major_choices, {
   req(major_course_vector())
   
   course_codes <- major_course_vector()
-  course_names <- unlist(lapply(course_codes, course_code_to_name))
+  course_names <- course_codes_to_name(course_codes)
   
   out <- tibble(
     code = course_codes,

@@ -46,7 +46,10 @@ observeEvent(input$get_requirements, {
             tag,
             name,
             choices = course_choices,
-            choicesOpt = list(subtext = unlist(lapply(course_choices, course_code_to_name)))
+            choicesOpt = list(subtext = course_codes_to_name(course_choices)),
+            options = pickerOptions(
+              showSubtext = TRUE
+            )
           ),
           br()
         )
@@ -61,7 +64,7 @@ observeEvent(input$get_requirements, {
             tag,
             name,
             choices = course_choices,
-            choicesOpt = list(subtext = unlist(lapply(course_choices, course_code_to_name))),
+            choicesOpt = list(subtext = course_codes_to_name(course_choices)),
             selected = course_choices[1:number],
             multiple = TRUE,
             options = pickerOptions(

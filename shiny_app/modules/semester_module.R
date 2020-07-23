@@ -131,7 +131,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
       course <- trimws(input$name_to_add)
     } else {
       code <- input$course_to_add
-      course <- course_code_to_name(code)
+      course <- course_codes_to_name(code)
     }
     
     semesters[[semester]] <- rbind(

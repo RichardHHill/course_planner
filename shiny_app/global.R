@@ -41,12 +41,9 @@ majors_list <- readRDS("data/majors_list.RDS")
 
 source("modules/semester_module.R")
 
-course_code_to_name <- function(code) {
-  out <- all_courses %>% 
-    filter(course_code == code) %>% 
+course_codes_to_name <- function(codes) {
+  tibble(course_code = codes) %>% 
+    left_join(all_courses, by = "course_code") %>% 
+    mutate(name = ifelse(is.na(name), "", name)) %>% 
     pull(name)
-  
-  if (length(out) != 1) out <- ""
-  
-  out
 }
