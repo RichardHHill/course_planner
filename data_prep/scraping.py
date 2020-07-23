@@ -7,7 +7,7 @@ import time
 
 # Set Up Database
 
-# conn = sqlite3.connect("shiny_app/data.db")
+# conn = sqlite3.connect("shiny_app/course_data.db")
 # c = conn.cursor()
 
 # c.execute("DROP TABLE IF EXISTS departments;")

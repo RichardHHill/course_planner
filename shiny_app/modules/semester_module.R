@@ -61,7 +61,11 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
               pickerInput(
                 ns("department_to_add"),
                 "Department",
-                choices = names(department_list)
+                choices = all_departments$code,
+                choicesOpt = list(subtext = all_departments$name),
+                options = pickerOptions(
+                  showSubtext = TRUE
+                )
               )
             ),
             column(
@@ -69,13 +73,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
               pickerInput(
                 ns("course_to_add"),
                 "Course",
-                choices = setNames(
-                  department_list[[1]][[1]],
-                  paste(
-                    department_list[[1]][[1]],
-                    department_list[[1]][[2]]
-                  )
-                )
+                choices = NULL
               )
             )
           )
@@ -106,18 +104,15 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
     )
     
     observeEvent(input$department_to_add, {
-      department <- input$department_to_add
+      hold <- course_codes %>%
+        filter(department == input$department_to_add)
+      
       updatePickerInput(
         session,
         "course_to_add", 
         "Course",
-        choices = setNames(
-          department_list[[department]][[1]],
-          paste(
-            department_list[[department]][[1]],
-            department_list[[department]][[2]]
-          )
-        )
+        choices = hold$course_code,
+        choicesOpt = list(subtext = hold$name)
       )
     })
   })
