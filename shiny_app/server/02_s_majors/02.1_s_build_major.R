@@ -29,7 +29,10 @@ observeEvent(input$get_requirements, {
   for (i in rev(seq_along(major))) {
     name <- major[[2, i]]
     number <- as.numeric(major[[3, i]])  
+    
     courses <- major[[i]][-c(1,2,3)] 
+    course_choices <- courses[!is.na(courses)]
+    
     tag <- paste0("req_", i)
     course_tags(c(course_tags(), tag))
     
@@ -42,14 +45,8 @@ observeEvent(input$get_requirements, {
           pickerInput(
             tag,
             name,
-            choices = setNames(
-              courses[!is.na(courses)],
-              paste(
-                courses[!is.na(courses)],
-                unlist(lapply(courses[!is.na(courses)], course_code_to_name))
-              )
-            ),
-            selected = courses[[1]]
+            choices = course_choices,
+            choicesOpt = list(subtext = unlist(lapply(course_choices, course_code_to_name)))
           ),
           br()
         )
@@ -63,14 +60,9 @@ observeEvent(input$get_requirements, {
           pickerInput(
             tag,
             name,
-            choices = setNames(
-              courses[!is.na(courses)],
-              paste(
-                courses[!is.na(courses)],
-                unlist(lapply(courses[!is.na(courses)], course_code_to_name))
-              )
-            ),
-            selected = courses[!is.na(courses)][1:number],
+            choices = course_choices,
+            choicesOpt = list(subtext = unlist(lapply(course_choices, course_code_to_name))),
+            selected = course_choices[1:number],
             multiple = TRUE,
             options = pickerOptions(
               maxOptions = number

@@ -7,32 +7,34 @@ file_path <- "data_prep/provided/Department Courses.xlsx"
 # Departments
 ###
 
-department_excel_tribble <- tribble(
-  ~name, ~rows,
-  "MATH", 2:34,
-  "ECON", 2:41,
-  "APMA", 2:23,
-  "PHYS", 2:28,
-  "CSCI", 2:47,
-  "FREN", 2:28,
-  "HISP", 2:34,
-  "CLPS", 2:54,
-  "POLS", 2:37,
-  "PLCY", 2:17
-)
+# Departments are now stored in from course_data.db
 
-department_list <- lapply(1:nrow(department_excel_tribble), function(row) {
-  read.xlsx(
-    file_path,
-    sheet = 1,
-    rows = department_excel_tribble[[row, 2]],
-    cols = (3 * row - 2):(3 * row - 1)
-  )
-})
-
-names(department_list) <- department_excel_tribble$name
-
-saveRDS(department_list, "shiny_app/data/department_list.RDS")
+# department_excel_tribble <- tribble(
+#   ~name, ~rows,
+#   "MATH", 2:34,
+#   "ECON", 2:41,
+#   "APMA", 2:23,
+#   "PHYS", 2:28,
+#   "CSCI", 2:47,
+#   "FREN", 2:28,
+#   "HISP", 2:34,
+#   "CLPS", 2:54,
+#   "POLS", 2:37,
+#   "PLCY", 2:17
+# )
+# 
+# department_list <- lapply(1:nrow(department_excel_tribble), function(row) {
+#   read.xlsx(
+#     file_path,
+#     sheet = 1,
+#     rows = department_excel_tribble[[row, 2]],
+#     cols = (3 * row - 2):(3 * row - 1)
+#   )
+# })
+# 
+# names(department_list) <- department_excel_tribble$name
+# 
+# saveRDS(department_list, "shiny_app/data/department_list.RDS")
 
 ###
 # Majors

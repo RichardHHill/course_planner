@@ -73,7 +73,10 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
               pickerInput(
                 ns("course_to_add"),
                 "Course",
-                choices = NULL
+                choices = NULL,
+                options = pickerOptions(
+                  showSubtext = TRUE
+                )
               )
             )
           )
@@ -104,7 +107,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
     )
     
     observeEvent(input$department_to_add, {
-      hold <- course_codes %>%
+      hold <- all_courses %>%
         filter(department == input$department_to_add)
       
       updatePickerInput(

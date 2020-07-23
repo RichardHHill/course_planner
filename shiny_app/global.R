@@ -25,7 +25,7 @@ course_codes_with_semester <- local_conn %>%
   tbl("courses") %>% 
   collect()
 
-course_codes <- course_codes_with_semester %>% 
+all_courses <- course_codes_with_semester %>% 
   select(-semester) %>% 
   distinct() %>% 
   arrange(course_code)
@@ -33,27 +33,20 @@ course_codes <- course_codes_with_semester %>%
 all_departments <- local_conn %>% 
   tbl("departments") %>% 
   collect() %>% 
-  filter(code %in% unique(course_codes$department))
+  filter(code %in% unique(all_courses$department))
 
 
 majors_table <- readRDS("data/majors.RDS")
 majors_list <- readRDS("data/majors_list.RDS")
-department_list <- readRDS("data/department_list.RDS")
 
 source("modules/semester_module.R")
 
 course_code_to_name <- function(code) {
-  department <- word(code)
+  out <- all_courses %>% 
+    filter(course_code == code) %>% 
+    pull(name)
   
-  if (department %in% names(department_list)) {
-    department_table <- department_list[[department]]
-    
-    index <- match(code, department_table$course_code)
-    
-    if (is.na(index)) out <- "" else out <- department_table$course_name[[index]]
-  } else {
-    out <- ""
-  }
+  if (length(out) != 1) out <- ""
   
   out
 }
