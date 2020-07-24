@@ -68,7 +68,9 @@ majors_module_ui <- function(id) {
         title = "Built Majors",
         DTOutput(ns("built_majors_table"))
       )
-    )
+    ),
+    tags$script(src = "majors_module.js"),
+    tags$script(paste0("majors_module_js('", ns(""), "')"))
   )
 }
 
