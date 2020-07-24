@@ -3,34 +3,37 @@
 semester_module_ui <- function(id) {
   ns <- NS(id)
   
-  column(
-    width = 3,
-    box(
-      width = 12,
-      fluidRow(
-        column(
-          6,
-          h4(paste0("Semester ", id))
-        ),
-        column(
-          6,
-          align = "right",
-          actionButton(
-            ns("add_course"),
-            " ",
-            icon = icon("plus")
+  tagList(
+    column(
+      width = 3,
+      box(
+        width = 12,
+        fluidRow(
+          column(
+            6,
+            h4(paste0("Semester ", id))
+          ),
+          column(
+            6,
+            align = "right",
+            actionButton(
+              ns("add_course"),
+              " ",
+              icon = icon("plus")
+            )
           )
-        )
-      ),
-      DTOutput(ns("semester_table"))
-    )
+        ),
+        DTOutput(ns("semester_table"))
+      )
+    ),
+    tags$script(src = "semester_module.js"),
+    tags$script(paste0("semester_module_js('", ns(""), "')"))
   )
 }
 
 semester_module <- function(input, output, session, id, delete_mode, semesters, semester_remove) {
   ns <- session$ns
-  runjs(paste0("myModuleJS('", ns(""), "');"))
-  
+
   observeEvent(input$add_course, {
     showModal(
       modalDialog(
