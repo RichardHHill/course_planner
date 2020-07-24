@@ -72,7 +72,9 @@ majors_module_ui <- function(id) {
   )
 }
 
-majors_module <- function(input, output, session) {
+majors_module <- function(input, output, session, semesters) {
+  ns <- session$ns
+  
   schedule_list <- reactive({
     unlist(lapply(reactiveValuesToList(semesters), function(df) df$code))
   })
@@ -84,19 +86,19 @@ majors_module <- function(input, output, session) {
   output$major_note <- renderText(major_note_prep())
   
   observeEvent(input$get_requirements, {
-    disable(id = "pick_major")
-    disable(id = "get_requirements")
+    disable("pick_major")
+    disable("get_requirements")
     
     major <- majors_list[[input$pick_major]]
     
     major_note_prep(if (is.na(major[[1, 1]])) "" else major[[1, 1]])
     
     insertUI(
-      selector = "#get_requirements",
+      selector = paste0("#", ns("get_requirements")),
       where = "afterEnd",
       div(
         class = "major_picker_ui",
-        textOutput("major_note")
+        textOutput(ns("major_note"))
       )
     )
     
@@ -112,12 +114,12 @@ majors_module <- function(input, output, session) {
       
       if (number == 1) {
         insertUI(
-          selector = "#get_requirements",
+          selector = paste0("#", ns("get_requirements")),
           where = "afterEnd",
           div(
             class = "major_picker_ui",
             pickerInput(
-              tag,
+              ns(tag),
               name,
               choices = course_choices,
               choicesOpt = list(subtext = course_codes_to_name(course_choices)),
@@ -130,12 +132,12 @@ majors_module <- function(input, output, session) {
         )
       } else {
         insertUI(
-          selector = "#get_requirements",
+          selector = paste0("#", ns("get_requirements")),
           where = "afterEnd",
           div(
             class = "major_picker_ui",
             pickerInput(
-              tag,
+              ns(tag),
               name,
               choices = course_choices,
               choicesOpt = list(subtext = course_codes_to_name(course_choices)),
@@ -152,24 +154,24 @@ majors_module <- function(input, output, session) {
     }
     
     insertUI(
-      selector = "#get_requirements",
+      selector = paste0("#", ns("get_requirements")),
       where = "afterEnd",
       div(
         class = "major_picker_ui",
         br(),
         actionButton(
-          "deselect_major",
+          ns("deselect_major"),
           "Deselect Major",
           style = "color: #fff; background-color: #dd4b39; border-color: #d73925"
         ),
         actionButton(
-          "select_major_choices",
+          ns("select_major_choices"),
           "Select Choices",
           style = "color: #fff; background-color: #07b710; border-color: #07b710;",
           icon = icon("arrow-right")
         ),
         br(),
-        textOutput("major_is_complete"),
+        textOutput(ns("major_is_complete")),
         br()
       )
     )
@@ -179,8 +181,8 @@ majors_module <- function(input, output, session) {
   observeEvent(input$deselect_major, {
     removeUI(selector = ".major_picker_ui", multiple = TRUE)
     
-    enable(id = "pick_major")
-    enable(id = "get_requirements")
+    enable("pick_major")
+    enable("get_requirements")
     hideElement("chosen_major_courses_box")
     course_tags(NULL)
   })
@@ -365,4 +367,7 @@ majors_module <- function(input, output, session) {
     )
   })
   
+  return(list(
+    built_majors = built_majors
+  ))
 }

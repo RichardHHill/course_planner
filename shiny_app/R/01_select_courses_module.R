@@ -41,10 +41,9 @@ select_courses_module_ui <- function(id) {
   )
 }
 
-select_courses_module <- function(input, output, session) {
+select_courses_module <- function(input, output, session, semesters, built_majors) {
   
-  #creates 8 semester tables
-  semesters <- reactiveValues()
+  
   delete_mode <- reactiveVal(FALSE)
   
   observeEvent(input$enable_delete_mode, {
@@ -59,7 +58,7 @@ select_courses_module <- function(input, output, session) {
     showElement("enable_delete_mode")
   })
   
-  
+  #creates 8 semester tables
   callModule(semester_module, "1", id = 1, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["1-semester_remove"]]))
   callModule(semester_module, "2", id = 2, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["2-semester_remove"]]))
   callModule(semester_module, "3", id = 3, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["3-semester_remove"]]))
