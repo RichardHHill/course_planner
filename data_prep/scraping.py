@@ -4,10 +4,11 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import chromedriver_binary
 import time
+import re
 
 # Set Up Database
 
-# conn = sqlite3.connect("shiny_app/course_data.db")
+# conn = sqlite3.connect("shiny_app/data/course_data_new.db")
 # c = conn.cursor()
 
 # c.execute("DROP TABLE IF EXISTS departments;")
@@ -39,14 +40,16 @@ all_semesters = []
 for semester in semester_rows:
     all_semesters.append(semester.text)
 
-department_rows = doc.find(id="crit-dept").find_all("option")
+department_rows = doc.find(id="crit-subject").find_all("option")
 
 all_departments = {}
 for department in department_rows:
     if department["value"]:
-        all_departments[department["value"]] = department.text
+        description = re.sub(r" ?\([^)]+\)", "", department.text)
+        all_departments[department["value"]] = description
+
         # c.execute("INSERT INTO departments VALUES(?,?)",
-        # (department["value"], department.text))
+        # (department["value"], description))
 
 search_input = driver.find_element_by_id("crit-keyword")
 semester_picker = driver.find_element_by_id("crit-srcdb")
@@ -61,10 +64,10 @@ for semester in all_semesters:
         
         search_button.click()
 
-        # As of the writing of this script, there are 986 combinations
-        # A wait time of 5 seconds, which gives the webpage ample
+        # As of the writing of this script, there are about 1600 combinations
+        # A wait time of 3 seconds, which gives the webpage ample
         # time to load, even at its slowest, will cause the script to 
-        # take over 82 minutes
+        # take over 80 minutes
         #time.sleep(3)
 
         doc = BeautifulSoup(driver.page_source, "html.parser")
@@ -75,8 +78,10 @@ for semester in all_semesters:
             code = row.find("span", {"class": "result__code"}).text
             name = row.find("span", {"class": "result__title"}).text
 
-            #if code[:4] == department and "XLIST" not in code:
+            if code[:4] == department and "XLIST" not in code:
                 # c.execute("INSERT INTO courses VALUES(?,?,?,?)",
                 # (code, name, department, semester))
+                print(code)
     
 #conn.commit()
+print("done")
