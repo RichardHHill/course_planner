@@ -146,7 +146,7 @@ semester_module <- function(input, output, session, delete_mode, semesters, name
     )
   })
   
-  semester_out <- reactiveVal()
+  semester_out <- reactiveVal(tibble("Remove" = character(0)))
   
   observe({
     out <- semesters[[ns("semester")]]
@@ -167,10 +167,15 @@ semester_module <- function(input, output, session, delete_mode, semesters, name
     semester_out(out)
   })
   
+  observe({
+    if (nrow(semester_out()) == 0) {
+      hideElement("semester_table")
+    } else {
+      showElement("semester_table")
+    }
+  })
   
   output$semester_table <- renderDT({
-    req(semesters[[ns("semester")]], nrow(semester_out()) > 0)
-    
     out <- semester_out()
     
     datatable(
