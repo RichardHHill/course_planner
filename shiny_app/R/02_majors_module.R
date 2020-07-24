@@ -22,6 +22,19 @@ majors_module_ui <- function(id) {
             width = 12,
             title = "Select Major",
             id = ns("select_major_box"),
+            circleButton(
+              ns("show_info"),
+              icon = icon("info"),
+              size = "xs"
+            ),
+            HTML(paste0("
+              <h5 id='", ns("build_majors_info"), "' class='shinyjs-hide'>
+                These majors are based on data from 
+                <a href='https://bulletin.brown.edu/the-college/concentrations/' target='blank_'>here</a>
+                in 2019. Only some majors that are less general in their
+                requirements are available, but all can be created in \"Customize Major\"
+              </h5>
+            ")),
             pickerInput(
               ns("pick_major"),
               "",
@@ -78,10 +91,14 @@ majors_module <- function(input, output, session, semesters, built_majors) {
   ns <- session$ns
   
   course_tags <- reactiveVal()
-  
   major_note_prep <- reactiveVal("")
   
+  
   output$major_note <- renderText(major_note_prep())
+  
+  
+  observeEvent(input$show_info, toggleElement("build_majors_info", anim = TRUE))
+  
   
   observeEvent(input$get_requirements, {
     disable("pick_major")
