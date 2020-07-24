@@ -7,16 +7,25 @@ saved_inputs_module_ui <- function(id) {
     fluidRow(
       box(
         width = 12,
-        fluidRow(
-          column(
-            2,
-            textInput(ns("saved_passkey"), "Passkey")
+        if (is.null(conn)) {
+          h3(
+            "Failed to connect to database. If you are running this app locally, it is because each IP address must
+            be whitelisted to access this app's database."
           )
-        ),
-        br(),
-        br(),
-        br(),
-        DTOutput(ns("saved_inputs_table")) %>% withSpinner(type = 8)
+        } else {
+          tagList(
+            fluidRow(
+              column(
+                2,
+                textInput(ns("saved_passkey"), "Passkey")
+              )
+            ),
+            br(),
+            br(),
+            br(),
+            DTOutput(ns("saved_inputs_table")) %>% withSpinner(type = 8)
+          )
+        }
       )
     ),
     tags$script(src = "saved_inputs_module.js"),

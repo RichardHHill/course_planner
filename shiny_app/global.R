@@ -17,7 +17,10 @@ library(RSQLite)
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 #Sys.setenv(R_CONFIG_ACTIVE = "production")
 app_config <- config::get()
-conn <- db_connect(app_config$db)
+
+conn <- NULL
+tryCatch(conn <- db_connect(app_config$db), error = function(err) print(err))
+
 
 local_conn <- dbConnect(SQLite(), "data/course_data.db")
 
