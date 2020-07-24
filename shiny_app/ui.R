@@ -45,9 +45,9 @@ body <- dashboardBody(
   ),
   useShinyjs(),
   tabItems(
-    source("ui/01_ui_courses.R", local = TRUE)$value,
-    source("ui/02_ui_majors.R", local = TRUE)$value,
-    source("ui/03_ui_saved_inputs.R", local = TRUE)$value
+    select_courses_module_ui("courses"),
+    majors_module_ui("majors"),
+    saved_inputs_module_ui("saved")
   )
 )
 
