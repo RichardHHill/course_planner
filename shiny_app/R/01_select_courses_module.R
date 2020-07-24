@@ -87,7 +87,9 @@ select_courses_module <- function(input, output, session, semesters, built_major
       
       course_codes <- major$code
       
-      in_schedule <- lapply(toupper(course_codes) %in% toupper(schedule_list()), function(x) {
+      schedule_list <- unlist(lapply(reactiveValuesToList(semesters), function(df) df$code))
+      
+      in_schedule <- lapply(toupper(course_codes) %in% toupper(schedule_list), function(x) {
         if (isTRUE(x)) {
           as.character(icon("check-circle"))
         } else {

@@ -74,12 +74,8 @@ majors_module_ui <- function(id) {
   )
 }
 
-majors_module <- function(input, output, session, semesters) {
+majors_module <- function(input, output, session, semesters, built_majors) {
   ns <- session$ns
-  
-  schedule_list <- reactive({
-    unlist(lapply(reactiveValuesToList(semesters), function(df) df$code))
-  })
   
   course_tags <- reactiveVal()
   
@@ -272,15 +268,6 @@ majors_module <- function(input, output, session, semesters) {
     custom_table_trigger(custom_table_trigger() + 1)
   })
   
-  built_majors <- reactiveVal(
-    tibble(
-      code = character(0),
-      name = character(0),
-      major_name = character(0),
-      major_id = character(0)
-    )
-  )
-  
   observeEvent(input$submit_major, {
     dat <- major_courses_table_prep()
     
@@ -368,8 +355,4 @@ majors_module <- function(input, output, session, semesters) {
         filter(major_id != id)
     )
   })
-  
-  return(list(
-    built_majors = built_majors
-  ))
 }

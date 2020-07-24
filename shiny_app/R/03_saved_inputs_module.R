@@ -24,7 +24,8 @@ saved_inputs_module_ui <- function(id) {
   )
 }
 
-saved_inputs_module <- function(input, output, session) {
+saved_inputs_module <- function(input, output, session, semesters, built_majors, save_all_inputs) {
+  ns <- session$ns
   
   semester_courses_df <- reactive({
     names <- names(reactiveValuesToList(semesters))
@@ -50,14 +51,14 @@ saved_inputs_module <- function(input, output, session) {
   })
   
   
-  observeEvent(input$save_all_inputs, {
+  observeEvent(save_all_inputs(), {
     showModal(
       modalDialog(
         title = "Save Courses and Majors",
         size = "s",
         footer = list(
           actionButton(
-            "confirm_save_all",
+            ns("confirm_save_all"),
             "Save All",
             style = "background-color: #46c410; color: #fff",
             icon = icon("plus")
@@ -67,8 +68,8 @@ saved_inputs_module <- function(input, output, session) {
         fluidRow(
           column(
             12,
-            textInput("saved_name", "Name"),
-            textInput("passkey", "Passkey")
+            textInput(ns("saved_name"), "Name"),
+            textInput(ns("passkey"), "Passkey")
           )
         ),
         fluidRow(
@@ -219,12 +220,12 @@ saved_inputs_module <- function(input, output, session) {
         size = "s",
         footer = list(
           actionButton(
-            "saved_inputs_delete_button",
+            ns("saved_inputs_delete_button"),
             "Delete",
             style="color: #fff; background-color: #dd4b39; border-color: #d73925"
           ),
           actionButton(
-            "saved_inputs_delete_cancel_button",
+            ns("saved_inputs_delete_cancel_button"),
             "Cancel",
             style="color: #444; background-color: #f4f4f4; border-color: #ddd"
           )
