@@ -1,6 +1,6 @@
 # Module for creating a semester used on the courses tab
 
-semester_module_ui <- function(id) {
+semester_module_ui <- function(id, name) {
   ns <- NS(id)
   
   tagList(
@@ -11,7 +11,7 @@ semester_module_ui <- function(id) {
         fluidRow(
           column(
             6,
-            h4(paste0("Semester ", id))
+            h4(name)
           ),
           column(
             6,
@@ -31,13 +31,13 @@ semester_module_ui <- function(id) {
   )
 }
 
-semester_module <- function(input, output, session, id, delete_mode, semesters, semester_remove) {
+semester_module <- function(input, output, session, delete_mode, semesters, name) {
   ns <- session$ns
 
   observeEvent(input$add_course, {
     showModal(
       modalDialog(
-        title = paste0("Add Course to Semester ", id),
+        title = paste0("Add Course to ", name),
         size = "m",
         footer = list(
           actionButton(ns("submit_course"), "Add Course"),
@@ -127,7 +127,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
     removeModal()
     
     type <- input$pick_or_custom
-    semester <- paste0("semester", id)
+    semester <- ns("semester")
     
     if (type == "Custom") {
       code <- trimws(input$code_to_add)
@@ -149,7 +149,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   semester_out <- reactiveVal()
   
   observe({
-    out <- semesters[[paste0("semester", id)]]
+    out <- semesters[[ns("semester")]]
     req(out)
     ids <- seq_len(nrow(out))
     
@@ -169,7 +169,7 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
   
   
   output$semester_table <- renderDT({
-    req(semesters[[paste0("semester", id)]], nrow(semester_out()) > 0)
+    req(semesters[[ns("semester")]], nrow(semester_out()) > 0)
     
     out <- semester_out()
     
@@ -186,10 +186,10 @@ semester_module <- function(input, output, session, id, delete_mode, semesters, 
     )
   })
   
-  observeEvent(semester_remove(), {
-    row <- as.numeric(semester_remove())
+  observeEvent(input$semester_remove, {
+    row <- as.numeric(input$semester_remove)
     
-    semesters[[paste0("semester", id)]] <- semesters[[paste0("semester", id)]][-row,]
+    semesters[[ns("semester")]] <- semesters[[ns("semester")]][-row,]
     semester_out(semester_out()[-row,])
   })
 }

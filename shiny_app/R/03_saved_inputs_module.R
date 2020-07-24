@@ -304,12 +304,12 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       collect %>% 
       filter(id == id_to_load)
     
-    for (i in 1:8) {
+    for (semester_name in unique(semesters_df$semester)) {
       courses <- semesters_df %>% 
-        filter(semester == paste0("semester", i)) %>% 
+        filter(semester == semester_name) %>% 
         select(code, name)
       
-      semesters[[paste0("semester", i)]] <- courses
+      semesters[[semester_name]] <- courses
     }
     
     

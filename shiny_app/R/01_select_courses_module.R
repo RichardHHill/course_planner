@@ -22,16 +22,16 @@ select_courses_module_ui <- function(id) {
         br(),
         br(),
         fluidRow(
-          semester_module_ui(ns("1")),
-          semester_module_ui(ns("3")),
-          semester_module_ui(ns("5")),
-          semester_module_ui(ns("7"))
+          semester_module_ui(ns("1"), "Semester 1"),
+          semester_module_ui(ns("3"), "Semester 2"),
+          semester_module_ui(ns("5"), "Semester 3"),
+          semester_module_ui(ns("7"), "Semester 4")
         ),
         fluidRow(
-          semester_module_ui(ns("2")),
-          semester_module_ui(ns("4")),
-          semester_module_ui(ns("6")),
-          semester_module_ui(ns("8"))
+          semester_module_ui(ns("2"), "Semester 5"),
+          semester_module_ui(ns("4"), "Semester 6"),
+          semester_module_ui(ns("6"), "Semester 7"),
+          semester_module_ui(ns("8"), "Semester 8")
         )
       )
     ),
@@ -58,15 +58,8 @@ select_courses_module <- function(input, output, session, semesters, built_major
     showElement("enable_delete_mode")
   })
   
-  #creates 8 semester tables
-  callModule(semester_module, "1", id = 1, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["1-semester_remove"]]))
-  callModule(semester_module, "2", id = 2, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["2-semester_remove"]]))
-  callModule(semester_module, "3", id = 3, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["3-semester_remove"]]))
-  callModule(semester_module, "4", id = 4, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["4-semester_remove"]]))
-  callModule(semester_module, "5", id = 5, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["5-semester_remove"]]))
-  callModule(semester_module, "6", id = 6, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["6-semester_remove"]]))
-  callModule(semester_module, "7", id = 7, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["7-semester_remove"]]))
-  callModule(semester_module, "8", id = 8, delete_mode = delete_mode, semesters = semesters, semester_remove = reactive(input[["8-semester_remove"]]))
+  # Create 8 semester tables
+  lapply(1:8, function(i) callModule(semester_module, i, delete_mode, semesters, paste("Semester", i)))
   
   
   tables_list <- reactive({
