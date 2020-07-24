@@ -1,13 +1,17 @@
 server <- function(input, output, session) {
-  source("server/01_s_semesters/01.1_s_semesters.R", local = TRUE)$value
-  source("server/01_s_semesters/01.2_s_major_tables.R", local = TRUE)$value
-
-  source("server/02_s_majors/02.1_s_build_major.R", local = TRUE)$value
-  source("server/02_s_majors/02.2_s_custom_major.R", local = TRUE)$value
-  source("server/02_s_majors/02.3_s_store_majors.R", local = TRUE)$value
   
-  source("server/03_s_save/03.1_s_save_data.R", local = TRUE)$value
-  source("server/03_s_save/03.2_s_saved_table.R", local = TRUE)$value
-  source("server/03_s_save/03.3_s_delete.R", local = TRUE)$value
-  source("server/03_s_save/03.4_s_reload.R", local = TRUE)$value
+  semesters <- reactiveValues()
+  
+  built_majors <- reactiveVal(
+    tibble(
+      code = character(0),
+      name = character(0),
+      major_name = character(0),
+      major_id = character(0)
+    )
+  )
+  
+  callModule(select_courses_module, "courses", semesters, built_majors)
+  callModule(majors_module, "majors", semesters, built_majors)
+  callModule(saved_inputs_module, "saved", semesters, built_majors, reactive(input$save_all_inputs))
 }

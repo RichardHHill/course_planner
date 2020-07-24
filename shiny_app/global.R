@@ -39,8 +39,6 @@ all_departments <- local_conn %>%
 majors_table <- readRDS("data/majors.RDS")
 majors_list <- readRDS("data/majors_list.RDS")
 
-source("modules/semester_module.R")
-
 course_codes_to_name <- function(codes) {
   tibble(course_code = codes) %>% 
     left_join(all_courses, by = "course_code") %>% 
