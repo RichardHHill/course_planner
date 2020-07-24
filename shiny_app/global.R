@@ -27,13 +27,15 @@ course_codes_with_semester <- local_conn %>%
 
 all_courses <- course_codes_with_semester %>% 
   select(-semester) %>% 
-  distinct() %>% 
+  group_by(course_code) %>% 
+  slice(1) %>% # Get most recent name
   arrange(course_code)
 
 all_departments <- local_conn %>% 
   tbl("departments") %>% 
   collect() %>% 
-  filter(code %in% unique(all_courses$department))
+  filter(code %in% unique(all_courses$department)) %>% 
+  arrange(code)
 
 
 majors_table <- readRDS("data/majors.RDS")
