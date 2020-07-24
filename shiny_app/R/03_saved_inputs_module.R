@@ -18,7 +18,9 @@ saved_inputs_module_ui <- function(id) {
         br(),
         DTOutput(ns("saved_inputs_table")) %>% withSpinner(type = 8)
       )
-    )
+    ),
+    tags$script(src = "saved_inputs_module.js"),
+    tags$script(paste0("saved_inputs_module_js('", ns(""), "')"))
   )
 }
 
