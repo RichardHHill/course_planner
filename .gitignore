@@ -4,3 +4,6 @@
 .Ruserdata
 *.Rproj
 /shiny_app/rsconnect
+.vscode
+debug.log
+env
