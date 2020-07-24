@@ -96,7 +96,8 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   observeEvent(input$confirm_save_all, {
     removeModal()
     
-    dat <- list(passkey = input$passkey, name = input$saved_name)
+    new_uid <- uuid::UUIDgenerate()
+    dat <- list(uid = new_uid, passkey = input$passkey, name = input$saved_name)
     semester_courses <- semester_courses_df()
     majors <- built_majors()
     
@@ -105,21 +106,13 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     tryCatch({
       DBI::dbWithTransaction(conn, {
         
+        
         tychobratools::add_row(conn, "input_ids", dat)
-        
-        get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
-        
-        get_query <- DBI::sqlInterpolate(conn, get_query, .dots = dat["passkey"])
-        
-        input_set_id <- as.integer(DBI::dbGetQuery(
-          conn,
-          get_query
-        ))
         
         progress$inc(amount = 1, message = "Saving Inputs", detail = "Semester Courses")
         
         if (nrow(semester_courses) > 0) {
-          semester_courses$id <- input_set_id 
+          semester_courses$uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -132,7 +125,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
         progress$inc(amount = 1, message = "Saving Inputs", detail = "Majors")
         
         if (nrow(majors) > 0) {
-          majors$id <- input_set_id
+          majors$uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -179,16 +172,16 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       tbl("input_ids") %>% 
       collect %>% 
       filter(passkey == input$saved_passkey) %>% 
-      arrange(desc(time_created)) %>% 
-      select(id, name)
+      arrange(desc(time_modified)) %>% 
+      mutate(time_created = as.Date(time_created), time_modified = as.Date(time_modified))
     
     if (nrow(out) > 0) {
-      rows <- seq_len(nrow(out))
+      ids <- out$uid
       
       buttons <- paste0(
         '<div class="btn-group width_75" role="group" aria-label="Basic example">
-        <button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', rows, ' style="margin: 0"><i class="fa fa-upload"></i></button>
-        <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Schedule" id = ', rows, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
+        <button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-upload"></i></button>
+        <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
       )
       
       out$button <- buttons
@@ -197,7 +190,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     }
     
     out %>% 
-      select(button, id, name)
+      select(button, name, time_created, time_modified)
   })
   
   
@@ -207,7 +200,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     datatable(
       out,
       rownames = FALSE,
-      colnames = c("", "Id", "Name"),
+      colnames = c("", "Name", "Created", "Updated"),
       escape = -1,
       selection = "none",
       options = list(
@@ -250,22 +243,21 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   
   observeEvent(input$saved_inputs_delete_button, {
     removeModal()
-    row <- as.numeric(input$saved_inputs_row_to_delete)
-    
-    id_to_delete <- saved_inputs_table_prep()[row, ]$id
+
+    uid_to_delete <- input$saved_inputs_delete_button
     
     progress <- Progress$new(session, min = 0, max = 3)
     
     tryCatch({
       DBI::dbWithTransaction(conn, {
         progress$inc(amount = 1, message = "Deleting Data", detail = "Input Id")
-        delete_by(conn, "input_ids", by = list(id = id_to_delete))
+        delete_by(conn, "input_ids", by = list(uid = uid_to_delete))
         
         progress$inc(amount = 1, message = "Deleting Data", detail = "Semester Courses")
-        delete_by(conn, "semester_courses", by = list(id = id_to_delete))
+        delete_by(conn, "semester_courses", by = list(uid = uid_to_delete))
         
         progress$inc(amount = 1, message = "Deleting Data", detail = "Majors")
-        delete_by(conn, "majors", by = list(id = id_to_delete))
+        delete_by(conn, "majors", by = list(uid = uid_to_delete))
       })
       
       saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
@@ -302,16 +294,14 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   observeEvent(input$saved_inputs_row_to_load, {
     progress <- Progress$new(session, min = 0, max = 2)
     
-    row <- as.numeric(input$saved_inputs_row_to_load)
-    
-    id_to_load <- saved_inputs_table_prep()[row, ]$id
+    uid_to_load <- input$saved_inputs_row_to_load
     
     progress$inc(amount = 1, message = "Loading Courses")
     
     semesters_df <- conn %>%
       tbl("semester_courses") %>% 
       collect %>% 
-      filter(id == id_to_load)
+      filter(uid == uid_to_load)
     
     for (semester_name in unique(semesters_df$semester)) {
       courses <- semesters_df %>% 
@@ -321,14 +311,13 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       semesters[[semester_name]] <- courses
     }
     
-    
     progress$inc(amount = 1, message = "Loading Majors")
     
     majors_df <- conn %>% 
       tbl("majors") %>% 
       collect %>% 
-      filter(id == id_to_load) %>% 
-      select(-id)
+      filter(uid == uid_to_load) %>% 
+      select(-uid)
     
     built_majors(majors_df)
     
