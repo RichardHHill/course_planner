@@ -17,7 +17,47 @@ saved_inputs_module_ui <- function(id) {
             fluidRow(
               column(
                 2,
-                textInput(ns("saved_passkey"), "Passkey")
+                textInput(ns("passkey"), "Passkey")
+              ),
+              column(
+                1,
+                actionButton(
+                  ns("save_all"),
+                  "Save",
+                  class = "btn-primary",
+                  style = "color: #fff; margin-top: 25px;",
+                  width = "100%"
+                )
+              ),
+              column(
+                1,
+                id = ns("update_saved_col"),
+                actionButton(
+                  ns("update_saved"),
+                  "Update",
+                  class = "btn-primary",
+                  style = "color: #fff; margin-top: 25px;",
+                  width = "100%"
+                )
+              ) %>% hidden(),
+              column(
+                1,
+                circleButton(
+                  ns("show_info"),
+                  icon = icon("info"),
+                  size = "xs",
+                  style = "margin-top: 35px;"
+                )
+              )
+            ),
+            fluidRow(
+              column(
+                6,
+                h4(
+                  id = ns("info_text"),
+                  "This app does not include authentication; schedules are saved to a passkey. Anyone who enters this
+                  passkey will see all its saved schedules. Must be at least 6 characters."
+                ) %>% hidden()
               )
             ),
             br(),
@@ -33,8 +73,28 @@ saved_inputs_module_ui <- function(id) {
   )
 }
 
-saved_inputs_module <- function(input, output, session, semesters, built_majors, save_all_inputs) {
+saved_inputs_module <- function(input, output, session, semesters, built_majors) {
   ns <- session$ns
+  
+  observeEvent(input$show_info, toggleElement("info_text", anim = TRUE))
+  
+  observe({
+    hold <- loaded_metadata()
+    
+    if (is.null(hold)) {
+      # none loaded
+      hideElement("update_saved_col", anim = TRUE, animType = "fade")
+      enable("save_all")
+    } else {
+      # loaded, cannot save as new unless passkey has changed
+      showElement("update_saved_col", anim = TRUE, animType = "fade")
+      if (isTRUE(hold$passkey == input$passkey)) {
+        disable("save_all")
+      } else {
+        enable("save_all")
+      }
+    }
+  })
   
   semester_courses_df <- reactive({
     names <- names(reactiveValuesToList(semesters))
@@ -60,7 +120,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   })
   
   
-  observeEvent(save_all_inputs(), {
+  observeEvent(input$save_all, {
     showModal(
       modalDialog(
         title = "Save Courses and Majors",
@@ -92,12 +152,15 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       )
   })
   
+  loaded_metadata <- reactiveVal()
   
   observeEvent(input$confirm_save_all, {
     removeModal()
     
     new_uid <- uuid::UUIDgenerate()
     dat <- list(uid = new_uid, passkey = input$passkey, name = input$saved_name)
+    loaded_metadata(dat)
+    
     semester_courses <- semester_courses_df()
     majors <- built_majors()
     
@@ -171,7 +234,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     out <- conn %>% 
       tbl("input_ids") %>% 
       collect %>% 
-      filter(passkey == input$saved_passkey) %>% 
+      filter(passkey == input$passkey) %>% 
       arrange(desc(time_modified)) %>% 
       mutate(time_created = as.Date(time_created), time_modified = as.Date(time_modified))
     
@@ -260,6 +323,8 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
         delete_by(conn, "majors", by = list(uid = uid_to_delete))
       })
       
+      if (isTRUE(loaded_metadata()$uid == uid_to_delete)) loaded_metadata(NULL)
+      
       saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
       
       session$sendCustomMessage(
@@ -300,8 +365,8 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     
     semesters_df <- conn %>%
       tbl("semester_courses") %>% 
-      collect %>% 
-      filter(uid == uid_to_load)
+      filter(uid == uid_to_load) %>% 
+      collect()
     
     for (semester_name in unique(semesters_df$semester)) {
       courses <- semesters_df %>% 
@@ -315,12 +380,19 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     
     majors_df <- conn %>% 
       tbl("majors") %>% 
-      collect %>% 
       filter(uid == uid_to_load) %>% 
-      select(-uid)
+      select(-uid) %>% 
+      collect()
     
     built_majors(majors_df)
     
+    dat <- conn %>% 
+      tbl("input_ids") %>% 
+      filter(uid == uid_to_load) %>% 
+      select(passkey, name) %>% 
+      collect()
+    
+    loaded_metadata(list(uid = uid_to_load, passkey = dat$passkey, name = dat$name))
     
     progress$close()
   })
