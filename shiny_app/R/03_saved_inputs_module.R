@@ -82,17 +82,17 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   
   observeEvent(input$show_info, toggleElement("info_text", anim = TRUE))
   
-  observe({
-    if (nchar(input$passkey) <= 6) {
-      showFeedbackDanger("passkey", "Passkey must be at least 6 characters")
-      disable("save_all")
-      disable("update_saved")
-    } else {
-      hideFeedback("passkey")
-      enable("save_all")
-      enable("update_saved")
-    }
-  })
+  # observe({
+  #   if (nchar(input$passkey) <= 6) {
+  #     showFeedbackDanger("passkey", "Passkey must be at least 6 characters")
+  #     disable("save_all")
+  #     disable("update_saved")
+  #   } else {
+  #     hideFeedback("passkey")
+  #     enable("save_all")
+  #     enable("update_saved")
+  #   }
+  # })
   
   observe({
     hold <- loaded_metadata()
@@ -135,8 +135,6 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   loaded_metadata <- reactiveVal()
   
   observeEvent(input$save_all, {
-    removeModal()
-    
     new_uid <- uuid::UUIDgenerate()
     dat <- list(uid = new_uid, passkey = input$passkey, name = input$name_to_save)
     loaded_metadata(dat)
@@ -145,14 +143,14 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
     majors <- built_majors()
     
     progress <- Progress$new(session, min = 0, max = 3)
-    progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
+    progress$inc(amount = 1, message = "Saving", detail = "initializing...")
     tryCatch({
       DBI::dbWithTransaction(conn, {
         
         
         tychobratools::add_row(conn, "input_ids", dat)
         
-        progress$inc(amount = 1, message = "Saving Inputs", detail = "Semester Courses")
+        progress$inc(amount = 1, message = "Saving", detail = "Semester Courses")
         
         if (nrow(semester_courses) > 0) {
           semester_courses$uid <- new_uid
@@ -165,10 +163,78 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
           )
         }
         
-        progress$inc(amount = 1, message = "Saving Inputs", detail = "Majors")
+        progress$inc(amount = 1, message = "Saving", detail = "Majors")
         
         if (nrow(majors) > 0) {
           majors$uid <- new_uid
+          
+          DBI::dbWriteTable(
+            conn,
+            name = "majors",
+            value = majors,
+            append = TRUE
+          )
+        }
+      })
+      
+      saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
+      
+      showToast("success", "Schedule Successfully Saved")
+      
+    }, error = function(error) {
+      
+      showToast("error", "Error Saving Schedule")
+      print(error)
+    })
+    
+    progress$close()
+  })
+  
+  
+  observeEvent(input$update_saved, {
+    hold <- loaded_metadata()
+    req(hold)
+    dat <- hold[c("name", "passkey")]
+    
+    semester_courses <- semester_courses_df()
+    majors <- built_majors()
+    
+    progress <- Progress$new(session, min = 0, max = 3)
+    progress$inc(amount = 1, message = "Updating", detail = "initializing...")
+    tryCatch({
+      DBI::dbWithTransaction(conn, {
+        
+        tychobratools::update_by(conn, "input_ids", by = list(uid = hold$uid), .dat = dat)
+        
+        # Also want to update the date modified; this one does not need protection
+        # against SQL injection
+        dbExecute(
+          conn, 
+          "UPDATE input_ids SET time_modified=NOW() WHERE uid=$1",
+          params = list(hold$uid)
+        )
+        
+        progress$inc(amount = 1, message = "Updating", detail = "Semester Courses")
+        
+        tychobratools::delete_by(conn, "semester_courses", by = list(uid = hold$uid))
+        
+        if (nrow(semester_courses) > 0) {
+          semester_courses$uid <- hold$uid
+          
+          DBI::dbWriteTable(
+            conn,
+            name = "semester_courses",
+            value = semester_courses,
+            append = TRUE
+          )
+        }
+        
+        progress$inc(amount = 1, message = "Updating", detail = "Majors")
+        
+        tychobratools::delete_by(conn, "majors", by = list(uid = hold$uid))
+        
+        if (nrow(majors) > 0) {
+          majors$uid <- hold$uid
           
           DBI::dbWriteTable(
             conn,

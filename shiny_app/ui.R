@@ -24,11 +24,6 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-  shiny::tags$head(
-    tags$script(src = "custom.js"),
-    tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"),
-    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
-  ),
   useShinyjs(),
   useShinyFeedback(),
   tabItems(
