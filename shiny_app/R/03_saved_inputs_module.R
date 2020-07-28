@@ -95,7 +95,17 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   })
   
   observe({
-    if (is.null(loaded_metadata())) hideElement("update_saved_col") else showElement("update_saved_col")
+    hold <- loaded_metadata()
+    
+    if (is.null(hold)) {
+      hideElement("update_saved_col") 
+    } else {
+      if (input$passkey == hold$passkey) {
+        showElement("update_saved_col")
+      } else {
+        hideElement("update_saved_col")
+      }
+    }
   })
   
   semester_courses_df <- reactive({
@@ -122,45 +132,13 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   })
   
   
-  observeEvent(input$save_all, {
-    showModal(
-      modalDialog(
-        title = "Save Courses and Majors",
-        size = "s",
-        footer = list(
-          actionButton(
-            ns("confirm_save_all"),
-            "Save All",
-            style = "background-color: #46c410; color: #fff",
-            icon = icon("plus")
-          ),
-          modalButton("Cancel")
-        ),
-        fluidRow(
-          column(
-            12,
-            textInput(ns("saved_name"), "Name"),
-            textInput(ns("passkey"), "Passkey")
-          )
-        ),
-        fluidRow(
-          column(
-            12,
-            "This passkey will be used to track all of your saved tables. Make sure it's unique; anyone
-            who types it in will be able to see your info!"
-          )
-          )
-        )
-      )
-  })
-  
   loaded_metadata <- reactiveVal()
   
-  observeEvent(input$confirm_save_all, {
+  observeEvent(input$save_all, {
     removeModal()
     
     new_uid <- uuid::UUIDgenerate()
-    dat <- list(uid = new_uid, passkey = input$passkey, name = input$saved_name)
+    dat <- list(uid = new_uid, passkey = input$passkey, name = input$name_to_save)
     loaded_metadata(dat)
     
     semester_courses <- semester_courses_df()
