@@ -13,6 +13,7 @@ library(V8)
 library(magrittr)
 library(stringr)
 library(RSQLite)
+library(shinyFeedback)
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 #Sys.setenv(R_CONFIG_ACTIVE = "production")

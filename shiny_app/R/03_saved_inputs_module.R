@@ -20,6 +20,10 @@ saved_inputs_module_ui <- function(id) {
                 textInput(ns("passkey"), "Passkey")
               ),
               column(
+                2,
+                textInput(ns("name_to_save"), "Name")
+              ),
+              column(
                 1,
                 actionButton(
                   ns("save_all"),
@@ -79,21 +83,19 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   observeEvent(input$show_info, toggleElement("info_text", anim = TRUE))
   
   observe({
-    hold <- loaded_metadata()
-    
-    if (is.null(hold)) {
-      # none loaded
-      hideElement("update_saved_col", anim = TRUE, animType = "fade")
-      enable("save_all")
+    if (nchar(input$passkey) <= 6) {
+      showFeedbackDanger("passkey", "Passkey must be at least 6 characters")
+      disable("save_all")
+      disable("update_saved")
     } else {
-      # loaded, cannot save as new unless passkey has changed
-      showElement("update_saved_col", anim = TRUE, animType = "fade")
-      if (isTRUE(hold$passkey == input$passkey)) {
-        disable("save_all")
-      } else {
-        enable("save_all")
-      }
+      hideFeedback("passkey")
+      enable("save_all")
+      enable("update_saved")
     }
+  })
+  
+  observe({
+    if (is.null(loaded_metadata())) hideElement("update_saved_col") else showElement("update_saved_col")
   })
   
   semester_courses_df <- reactive({
@@ -201,25 +203,11 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
       
       saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "success",
-          title = "Inputs Successfully Saved!",
-          message = NULL
-        )
-      )
+      showToast("success", "Schedule Successfully Saved")
       
     }, error = function(error) {
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "error",
-          title = "Error Saving Inputs",
-          message = NULL
-        )
-      )
+      showToast("error", "Error Saving Schedule")
       print(error)
     })
     
@@ -252,13 +240,13 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
       out$button <- character(0)
     }
     
-    out %>% 
-      select(button, name, time_created, time_modified)
+    out
   })
   
   
   output$saved_inputs_table <- renderDT({
-    out <- saved_inputs_table_prep()
+    out <- saved_inputs_table_prep() %>% 
+      select(button, name, time_created, time_modified)
     
     datatable(
       out,
@@ -277,7 +265,11 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   
   
   observeEvent(input$saved_inputs_row_to_delete, {
-    id <- as.numeric(input$saved_inputs_row_to_delete)
+    hold_uid <- input$saved_inputs_row_to_delete
+    
+    hold_name <- saved_inputs_table_prep() %>% 
+      filter(uid == hold_uid) %>% 
+      pull(name)
     
     showModal(
       modalDialog(
@@ -295,7 +287,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
             style="color: #444; background-color: #f4f4f4; border-color: #ddd"
           )
         ),
-        h3(paste0("Are you sure you want to delete schedule #", id, "?"))
+        h3(paste0("Are you sure you want to delete ", hold_name, "?"))
       )
     )
   })
@@ -307,7 +299,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   observeEvent(input$saved_inputs_delete_button, {
     removeModal()
 
-    uid_to_delete <- input$saved_inputs_delete_button
+    uid_to_delete <- input$saved_inputs_row_to_delete
     
     progress <- Progress$new(session, min = 0, max = 3)
     
@@ -327,24 +319,10 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
       
       saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "success",
-          title = "Schedule Deleted",
-          message = NULL
-        )
-      )
+      showToast("success", "Schedule Deleted")
     }, error = function(error) {
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "error",
-          title = "Error Deleting Schedule",
-          message = NULL
-        )
-      )
+      showToast("error", "Error Deleting Schedule")
       
       print("error deleting input set")
       print(error)
@@ -393,6 +371,12 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
       collect()
     
     loaded_metadata(list(uid = uid_to_load, passkey = dat$passkey, name = dat$name))
+    
+    updateTextInput(
+      session,
+      "name_to_save",
+      value = dat$name
+    )
     
     progress$close()
   })

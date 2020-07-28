@@ -30,6 +30,7 @@ body <- dashboardBody(
     tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
   ),
   useShinyjs(),
+  useShinyFeedback(),
   tabItems(
     select_courses_module_ui("courses"),
     majors_module_ui("majors"),
