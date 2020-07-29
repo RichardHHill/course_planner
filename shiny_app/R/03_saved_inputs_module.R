@@ -60,7 +60,7 @@ saved_inputs_module_ui <- function(id) {
                 h4(
                   id = ns("info_text"),
                   "This app does not include authentication; schedules are saved to a passkey. Anyone who enters this
-                  passkey will see all its saved schedules. Must be at least 6 characters."
+                  passkey will see all its saved schedules."
                 ) %>% hidden()
               )
             ),
