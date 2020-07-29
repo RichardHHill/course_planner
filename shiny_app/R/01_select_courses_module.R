@@ -41,7 +41,7 @@ select_courses_module_ui <- function(id) {
 }
 
 select_courses_module <- function(input, output, session, built_majors, semester_names, semester_courses) {
-  
+  ns <- session$ns
   
   delete_mode <- reactiveVal(FALSE)
   
@@ -65,33 +65,29 @@ select_courses_module <- function(input, output, session, built_majors, semester
       semester_courses()
   })
   
-  observe(print(list(semester_courses = semester_courses)))
+  observe(print(list(semester_courses = semester_courses())))
   
   # Call a module for each semester
   output$semesters_ui <- renderUI({
     hold_names <- semester_names()
-    hold_courses <- isolate(semester_courses()) # only rerender when semesters change
-    
+
     layers <- ceiling(nrow(hold_names) / 4)
     
     out <- lapply(seq_len(layers), function(layer) {
-      hold <- hold_names[1+4 + 4 * (layer - 1), ]
+      hold <- hold_names[1:4 + 4 * (layer - 1), ]
       
       row <- lapply(seq_len(nrow(hold)), function(i)  {
-        
         callModule(
           semester_module, 
-          ns(hold[i,1]),
-          semester_uid = hold[i,1],
+          hold[[i,1]],
+          semester_uid = hold[[i,1]],
           delete_mode = delete_mode,
           semester_courses = semester_courses,
-          namehold[i,2]
+          name = hold[[i,2]]
         )
         
-        semester_module_ui(ns(hold[i,1]), hold[i,2])
+        semester_module_ui(ns(hold[[i,1]]), hold[[i,2]])
       })
-      
-      
       
       fluidRow(tagList(row))
     })

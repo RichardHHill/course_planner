@@ -173,7 +173,8 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
   
   output$semester_table <- renderDT({
     out <- semester_out() %>% 
-      select(Remove, course_code, course_name)
+      select(-semester_uid)
+    req(nrow(out) > 0)
     
     datatable(
       out,
@@ -196,6 +197,9 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
     
     out <- out[-row,]
     
-    semester_courses(out)
+    semester_courses() %>% 
+      filter(.data$semester_uid != .env$semester_uid) %>% 
+      bind_rows(out) %>% 
+      semester_courses()
   })
 }
