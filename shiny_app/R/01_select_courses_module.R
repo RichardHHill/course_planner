@@ -9,31 +9,29 @@ select_courses_module_ui <- function(id) {
         width = 12,
         fluidRow(
           column(
-            12,
+            6,
+            actionButton(
+              ns("edit_semesters"),
+              "Edit Semesters",
+              class = "btn-primary",
+              style = "color: #fff;"
+            )
+          ),
+          column(
+            6,
             align = "right",
             actionButton(
               ns("enable_delete_mode"),
               "Delete Courses",
               class = "btn-danger",
-              style = "color: #fff"
+              style = "color: #fff;"
             ),
             actionButton(ns("disable_delete_mode"), "Stop Deleting") %>% hidden
           )
         ),
         br(),
         br(),
-        fluidRow(
-          semester_module_ui(ns("1"), "Semester 1"),
-          semester_module_ui(ns("3"), "Semester 2"),
-          semester_module_ui(ns("5"), "Semester 3"),
-          semester_module_ui(ns("7"), "Semester 4")
-        ),
-        fluidRow(
-          semester_module_ui(ns("2"), "Semester 5"),
-          semester_module_ui(ns("4"), "Semester 6"),
-          semester_module_ui(ns("6"), "Semester 7"),
-          semester_module_ui(ns("8"), "Semester 8")
-        )
+        uiOutput(ns("semesters_ui"))
       )
     ),
     fluidRow(
@@ -42,7 +40,7 @@ select_courses_module_ui <- function(id) {
   )
 }
 
-select_courses_module <- function(input, output, session, semesters, built_majors) {
+select_courses_module <- function(input, output, session, built_majors, semester_names, semester_courses) {
   
   
   delete_mode <- reactiveVal(FALSE)
@@ -59,8 +57,47 @@ select_courses_module <- function(input, output, session, semesters, built_major
     showElement("enable_delete_mode")
   })
   
-  # Create 8 semester tables
-  lapply(1:8, function(i) callModule(semester_module, i, delete_mode, semesters, paste("Semester", i)))
+  
+  observeEvent(semester_names(), ignoreInit = TRUE, {
+    # Remove all rows from deleted semesters
+    semester_courses() %>% 
+      filter(semester_uid %in% semester_names()$semester_uid) %>% 
+      semester_courses()
+  })
+  
+  observe(print(list(semester_courses = semester_courses)))
+  
+  # Call a module for each semester
+  output$semesters_ui <- renderUI({
+    hold_names <- semester_names()
+    hold_courses <- isolate(semester_courses()) # only rerender when semesters change
+    
+    layers <- ceiling(nrow(hold_names) / 4)
+    
+    out <- lapply(seq_len(layers), function(layer) {
+      hold <- hold_names[1+4 + 4 * (layer - 1), ]
+      
+      row <- lapply(seq_len(nrow(hold)), function(i)  {
+        
+        callModule(
+          semester_module, 
+          ns(hold[i,1]),
+          semester_uid = hold[i,1],
+          delete_mode = delete_mode,
+          semester_courses = semester_courses,
+          namehold[i,2]
+        )
+        
+        semester_module_ui(ns(hold[i,1]), hold[i,2])
+      })
+      
+      
+      
+      fluidRow(tagList(row))
+    })
+    
+    tagList(out)
+  })
   
   
   tables_list <- reactive({

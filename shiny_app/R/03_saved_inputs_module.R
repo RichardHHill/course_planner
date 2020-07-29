@@ -17,7 +17,7 @@ saved_inputs_module_ui <- function(id) {
             fluidRow(
               column(
                 2,
-                textInput(ns("passkey"), "Passkey")
+                textInput(ns("passkey"), "Passkey", value = "demo")
               ),
               column(
                 2,
@@ -77,7 +77,7 @@ saved_inputs_module_ui <- function(id) {
   )
 }
 
-saved_inputs_module <- function(input, output, session, semesters, built_majors) {
+saved_inputs_module <- function(input, output, session, built_majors, semester_names, semester_courses) {
   ns <- session$ns
   
   observeEvent(input$show_info, toggleElement("info_text", anim = TRUE))
@@ -108,29 +108,6 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
     }
   })
   
-  semester_courses_df <- reactive({
-    names <- names(reactiveValuesToList(semesters))
-    
-    out <- tibble(
-      semester = character(0),
-      code = character(0),
-      name = character(0)
-    )
-    
-    for (i in seq_along(names)) {
-      out <- rbind(
-        out,
-        tibble(
-          semester = names[[i]],
-          code = semesters[[names[[i]]]]$code,
-          name = semesters[[names[[i]]]]$name
-        )
-      )
-    }
-    
-    out
-  })
-  
   
   loaded_metadata <- reactiveVal()
   
@@ -139,7 +116,8 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
     dat <- list(uid = new_uid, passkey = input$passkey, name = input$name_to_save)
     loaded_metadata(dat)
     
-    semester_courses <- semester_courses_df()
+    semester_names <- semester_names()
+    semester_courses <- semester_courses()
     majors <- built_majors()
     
     progress <- Progress$new(session, min = 0, max = 3)
@@ -152,8 +130,19 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
         
         progress$inc(amount = 1, message = "Saving", detail = "Semester Courses")
         
+        if (nrow(semester_names) > 0) {
+          semester_names$schedule_uid <- new_uid
+          
+          DBI::dbWriteTable(
+            conn,
+            name = "semester_names",
+            value = semester_names,
+            append = TRUE
+          )
+        }
+        
         if (nrow(semester_courses) > 0) {
-          semester_courses$uid <- new_uid
+          semester_courses$schedule$uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -166,7 +155,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
         progress$inc(amount = 1, message = "Saving", detail = "Majors")
         
         if (nrow(majors) > 0) {
-          majors$uid <- new_uid
+          majors$schedule_uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -196,7 +185,8 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
     req(hold)
     dat <- hold[c("name", "passkey")]
     
-    semester_courses <- semester_courses_df()
+    semester_names <- semester_names()
+    semester_courses <- semester_courses()
     majors <- built_majors()
     
     progress <- Progress$new(session, min = 0, max = 3)
@@ -216,10 +206,23 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
         
         progress$inc(amount = 1, message = "Updating", detail = "Semester Courses")
         
-        tychobratools::delete_by(conn, "semester_courses", by = list(uid = hold$uid))
+        tychobratools::delete_by(conn, "semester_names", by = list(schedule_uid = hold$uid))
+        
+        if (nrow(semester_names) > 0) {
+          semester_names$schedule_uid <- hold$uid
+          
+          DBI::dbWriteTable(
+            conn,
+            name = "semester_names",
+            value = semester_names,
+            append = TRUE
+          )
+        }
+        
+        tychobratools::delete_by(conn, "semester_courses", by = list(schedule_uid = hold$uid))
         
         if (nrow(semester_courses) > 0) {
-          semester_courses$uid <- hold$uid
+          semester_courses$schedule_uid <- hold$uid
           
           DBI::dbWriteTable(
             conn,
@@ -231,10 +234,10 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
         
         progress$inc(amount = 1, message = "Updating", detail = "Majors")
         
-        tychobratools::delete_by(conn, "majors", by = list(uid = hold$uid))
+        tychobratools::delete_by(conn, "majors", by = list(schedule_uid = hold$uid))
         
         if (nrow(majors) > 0) {
-          majors$uid <- hold$uid
+          majors$schedule_uid <- hold$uid
           
           DBI::dbWriteTable(
             conn,
@@ -262,12 +265,13 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
   
   saved_inputs_table_prep <- reactive({
     saved_inputs_table_trigger()
+    passkey <- input$passkey
     
     out <- conn %>% 
       tbl("input_ids") %>% 
-      collect %>% 
-      filter(passkey == input$passkey) %>% 
+      filter(.data$passkey == .env$passkey) %>% 
       arrange(desc(time_modified)) %>% 
+      collect() %>% 
       mutate(time_created = as.Date(time_created), time_modified = as.Date(time_modified))
     
     if (nrow(out) > 0) {
@@ -346,19 +350,11 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
 
     uid_to_delete <- input$saved_inputs_row_to_delete
     
-    progress <- Progress$new(session, min = 0, max = 3)
+    progress <- Progress$new(session, min = 0, max = 2)
+    progress$inc(amount = 1, message = "Deleting Data", detail = "Input Id")
     
     tryCatch({
-      DBI::dbWithTransaction(conn, {
-        progress$inc(amount = 1, message = "Deleting Data", detail = "Input Id")
-        delete_by(conn, "input_ids", by = list(uid = uid_to_delete))
-        
-        progress$inc(amount = 1, message = "Deleting Data", detail = "Semester Courses")
-        delete_by(conn, "semester_courses", by = list(uid = uid_to_delete))
-        
-        progress$inc(amount = 1, message = "Deleting Data", detail = "Majors")
-        delete_by(conn, "majors", by = list(uid = uid_to_delete))
-      })
+      delete_by(conn, "input_ids", by = list(uid = uid_to_delete))
       
       if (isTRUE(loaded_metadata()$uid == uid_to_delete)) loaded_metadata(NULL)
       
@@ -373,6 +369,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
       print(error)
     })
     
+    progess$inc(amount = 1)
     progress$close()
   })
   
@@ -386,28 +383,28 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors)
     
     progress$inc(amount = 1, message = "Loading Courses")
     
-    semesters_df <- conn %>%
-      tbl("semester_courses") %>% 
-      filter(uid == uid_to_load) %>% 
-      collect()
+    conn %>% 
+      tbl("semester_names") %>% 
+      filter(schedule_uid == uid_to_load) %>% 
+      select(-schedule_uid) %>% 
+      collect() %>% 
+      semester_names()
     
-    for (semester_name in unique(semesters_df$semester)) {
-      courses <- semesters_df %>% 
-        filter(semester == semester_name) %>% 
-        select(code, name)
-      
-      semesters[[semester_name]] <- courses
-    }
+    conn %>%
+      tbl("semester_courses") %>% 
+      filter(schedule_uid == uid_to_load) %>% 
+      select(-schedule_uid) %>% 
+      collect() %>% 
+      semester_courses()
     
     progress$inc(amount = 1, message = "Loading Majors")
     
-    majors_df <- conn %>% 
+    conn %>% 
       tbl("majors") %>% 
-      filter(uid == uid_to_load) %>% 
-      select(-uid) %>% 
-      collect()
-    
-    built_majors(majors_df)
+      filter(schedule_uid == uid_to_load) %>% 
+      select(-schedule_uid) %>% 
+      collect() %>% 
+      built_majors()
     
     dat <- conn %>% 
       tbl("input_ids") %>% 

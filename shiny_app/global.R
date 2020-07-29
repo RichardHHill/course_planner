@@ -14,6 +14,7 @@ library(magrittr)
 library(stringr)
 library(RSQLite)
 library(shinyFeedback)
+library(uuid)
 
 Sys.setenv(R_CONFIG_ACTIVE = "default")
 #Sys.setenv(R_CONFIG_ACTIVE = "production")
