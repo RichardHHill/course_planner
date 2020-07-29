@@ -3,19 +3,6 @@ head <- dashboardHeader(
 )
 
 sidebar <- dashboardSidebar(
-  fluidRow(
-    column(
-      12,
-      align = "center",
-      actionButton(
-        "save_all_inputs",
-        "Save Inputs",
-        style = "background-color: #07b710; color: #fff; border-color: #07b710",
-        icon = icon("plus"),
-        width = "90%"
-      )
-    )
-  ),
   sidebarMenu(
     id = "sidebar",
     menuItem(
@@ -37,12 +24,8 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-  shiny::tags$head(
-    tags$script(src = "custom.js"),
-    tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"),
-    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
-  ),
   useShinyjs(),
+  useShinyFeedback(),
   tabItems(
     select_courses_module_ui("courses"),
     majors_module_ui("majors"),

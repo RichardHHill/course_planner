@@ -17,7 +17,51 @@ saved_inputs_module_ui <- function(id) {
             fluidRow(
               column(
                 2,
-                textInput(ns("saved_passkey"), "Passkey")
+                textInput(ns("passkey"), "Passkey")
+              ),
+              column(
+                2,
+                textInput(ns("name_to_save"), "Name")
+              ),
+              column(
+                1,
+                actionButton(
+                  ns("save_all"),
+                  "Save",
+                  class = "btn-primary",
+                  style = "color: #fff; margin-top: 25px;",
+                  width = "100%"
+                )
+              ),
+              column(
+                1,
+                id = ns("update_saved_col"),
+                actionButton(
+                  ns("update_saved"),
+                  "Update",
+                  class = "btn-primary",
+                  style = "color: #fff; margin-top: 25px;",
+                  width = "100%"
+                )
+              ) %>% hidden(),
+              column(
+                1,
+                circleButton(
+                  ns("show_info"),
+                  icon = icon("info"),
+                  size = "xs",
+                  style = "margin-top: 35px;"
+                )
+              )
+            ),
+            fluidRow(
+              column(
+                6,
+                h4(
+                  id = ns("info_text"),
+                  "This app does not include authentication; schedules are saved to a passkey. Anyone who enters this
+                  passkey will see all its saved schedules. Must be at least 6 characters."
+                ) %>% hidden()
               )
             ),
             br(),
@@ -33,8 +77,36 @@ saved_inputs_module_ui <- function(id) {
   )
 }
 
-saved_inputs_module <- function(input, output, session, semesters, built_majors, save_all_inputs) {
+saved_inputs_module <- function(input, output, session, semesters, built_majors) {
   ns <- session$ns
+  
+  observeEvent(input$show_info, toggleElement("info_text", anim = TRUE))
+  
+  # observe({
+  #   if (nchar(input$passkey) <= 6) {
+  #     showFeedbackDanger("passkey", "Passkey must be at least 6 characters")
+  #     disable("save_all")
+  #     disable("update_saved")
+  #   } else {
+  #     hideFeedback("passkey")
+  #     enable("save_all")
+  #     enable("update_saved")
+  #   }
+  # })
+  
+  observe({
+    hold <- loaded_metadata()
+    
+    if (is.null(hold)) {
+      hideElement("update_saved_col") 
+    } else {
+      if (input$passkey == hold$passkey) {
+        showElement("update_saved_col")
+      } else {
+        hideElement("update_saved_col")
+      }
+    }
+  })
   
   semester_courses_df <- reactive({
     names <- names(reactiveValuesToList(semesters))
@@ -60,66 +132,28 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   })
   
   
-  observeEvent(save_all_inputs(), {
-    showModal(
-      modalDialog(
-        title = "Save Courses and Majors",
-        size = "s",
-        footer = list(
-          actionButton(
-            ns("confirm_save_all"),
-            "Save All",
-            style = "background-color: #46c410; color: #fff",
-            icon = icon("plus")
-          ),
-          modalButton("Cancel")
-        ),
-        fluidRow(
-          column(
-            12,
-            textInput(ns("saved_name"), "Name"),
-            textInput(ns("passkey"), "Passkey")
-          )
-        ),
-        fluidRow(
-          column(
-            12,
-            "This passkey will be used to track all of your saved tables. Make sure it's unique; anyone
-            who types it in will be able to see your info!"
-          )
-          )
-        )
-      )
-  })
+  loaded_metadata <- reactiveVal()
   
-  
-  observeEvent(input$confirm_save_all, {
-    removeModal()
+  observeEvent(input$save_all, {
+    new_uid <- uuid::UUIDgenerate()
+    dat <- list(uid = new_uid, passkey = input$passkey, name = input$name_to_save)
+    loaded_metadata(dat)
     
-    dat <- list(passkey = input$passkey, name = input$saved_name)
     semester_courses <- semester_courses_df()
     majors <- built_majors()
     
     progress <- Progress$new(session, min = 0, max = 3)
-    progress$inc(amount = 1, message = "Saving Inputs", detail = "initializing...")
+    progress$inc(amount = 1, message = "Saving", detail = "initializing...")
     tryCatch({
       DBI::dbWithTransaction(conn, {
         
+        
         tychobratools::add_row(conn, "input_ids", dat)
         
-        get_query <- "SELECT id from input_ids WHERE passkey=?passkey ORDER BY time_created DESC LIMIT 1"
-        
-        get_query <- DBI::sqlInterpolate(conn, get_query, .dots = dat["passkey"])
-        
-        input_set_id <- as.integer(DBI::dbGetQuery(
-          conn,
-          get_query
-        ))
-        
-        progress$inc(amount = 1, message = "Saving Inputs", detail = "Semester Courses")
+        progress$inc(amount = 1, message = "Saving", detail = "Semester Courses")
         
         if (nrow(semester_courses) > 0) {
-          semester_courses$id <- input_set_id 
+          semester_courses$uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -129,10 +163,10 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
           )
         }
         
-        progress$inc(amount = 1, message = "Saving Inputs", detail = "Majors")
+        progress$inc(amount = 1, message = "Saving", detail = "Majors")
         
         if (nrow(majors) > 0) {
-          majors$id <- input_set_id
+          majors$uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -145,25 +179,79 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       
       saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "success",
-          title = "Inputs Successfully Saved!",
-          message = NULL
-        )
-      )
+      showToast("success", "Schedule Successfully Saved")
       
     }, error = function(error) {
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "error",
-          title = "Error Saving Inputs",
-          message = NULL
+      showToast("error", "Error Saving Schedule")
+      print(error)
+    })
+    
+    progress$close()
+  })
+  
+  
+  observeEvent(input$update_saved, {
+    hold <- loaded_metadata()
+    req(hold)
+    dat <- hold[c("name", "passkey")]
+    
+    semester_courses <- semester_courses_df()
+    majors <- built_majors()
+    
+    progress <- Progress$new(session, min = 0, max = 3)
+    progress$inc(amount = 1, message = "Updating", detail = "initializing...")
+    tryCatch({
+      DBI::dbWithTransaction(conn, {
+        
+        tychobratools::update_by(conn, "input_ids", by = list(uid = hold$uid), .dat = dat)
+        
+        # Also want to update the date modified; this one does not need protection
+        # against SQL injection
+        dbExecute(
+          conn, 
+          "UPDATE input_ids SET time_modified=NOW() WHERE uid=$1",
+          params = list(hold$uid)
         )
-      )
+        
+        progress$inc(amount = 1, message = "Updating", detail = "Semester Courses")
+        
+        tychobratools::delete_by(conn, "semester_courses", by = list(uid = hold$uid))
+        
+        if (nrow(semester_courses) > 0) {
+          semester_courses$uid <- hold$uid
+          
+          DBI::dbWriteTable(
+            conn,
+            name = "semester_courses",
+            value = semester_courses,
+            append = TRUE
+          )
+        }
+        
+        progress$inc(amount = 1, message = "Updating", detail = "Majors")
+        
+        tychobratools::delete_by(conn, "majors", by = list(uid = hold$uid))
+        
+        if (nrow(majors) > 0) {
+          majors$uid <- hold$uid
+          
+          DBI::dbWriteTable(
+            conn,
+            name = "majors",
+            value = majors,
+            append = TRUE
+          )
+        }
+      })
+      
+      saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
+      
+      showToast("success", "Schedule Successfully Saved")
+      
+    }, error = function(error) {
+      
+      showToast("error", "Error Saving Schedule")
       print(error)
     })
     
@@ -178,17 +266,17 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
     out <- conn %>% 
       tbl("input_ids") %>% 
       collect %>% 
-      filter(passkey == input$saved_passkey) %>% 
-      arrange(desc(time_created)) %>% 
-      select(id, name)
+      filter(passkey == input$passkey) %>% 
+      arrange(desc(time_modified)) %>% 
+      mutate(time_created = as.Date(time_created), time_modified = as.Date(time_modified))
     
     if (nrow(out) > 0) {
-      rows <- seq_len(nrow(out))
+      ids <- out$uid
       
       buttons <- paste0(
         '<div class="btn-group width_75" role="group" aria-label="Basic example">
-        <button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', rows, ' style="margin: 0"><i class="fa fa-upload"></i></button>
-        <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Schedule" id = ', rows, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
+        <button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-upload"></i></button>
+        <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
       )
       
       out$button <- buttons
@@ -196,18 +284,18 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       out$button <- character(0)
     }
     
-    out %>% 
-      select(button, id, name)
+    out
   })
   
   
   output$saved_inputs_table <- renderDT({
-    out <- saved_inputs_table_prep()
+    out <- saved_inputs_table_prep() %>% 
+      select(button, name, time_created, time_modified)
     
     datatable(
       out,
       rownames = FALSE,
-      colnames = c("", "Id", "Name"),
+      colnames = c("", "Name", "Created", "Updated"),
       escape = -1,
       selection = "none",
       options = list(
@@ -221,7 +309,11 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   
   
   observeEvent(input$saved_inputs_row_to_delete, {
-    id <- as.numeric(input$saved_inputs_row_to_delete)
+    hold_uid <- input$saved_inputs_row_to_delete
+    
+    hold_name <- saved_inputs_table_prep() %>% 
+      filter(uid == hold_uid) %>% 
+      pull(name)
     
     showModal(
       modalDialog(
@@ -239,7 +331,7 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
             style="color: #444; background-color: #f4f4f4; border-color: #ddd"
           )
         ),
-        h3(paste0("Are you sure you want to delete schedule #", id, "?"))
+        h3(paste0("Are you sure you want to delete ", hold_name, "?"))
       )
     )
   })
@@ -250,44 +342,31 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   
   observeEvent(input$saved_inputs_delete_button, {
     removeModal()
-    row <- as.numeric(input$saved_inputs_row_to_delete)
-    
-    id_to_delete <- saved_inputs_table_prep()[row, ]$id
+
+    uid_to_delete <- input$saved_inputs_row_to_delete
     
     progress <- Progress$new(session, min = 0, max = 3)
     
     tryCatch({
       DBI::dbWithTransaction(conn, {
         progress$inc(amount = 1, message = "Deleting Data", detail = "Input Id")
-        delete_by(conn, "input_ids", by = list(id = id_to_delete))
+        delete_by(conn, "input_ids", by = list(uid = uid_to_delete))
         
         progress$inc(amount = 1, message = "Deleting Data", detail = "Semester Courses")
-        delete_by(conn, "semester_courses", by = list(id = id_to_delete))
+        delete_by(conn, "semester_courses", by = list(uid = uid_to_delete))
         
         progress$inc(amount = 1, message = "Deleting Data", detail = "Majors")
-        delete_by(conn, "majors", by = list(id = id_to_delete))
+        delete_by(conn, "majors", by = list(uid = uid_to_delete))
       })
+      
+      if (isTRUE(loaded_metadata()$uid == uid_to_delete)) loaded_metadata(NULL)
       
       saved_inputs_table_trigger(saved_inputs_table_trigger() + 1)
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "success",
-          title = "Schedule Deleted",
-          message = NULL
-        )
-      )
+      showToast("success", "Schedule Deleted")
     }, error = function(error) {
       
-      session$sendCustomMessage(
-        "show_toast",
-        message = list(
-          type = "error",
-          title = "Error Deleting Schedule",
-          message = NULL
-        )
-      )
+      showToast("error", "Error Deleting Schedule")
       
       print("error deleting input set")
       print(error)
@@ -302,16 +381,14 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
   observeEvent(input$saved_inputs_row_to_load, {
     progress <- Progress$new(session, min = 0, max = 2)
     
-    row <- as.numeric(input$saved_inputs_row_to_load)
-    
-    id_to_load <- saved_inputs_table_prep()[row, ]$id
+    uid_to_load <- input$saved_inputs_row_to_load
     
     progress$inc(amount = 1, message = "Loading Courses")
     
     semesters_df <- conn %>%
       tbl("semester_courses") %>% 
-      collect %>% 
-      filter(id == id_to_load)
+      filter(uid == uid_to_load) %>% 
+      collect()
     
     for (semester_name in unique(semesters_df$semester)) {
       courses <- semesters_df %>% 
@@ -321,17 +398,29 @@ saved_inputs_module <- function(input, output, session, semesters, built_majors,
       semesters[[semester_name]] <- courses
     }
     
-    
     progress$inc(amount = 1, message = "Loading Majors")
     
     majors_df <- conn %>% 
       tbl("majors") %>% 
-      collect %>% 
-      filter(id == id_to_load) %>% 
-      select(-id)
+      filter(uid == uid_to_load) %>% 
+      select(-uid) %>% 
+      collect()
     
     built_majors(majors_df)
     
+    dat <- conn %>% 
+      tbl("input_ids") %>% 
+      filter(uid == uid_to_load) %>% 
+      select(passkey, name) %>% 
+      collect()
+    
+    loaded_metadata(list(uid = uid_to_load, passkey = dat$passkey, name = dat$name))
+    
+    updateTextInput(
+      session,
+      "name_to_save",
+      value = dat$name
+    )
     
     progress$close()
   })
