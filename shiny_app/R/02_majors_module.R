@@ -58,12 +58,14 @@ majors_module_ui <- function(id) {
           actionButton(
             ns("submit_custom_major"),
             "Submit Major",
-            style = "color: #fff; background-color: #07b710; border-color: #07b710;"
+            class = "btn-primary",
+            style = "color: #fff;"
           ),
           actionButton(
             ns("clear_custom_major"),
             "Clear",
-            style = "color: #fff; background-color: #dd4b39; border-color: #d73925"
+            class = "btn-danger",
+            style = "color: #fff;"
           )
         ),
         br(),
@@ -177,12 +179,14 @@ majors_module <- function(input, output, session, semesters, built_majors) {
         actionButton(
           ns("deselect_major"),
           "Deselect Major",
-          style = "color: #fff; background-color: #dd4b39; border-color: #d73925"
+          class = "btn-danger",
+          style = "color: #fff;"
         ),
         actionButton(
           ns("select_major_choices"),
           "Select Choices",
-          style = "color: #fff; background-color: #07b710; border-color: #07b710;",
+          class = "btn-primary",
+          style = "color: #fff;",
           icon = icon("arrow-right")
         ),
         br(),

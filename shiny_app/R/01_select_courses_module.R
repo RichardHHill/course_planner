@@ -14,7 +14,8 @@ select_courses_module_ui <- function(id) {
             actionButton(
               ns("enable_delete_mode"),
               "Delete Courses",
-              style = "background-color: #dd4b39; border-color: #d73925; color: #fff"
+              class = "btn-danger",
+              style = "color: #fff"
             ),
             actionButton(ns("disable_delete_mode"), "Stop Deleting") %>% hidden
           )
