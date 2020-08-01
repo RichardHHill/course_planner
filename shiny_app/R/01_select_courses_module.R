@@ -82,7 +82,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
             style = "color: #fff;"
           )
         ),
-        size = "s"
+        size = "m"
       )
     )
   })
@@ -93,8 +93,23 @@ select_courses_module <- function(input, output, session, built_majors, semester
   observeEvent(semester_names(), semester_names_hold(semester_names()))
   
   output$semester_names_table <- renderDT({
-    out <- semester_names() %>% 
-      select(semester_name)
+    out <- semester_names()
+    
+    if (nrow(out) > 0) {
+      ids <- out$semester_uid
+      
+      buttons <- paste0(
+        '<div class="btn-group" role="group">
+          <button class="btn btn-danger btn-sm delete_btn" id = ', ids, ' style="margin: 0; width: 35px;"><i class="fa fa-trash-o"></i></button>
+          <button class="btn btn-info btn-sm" id = ', ids, ' style="margin: 0; width: 35px;"><i class="fa fa-arrows-alt-v"></i></button>
+        </div>'
+      )
+      
+      out <- bind_cols(tibble(buttons = buttons), out)
+    }
+    
+    out <- out %>% 
+      select(-semester_uid)
     
     datatable(
       out,
@@ -102,9 +117,13 @@ select_courses_module <- function(input, output, session, built_majors, semester
       rownames = FALSE,
       colnames = "Double Click to Edit",
       selection = "none",
+      escape = -1,
       options = list(
         dom = "t",
-        ordering = FALSE
+        ordering = FALSE,
+        columnDefs = list(
+          list(width = "100px", targets = 0)
+        )
       )
     )
   })
