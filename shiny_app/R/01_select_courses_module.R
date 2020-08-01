@@ -57,6 +57,80 @@ select_courses_module <- function(input, output, session, built_majors, semester
     showElement("enable_delete_mode")
   })
   
+  # Modal with datatable to add, edit, and delete semesters
+  observeEvent(input$edit_semesters, {
+    showModal(
+      modalDialog(
+        actionButton(
+          ns("add_semester"),
+          "",
+          icon = icon("plus"),
+          class = "btn-primary",
+          style = "color: #fff;"
+        ),
+        DTOutput(ns("semester_names_table")),
+        title = "Edit Semesters",
+        footer = list(
+          actionButton(
+            ns("cancel_edit_semesters"),
+            "Cancel"
+          ),
+          actionButton(
+            ns("submit_edit_semesters"),
+            "Submit",
+            class = "btn-primary",
+            style = "color: #fff;"
+          )
+        ),
+        size = "s"
+      )
+    )
+  })
+  
+  # Hold semester names for edit until table is submitted
+  semester_names_hold <- reactiveVal()
+  
+  observeEvent(semester_names(), semester_names_hold(semester_names()))
+  
+  output$semester_names_table <- renderDT({
+    out <- semester_names() %>% 
+      select(semester_name)
+    
+    datatable(
+      out,
+      editable = "cell",
+      rownames = FALSE,
+      colnames = "Double Click to Edit",
+      selection = "none",
+      options = list(
+        dom = "t",
+        ordering = FALSE
+      )
+    )
+  })
+  
+  
+  # Update Edited Cell Names
+  observeEvent(input$semester_names_table_cell_edit, {
+    change <- input$semester_names_table_cell_edit
+    hold <- semester_names_hold()
+    
+    hold[change$row, 2] <- change$value
+    
+    semester_names_hold(hold)
+  })
+  
+  # Update semester names to our held values
+  observeEvent(input$submit_edit_semesters, {
+    removeModal()
+    semester_names(semester_names_hold())
+  })
+  
+  # Cancelling, reset held values
+  observeEvent(input$cancel_edit_semesters, {
+    removeModal()
+    semester_names_hold(semester_names())
+  })
   
   observeEvent(semester_names(), ignoreInit = TRUE, {
     # Remove all rows from deleted semesters
