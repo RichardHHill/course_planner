@@ -94,7 +94,10 @@ select_courses_module <- function(input, output, session, built_majors, semester
   
   observeEvent(semester_names(), semester_names_hold(semester_names()))
   
-  output$semester_names_table <- renderDT({
+  
+  semester_names_table_prep <- reactiveVal()
+  
+  observe({
     out <- semester_names_hold()
     
     if (nrow(out) > 0) {
@@ -113,6 +116,16 @@ select_courses_module <- function(input, output, session, built_majors, semester
     out <- out %>% 
       select(-semester_uid)
     
+    if (is.null(semester_names_table_prep())) {
+      semester_names_table_prep(out)
+    } else {
+      replaceData(semester_names_table_proxy, out, rownames = FALSE)
+    }
+  })
+  
+  output$semester_names_table <- renderDT({
+    out <- semester_names_table_prep()
+    
     datatable(
       out,
       editable = list(target = "cell", disable = list(columns = 0)),
@@ -121,7 +134,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
       selection = "none",
       escape = -1,
       options = list(
-        dom = "t",
+        dom = "tp",
         ordering = FALSE,
         columnDefs = list(
           list(width = "100px", targets = 0)
@@ -129,6 +142,8 @@ select_courses_module <- function(input, output, session, built_majors, semester
       )
     )
   })
+  
+  semester_names_table_proxy <- dataTableProxy("semester_names_table")
   
   
   observeEvent(input$add_semester, {
