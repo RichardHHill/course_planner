@@ -1,7 +1,7 @@
 server <- function(input, output, session) {
   
   semester_names <- reactiveVal(tibble(
-    semester_uid = uuid::UUIDgenerate(n = 8),
+    semester_uid = UUIDgenerate(n = 8),
     semester_name = paste("Semester", 1:8)
   ))
   

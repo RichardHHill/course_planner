@@ -112,7 +112,7 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
   loaded_metadata <- reactiveVal()
   
   observeEvent(input$save_all, {
-    new_uid <- uuid::UUIDgenerate()
+    new_uid <- UUIDgenerate()
     dat <- list(uid = new_uid, passkey = input$passkey, name = input$name_to_save)
     loaded_metadata(dat)
     

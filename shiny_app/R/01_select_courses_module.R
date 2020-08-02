@@ -36,7 +36,9 @@ select_courses_module_ui <- function(id) {
     ),
     fluidRow(
       uiOutput(ns("major_tables_ui"))
-    )
+    ),
+    tags$script(src = "select_courses_module.js"),
+    tags$script(paste0("select_courses_module_js('", ns(""), "')"))
   )
 }
 
@@ -93,7 +95,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
   observeEvent(semester_names(), semester_names_hold(semester_names()))
   
   output$semester_names_table <- renderDT({
-    out <- semester_names()
+    out <- semester_names_hold()
     
     if (nrow(out) > 0) {
       ids <- out$semester_uid
@@ -129,6 +131,12 @@ select_courses_module <- function(input, output, session, built_majors, semester
   })
   
   
+  observeEvent(input$add_semester, {
+    semester_names_hold() %>% 
+      tibble::add_row(semester_uid = UUIDgenerate(), semester_name = "") %>% 
+      semester_names_hold()
+  })
+  
   # Update Edited Cell Names
   observeEvent(input$semester_names_table_cell_edit, {
     change <- input$semester_names_table_cell_edit
@@ -137,6 +145,12 @@ select_courses_module <- function(input, output, session, built_majors, semester
     hold[change$row, 2] <- change$value
     
     semester_names_hold(hold)
+  })
+  
+  observeEvent(input$semester_delete, {
+    semester_names_hold() %>% 
+      filter(semester_uid != input$semester_delete) %>% 
+      semester_names_hold()
   })
   
   # Update semester names to our held values
@@ -167,7 +181,9 @@ select_courses_module <- function(input, output, session, built_majors, semester
     layers <- ceiling(nrow(hold_names) / 4)
     
     out <- lapply(seq_len(layers), function(layer) {
-      hold <- hold_names[1:4 + 4 * (layer - 1), ]
+      idx <- 1:4 + 4 * (layer - 1)
+      idx <- idx[idx <= nrow(hold_names)]
+      hold <- hold_names[idx, ]
       
       row <- lapply(seq_len(nrow(hold)), function(i)  {
         callModule(
