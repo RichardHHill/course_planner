@@ -191,10 +191,17 @@ select_courses_module <- function(input, output, session, built_majors, semester
   
   observe(print(list(semester_courses = semester_courses())))
   
+  
+  # Keep track so we don't call the module server code multiple times on one uid
+  semester_modules_created <- reactiveVal({
+    tibble(uid = character(0), ui = list())
+  })
+  
   # Call a module for each semester
   output$semesters_ui <- renderUI({
     hold_names <- semester_names()
-
+    existing <- isolate(semester_modules_created())
+    
     layers <- ceiling(nrow(hold_names) / 4)
     
     out <- lapply(seq_len(layers), function(layer) {
@@ -203,20 +210,35 @@ select_courses_module <- function(input, output, session, built_majors, semester
       hold <- hold_names[idx, ]
       
       row <- lapply(seq_len(nrow(hold)), function(i)  {
-        callModule(
-          semester_module, 
-          hold[[i,1]],
-          semester_uid = hold[[i,1]],
-          delete_mode = delete_mode,
-          semester_courses = semester_courses,
-          name = hold[[i,2]]
-        )
+        if (hold[[i,1]] %in% existing$uid) {
+          ui <- existing %>% 
+            filter(uid == hold[[i,1]]) %>% 
+            pull(ui)
+          
+          ui <- ui[[1]]
+        } else {
+          callModule(
+            semester_module, 
+            hold[[i,1]],
+            semester_uid = hold[[i,1]],
+            delete_mode = delete_mode,
+            semester_courses = semester_courses,
+            name = hold[[i,2]]
+          )
+          
+          ui <- semester_module_ui(ns(hold[[i,1]]), hold[[i,2]])
+          
+          existing <<- existing %>% 
+            tibble::add_row(uid = hold[[i,1]], ui = list(ui))
+        }
         
-        semester_module_ui(ns(hold[[i,1]]), hold[[i,2]])
+        ui
       })
       
       fluidRow(tagList(row))
     })
+    
+    semester_modules_created(existing)
     
     tagList(out)
   })

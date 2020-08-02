@@ -33,7 +33,7 @@ semester_module_ui <- function(id, name) {
 
 semester_module <- function(input, output, session, semester_uid, delete_mode, semester_courses, name) {
   ns <- session$ns
-
+  
   observeEvent(input$add_course, {
     showModal(
       modalDialog(
