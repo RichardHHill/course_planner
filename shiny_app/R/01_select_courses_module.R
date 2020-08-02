@@ -115,7 +115,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
     
     datatable(
       out,
-      editable = "cell",
+      editable = list(target = "cell", disable = list(columns = 0)),
       rownames = FALSE,
       colnames = "Double Click to Edit",
       selection = "none",
@@ -140,11 +140,13 @@ select_courses_module <- function(input, output, session, built_majors, semester
   # Update Edited Cell Names
   observeEvent(input$semester_names_table_cell_edit, {
     change <- input$semester_names_table_cell_edit
-    hold <- semester_names_hold()
+    print(change)
+    if (change$col == 1) { 
+      hold <- semester_names_hold()
+      hold[change$row, 2] <- change$value
     
-    hold[change$row, 2] <- change$value
-    
-    semester_names_hold(hold)
+      semester_names_hold(hold)
+    }
   })
   
   observeEvent(input$semester_delete, {
