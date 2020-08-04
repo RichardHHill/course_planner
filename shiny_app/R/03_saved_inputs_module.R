@@ -82,17 +82,17 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
   
   observeEvent(input$show_info, toggleElement("info_text", anim = TRUE))
   
-  # observe({
-  #   if (nchar(input$passkey) <= 6) {
-  #     showFeedbackDanger("passkey", "Passkey must be at least 6 characters")
-  #     disable("save_all")
-  #     disable("update_saved")
-  #   } else {
-  #     hideFeedback("passkey")
-  #     enable("save_all")
-  #     enable("update_saved")
-  #   }
-  # })
+  observe({
+    if (nchar(input$passkey) < 6) {
+      showFeedbackDanger("passkey", "Passkey must be at least 6 characters")
+      disable("save_all")
+      disable("update_saved")
+    } else {
+      hideFeedback("passkey")
+      enable("save_all")
+      enable("update_saved")
+    }
+  })
   
   observe({
     hold <- loaded_metadata()
@@ -112,6 +112,8 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
   loaded_metadata <- reactiveVal()
   
   observeEvent(input$save_all, {
+    req(nchar(input$passkey) >= 6)
+    
     new_uid <- UUIDgenerate()
     dat <- list(uid = new_uid, passkey = input$passkey, name = input$name_to_save)
     loaded_metadata(dat)
@@ -181,11 +183,12 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
   
   
   observeEvent(input$update_saved, {
+    req(nchar(input$passkey) >= 6)
+    
     hold <- loaded_metadata()
     req(hold)
     dat <- hold["passkey"]
     dat$name <- input$name_to_save
-    
     
     semester_names <- semester_names()
     semester_courses <- semester_courses()
@@ -279,11 +282,16 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
     if (nrow(out) > 0) {
       ids <- out$uid
       
-      buttons <- paste0(
-        '<div class="btn-group width_75" role="group" aria-label="Basic example">
-        <button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-upload"></i></button>
-        <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
-      )
+      if (input$passkey == "demo") {
+        # Don't let users delete demos
+        buttons <- paste0('<button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-upload"></i></button>')
+      } else {
+        buttons <- paste0(
+          '<div class="btn-group width_75" role="group" aria-label="Basic example">
+          <button class="btn btn-primary btn-sm load_btn" data-toggle="tooltip" data-placement="top" title="Load Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-upload"></i></button>
+          <button class="btn btn-danger btn-sm delete_btn" data-toggle="tooltip" data-placement="top" title="Delete Schedule" id = ', ids, ' style="margin: 0"><i class="fa fa-trash-o"></i></button></div>'
+        )
+      }
       
       out$button <- buttons
     } else {
