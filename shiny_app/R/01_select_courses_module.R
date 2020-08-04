@@ -142,6 +142,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
     )
   })
   
+  outputOptions(output, "semester_names_table", suspendWhenHidden = FALSE)
   semester_names_table_proxy <- dataTableProxy("semester_names_table")
   
   
@@ -221,10 +222,10 @@ select_courses_module <- function(input, output, session, built_majors, semester
             semester_uid = hold[[i,1]],
             delete_mode = delete_mode,
             semester_courses = semester_courses,
-            name = hold[[i,2]]
+            semester_names = semester_names
           )
           
-          ui <- semester_module_ui(ns(hold[[i,1]]), hold[[i,2]])
+          ui <- semester_module_ui(ns(hold[[i,1]]))
           
           existing <<- existing %>% 
             tibble::add_row(uid = hold[[i,1]], ui = list(ui))

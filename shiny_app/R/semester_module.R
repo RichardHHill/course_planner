@@ -1,6 +1,6 @@
 # Module for creating a semester used on the courses tab
 
-semester_module_ui <- function(id, name) {
+semester_module_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
@@ -11,7 +11,7 @@ semester_module_ui <- function(id, name) {
         fluidRow(
           column(
             6,
-            h4(name)
+            h4(textOutput(ns("name")))
           ),
           column(
             6,
@@ -29,15 +29,25 @@ semester_module_ui <- function(id, name) {
   )
 }
 
-semester_module <- function(input, output, session, semester_uid, delete_mode, semester_courses, name) {
+semester_module <- function(input, output, session, semester_uid, delete_mode, semester_courses, semester_names) {
   ns <- session$ns
   # Can't do this in the ui or it will be added again every time the ui is changed
   runjs(paste0("semester_module_js('", ns(""), "')"))
   
+  semester_name <- reactive({
+    semester_names() %>% 
+      filter(.data$semester_uid == .env$semester_uid) %>% 
+      pull(semester_name)
+  })
+  
+  output$name <- renderText({
+    semester_name()
+  })
+  
   observeEvent(input$add_course, {
     showModal(
       modalDialog(
-        title = paste0("Add Course to ", name),
+        title = paste0("Add Course to ", semester_name()),
         size = "m",
         footer = list(
           actionButton(ns("submit_course"), "Add Course"),
