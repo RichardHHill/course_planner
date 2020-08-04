@@ -67,7 +67,7 @@ saved_inputs_module_ui <- function(id) {
             br(),
             br(),
             br(),
-            DTOutput(ns("saved_inputs_table")) %>% withSpinner(type = 8)
+            DTOutput(ns("saved_inputs_table"))
           )
         }
       )
@@ -301,10 +301,22 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
     out
   })
   
+  # Saved inputs table prep is used elsewhere; this will work with the DT proxy
+  saved_inputs_table_prep2 <- reactiveVal()
   
-  output$saved_inputs_table <- renderDT({
+  observe({
     out <- saved_inputs_table_prep() %>% 
       select(button, name, time_created, time_modified)
+    
+    if (is.null(isolate(saved_inputs_table_prep2()))) {
+      saved_inputs_table_prep2(out)
+    } else {
+      replaceData(saved_inputs_table_proxy, out, rownames = FALSE)
+    }
+  })
+  
+  output$saved_inputs_table <- renderDT({
+    out <- saved_inputs_table_prep2()
     
     datatable(
       out,
@@ -321,6 +333,8 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
       )
     )
   })
+  
+  saved_inputs_table_proxy <- dataTableProxy("saved_inputs_table")
   
   
   observeEvent(input$saved_inputs_row_to_delete, {

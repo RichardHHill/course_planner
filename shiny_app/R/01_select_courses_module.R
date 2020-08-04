@@ -236,7 +236,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
       
       fluidRow(tagList(row))
     })
-    
+   
     semester_modules_created(existing)
     
     tagList(out)
