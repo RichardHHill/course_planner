@@ -25,14 +25,14 @@ semester_module_ui <- function(id, name) {
         ),
         DTOutput(ns("semester_table"))
       )
-    ),
-    tags$script(src = "semester_module.js"),
-    tags$script(paste0("semester_module_js('", ns(""), "')"))
+    )
   )
 }
 
 semester_module <- function(input, output, session, semester_uid, delete_mode, semester_courses, name) {
   ns <- session$ns
+  # Can't do this in the ui or it will be added again every time the ui is changed
+  runjs(paste0("semester_module_js('", ns(""), "')"))
   
   observeEvent(input$add_course, {
     showModal(
@@ -190,6 +190,7 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
   })
   
   observeEvent(input$semester_remove, {
+    print("remove")
     row <- as.numeric(input$semester_remove)
     
     out <- semester_courses() %>% 

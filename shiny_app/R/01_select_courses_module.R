@@ -104,10 +104,9 @@ select_courses_module <- function(input, output, session, built_majors, semester
       ids <- out$semester_uid
       
       buttons <- paste0(
-        '<div class="btn-group" role="group">
-          <button class="btn btn-danger btn-sm delete_btn" id = ', ids, ' style="margin: 0; width: 35px;"><i class="fa fa-trash-o"></i></button>
-          <button class="btn btn-info btn-sm" id = ', ids, ' style="margin: 0; width: 35px;"><i class="fa fa-arrows-alt-v"></i></button>
-        </div>'
+        '<button class="btn btn-danger btn-sm delete_btn" id = ', 
+        ids, 
+        ' style="margin: 0; width: 35px;"><i class="fa fa-trash-o"></i></button>'
       )
       
       out <- bind_cols(tibble(buttons = buttons), out)
@@ -137,7 +136,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
         dom = "tp",
         ordering = FALSE,
         columnDefs = list(
-          list(width = "100px", targets = 0)
+          list(width = "50px", targets = 0)
         )
       )
     )
@@ -201,7 +200,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
   output$semesters_ui <- renderUI({
     hold_names <- semester_names()
     existing <- isolate(semester_modules_created())
-    
+    print(existing)
     layers <- ceiling(nrow(hold_names) / 4)
     
     out <- lapply(seq_len(layers), function(layer) {
@@ -217,6 +216,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
           
           ui <- ui[[1]]
         } else {
+          
           callModule(
             semester_module, 
             hold[[i,1]],
