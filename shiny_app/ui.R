@@ -26,6 +26,7 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   useShinyjs(),
   useShinyFeedback(),
+  tags$script(src = "semester_module.js"),
   tabItems(
     select_courses_module_ui("courses"),
     majors_module_ui("majors"),

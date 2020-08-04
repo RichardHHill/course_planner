@@ -89,7 +89,7 @@ majors_module_ui <- function(id) {
   )
 }
 
-majors_module <- function(input, output, session, semesters, built_majors) {
+majors_module <- function(input, output, session, built_majors) {
   ns <- session$ns
   
   course_tags <- reactiveVal()

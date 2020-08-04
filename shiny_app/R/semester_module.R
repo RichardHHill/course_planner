@@ -25,15 +25,15 @@ semester_module_ui <- function(id, name) {
         ),
         DTOutput(ns("semester_table"))
       )
-    ),
-    tags$script(src = "semester_module.js"),
-    tags$script(paste0("semester_module_js('", ns(""), "')"))
+    )
   )
 }
 
-semester_module <- function(input, output, session, delete_mode, semesters, name) {
+semester_module <- function(input, output, session, semester_uid, delete_mode, semester_courses, name) {
   ns <- session$ns
-
+  # Can't do this in the ui or it will be added again every time the ui is changed
+  runjs(paste0("semester_module_js('", ns(""), "')"))
+  
   observeEvent(input$add_course, {
     showModal(
       modalDialog(
@@ -137,23 +137,19 @@ semester_module <- function(input, output, session, delete_mode, semesters, name
       course <- course_codes_to_name(code)
     }
     
-    semesters[[semester]] <- rbind(
-      semesters[[semester]], 
-      tibble(
-        code = code,
-        name = course
-      )
-    )
+    semester_courses() %>% 
+      tibble::add_row(semester_uid = semester_uid, course_code = code, course_name = course) %>% 
+      semester_courses()
   })
   
   semester_out <- reactiveVal(tibble("Remove" = character(0)))
   
   observe({
-    out <- semesters[[ns("semester")]]
-    req(out)
-    ids <- seq_len(nrow(out))
+    out <- semester_courses() %>% 
+      filter(.data$semester_uid == .env$semester_uid)
     
     if (delete_mode() & nrow(out) > 0) {
+      ids <- seq_len(nrow(out))
       buttons <- paste0('<button class="btn btn-danger btn-sm deselect_btn" data-toggle="tooltip" data-placement="top" title="Remove Course" id = ', ids, ' style="margin: 0"><i class="fa fa-minus-circle"></i></button></div>')
       
       buttons <- tibble("Remove" = buttons)
@@ -176,7 +172,9 @@ semester_module <- function(input, output, session, delete_mode, semesters, name
   })
   
   output$semester_table <- renderDT({
-    out <- semester_out()
+    out <- semester_out() %>% 
+      select(-semester_uid)
+    req(nrow(out) > 0)
     
     datatable(
       out,
@@ -192,9 +190,17 @@ semester_module <- function(input, output, session, delete_mode, semesters, name
   })
   
   observeEvent(input$semester_remove, {
+    print("remove")
     row <- as.numeric(input$semester_remove)
     
-    semesters[[ns("semester")]] <- semesters[[ns("semester")]][-row,]
-    semester_out(semester_out()[-row,])
+    out <- semester_courses() %>% 
+      filter(.data$semester_uid == .env$semester_uid)
+    
+    out <- out[-row,]
+    
+    semester_courses() %>% 
+      filter(.data$semester_uid != .env$semester_uid) %>% 
+      bind_rows(out) %>% 
+      semester_courses()
   })
 }
