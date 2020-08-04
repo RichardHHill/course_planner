@@ -305,9 +305,10 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
       escape = -1,
       selection = "none",
       options = list(
+        dom = "tp",
         columnDefs = list(
-          list(width = "10%", targets = 0),
-          list(width = "45%", targets = c(1,2), className = "dt-center")
+          list(width = "100px", orderable = FALSE, targets = 0),
+          list(width = "150px", targets = 2:3)
         )
       )
     )
