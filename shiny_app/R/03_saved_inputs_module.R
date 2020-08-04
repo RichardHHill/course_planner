@@ -142,7 +142,7 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
         }
         
         if (nrow(semester_courses) > 0) {
-          semester_courses$schedule$uid <- new_uid
+          semester_courses$schedule_uid <- new_uid
           
           DBI::dbWriteTable(
             conn,
@@ -183,7 +183,9 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
   observeEvent(input$update_saved, {
     hold <- loaded_metadata()
     req(hold)
-    dat <- hold[c("name", "passkey")]
+    dat <- hold["passkey"]
+    dat$name <- input$name_to_save
+    
     
     semester_names <- semester_names()
     semester_courses <- semester_courses()
@@ -324,26 +326,19 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
         title = "Delete Schedule",
         size = "s",
         footer = list(
+          modalButton("Cancel"),
           actionButton(
             ns("saved_inputs_delete_button"),
             "Delete",
             class = "btn-danger",
             style = "color: #fff;"
-          ),
-          actionButton(
-            ns("saved_inputs_delete_cancel_button"),
-            "Cancel",
-            style = "color: #444; background-color: #f4f4f4; border-color: #ddd"
           )
         ),
         h3(paste0("Are you sure you want to delete ", hold_name, "?"))
       )
     )
   })
-  
-  observeEvent(input$saved_inputs_delete_cancel_button, {
-    removeModal()
-  })
+
   
   observeEvent(input$saved_inputs_delete_button, {
     removeModal()
@@ -369,7 +364,7 @@ saved_inputs_module <- function(input, output, session, built_majors, semester_n
       print(error)
     })
     
-    progess$inc(amount = 1)
+    progress$inc(amount = 1)
     progress$close()
   })
   

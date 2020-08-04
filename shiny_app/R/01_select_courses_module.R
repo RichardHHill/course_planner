@@ -154,7 +154,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
   # Update Edited Cell Names
   observeEvent(input$semester_names_table_cell_edit, {
     change <- input$semester_names_table_cell_edit
-    print(change)
+    
     if (change$col == 1) { 
       hold <- semester_names_hold()
       hold[change$row, 2] <- change$value
@@ -188,8 +188,6 @@ select_courses_module <- function(input, output, session, built_majors, semester
       semester_courses()
   })
   
-  observe(print(list(semester_courses = semester_courses())))
-  
   
   # Keep track so we don't call the module server code multiple times on one uid
   semester_modules_created <- reactiveVal({
@@ -200,7 +198,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
   output$semesters_ui <- renderUI({
     hold_names <- semester_names()
     existing <- isolate(semester_modules_created())
-    print(existing)
+    
     layers <- ceiling(nrow(hold_names) / 4)
     
     out <- lapply(seq_len(layers), function(layer) {
@@ -262,7 +260,7 @@ select_courses_module <- function(input, output, session, built_majors, semester
       
       course_codes <- major$code
       
-      schedule_list <- unlist(lapply(reactiveValuesToList(semesters), function(df) df$code))
+      schedule_list <- semester_courses()$course_code
       
       in_schedule <- lapply(toupper(course_codes) %in% toupper(schedule_list), function(x) {
         if (isTRUE(x)) {
