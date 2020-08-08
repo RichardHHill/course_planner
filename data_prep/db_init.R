@@ -21,7 +21,7 @@ ids_table_query <- "CREATE TABLE input_ids (
 DBI::dbExecute(conn, ids_table_query)
 
 semester_names_query <- "CREATE TABLE semester_names (
-  semester_uid      VARCHAR(36) PRIMARY KEY,
+  semester_uid      VARCHAR(36),
   schedule_uid      VARCHAR(36) REFERENCES input_ids (uid) ON DELETE CASCADE,
   semester_name     TEXT
 );"

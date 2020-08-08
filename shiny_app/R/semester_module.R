@@ -50,8 +50,13 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
         title = paste0("Add Course to ", semester_name()),
         size = "m",
         footer = list(
-          actionButton(ns("submit_course"), "Add Course"),
-          modalButton("Cancel")
+          modalButton("Cancel"),
+          actionButton(
+            ns("submit_course"), 
+            "Add Course",
+            class = "btn-primary",
+            style = "color: #fff"
+          )
         ),
         fluidRow(
           column(
@@ -77,7 +82,8 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
                 choices = all_departments$code,
                 choicesOpt = list(subtext = all_departments$name),
                 options = pickerOptions(
-                  showSubtext = TRUE
+                  showSubtext = TRUE,
+                  liveSearch = TRUE
                 )
               )
             ),
@@ -88,7 +94,8 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
                 "Course",
                 choices = NULL,
                 options = pickerOptions(
-                  showSubtext = TRUE
+                  showSubtext = TRUE,
+                  liveSearch = TRUE
                 )
               )
             )
@@ -192,7 +199,10 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
       colnames = rep("", length(out)),
       options = list(
         dom = "t",
-        ordering = FALSE
+        ordering = FALSE,
+        columnDefs = list(
+          list(width = "65px", targets = 0)
+        )
       ),
       escape = -1,
       selection = "none"
@@ -200,7 +210,6 @@ semester_module <- function(input, output, session, semester_uid, delete_mode, s
   })
   
   observeEvent(input$semester_remove, {
-    print("remove")
     row <- as.numeric(input$semester_remove)
     
     out <- semester_courses() %>% 
